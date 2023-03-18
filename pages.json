@@ -17,6 +17,42 @@
 			}
 		}
 	    
+        ,{
+            "path" : "pages/project/project",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        },
+		{
+		    "path" : "pages/my/my",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "我的",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		},
+		{
+		    "path" : "pages/map/map",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		},
+		{
+		    "path" : "pages/my/offwork",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "请假报备",
+		        "enablePullDownRefresh": false
+		    }
+		    
+		}
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -32,8 +68,16 @@
 		"selectedColor": "#444",
 		"list": [
 			{
-				"text": "首页",
-				"pagePath": "pages/index/index"
+				"text": "项目",
+				"pagePath": "pages/project/project"
+			},
+			{
+				"text": "地图",
+				"pagePath": "pages/map/map"
+			},
+			{
+				"text": "我的",
+				"pagePath": "pages/my/my"
 			}
 		]
 	}

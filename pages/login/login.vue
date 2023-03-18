@@ -10,7 +10,7 @@
 				<text class="iconfont iconfont1 icon-password"></text>
 				<input name="psd" class="psd" password placeholder="密码" />
 			</view>
-			<button formType="submit" class="login-btn" type="default">登录</button>
+			<button formType="submit" class="login-btn" type="default" >登录</button>
 		</form>
 	</view>
 </template>
