@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<text class="title">水务工程巡查</text>
+		<view style="text-align: center;margin-top: 300rpx;margin-bottom: 100rpx;font-weight: 700;font-size: 40rpx;">水务工程巡查</view>
 		<form class="form" @submit="formSubmit">
 			<view class="tel-wrap">
 				<text class="iconfont iconfont1 icon-username"></text>
