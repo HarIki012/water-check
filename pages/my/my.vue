@@ -20,10 +20,10 @@
 			<view class="nameStyle">></view>
 		</view>
 	</view>
-	<view class="name1">
+	<view class="name1" @click="redirectTo()">
 		<view class="nameStyle1">请假报备</view>
 		<view style="width: 50%;margin: auto;margin-right: 10rpx;">
-			<view class="nameStyle">></view>
+			<view class="nameStyle" >></view>
 		</view>
 	</view>
 	
@@ -144,7 +144,14 @@
 				} else {
 					this.errorTips3 = 1
 				}
+			},
+			redirectTo()
+			{
+				uni.redirectTo({
+					url:'/pages/my/offwork'
+				});
 			}
+			
 		}
 	}
 </script>

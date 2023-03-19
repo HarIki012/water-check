@@ -75,7 +75,6 @@
 		.tel-wrap, .psd-wrap {
 			width: 80%;
 			margin: 0 auto;
-			
 			position: relative;
 			height: 100upx;
 			border: 1upx solid #eee;

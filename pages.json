@@ -16,7 +16,6 @@
 				"enablePullDownRefresh": true
 			}
 		}
-	    
         ,{
             "path" : "pages/project/project",
             "style" :                                                                                    
@@ -39,7 +38,7 @@
 		    "path" : "pages/map/map",
 		    "style" :                                                                                    
 		    {
-		        "navigationBarTitleText": "",
+		        "navigationBarTitleText": "辖区地图",
 		        "enablePullDownRefresh": false
 		    }
 		    
