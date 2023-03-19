@@ -4,7 +4,7 @@
 		<form class="form" @submit="formSubmit">
 			<view class="tel-wrap">
 				<text class="iconfont iconfont1 icon-username"></text>
-				<input name="tel" class="tel" focus placeholder="账号" />
+				<input name="tel" class="tel" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength=11 placeholder="账号" />
 			</view>
 			<view class="psd-wrap">
 				<text class="iconfont iconfont1 icon-password"></text>
