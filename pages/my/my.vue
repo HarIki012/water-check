@@ -28,7 +28,7 @@
 <style lang="scss">
 .content{
 	position: relative;
-	height: 400upx;
+	height: 600upx;
 	width: 200rpx;
 	.name,.phone,.updatepws,.offwork{
 		text-align: left;

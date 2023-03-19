@@ -19,8 +19,42 @@
 	export default {
 		data() {
 			return {
-				
+				phone: 13277271520,
+				password: 123456,
 			};
+		},
+		methods:{
+			formSubmit(e) {
+				var rule = [
+					{name:"error",  errorMsg:"账号或密码输入错误"},
+					{name:"null",   errorMsg:"请输入账号或密码"}
+				];
+				var formData = e.detail.value;
+				var reg = /^1[0-9]{10,10}$/;
+				if (!formData.tel | !formData.psd){
+					uni.showToast({
+						title: rule[1].errorMsg,
+						icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
+						duration: 1500    //持续时间为 2秒
+					})  
+					console.log(rule[1].errorMsg);
+				}
+				else if (!reg.test(formData.tel)) {
+					uni.showToast({
+						title: rule[0].errorMsg,
+						icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
+						duration: 1500    //持续时间为 2秒
+					})  
+					console.log(rule[0].errorMsg);
+				}
+				else if (formData.tel == this.phone & formData.psd == this.password){
+					uni.switchTab({
+						url: '/pages/project/project'
+					});
+				}
+				
+				
+			}
 		}
 	}
 </script>
@@ -33,9 +67,7 @@
 	.content {
 		//background: url("../../static/imgs/login/login-background1.png") no-repeat;
 		background-size: cover;
-		.text{
-			width: 200rpx;
-		}
+		
 		.form{
 			display: block;
 			padding-top: 40upx;
@@ -43,13 +75,14 @@
 		.tel-wrap, .psd-wrap {
 			width: 80%;
 			margin: 0 auto;
+			
 			position: relative;
 			height: 100upx;
-			border-bottom: 1upx solid #eee;
+			border: 1upx solid #eee;
 			.iconfont {
 				position: absolute;
-				left: 0;
-				top: 30upx;
+				left: 20upx;
+				top: 25upx;
 				font-size: 48upx;
 			}
 			input{

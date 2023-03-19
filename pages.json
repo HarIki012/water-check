@@ -64,12 +64,15 @@
 		
 	},
 	"tabBar": {
-		"color": "#d8d8d8",
-		"selectedColor": "#444",
+		"color": "#000000",
+		"selectedColor": "#ff003b",
+		"fontSize": "18px",
+		
 		"list": [
 			{
 				"text": "项目",
 				"pagePath": "pages/project/project"
+				
 			},
 			{
 				"text": "地图",
