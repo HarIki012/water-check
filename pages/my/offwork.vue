@@ -2,10 +2,9 @@
 	<view>
 		<view class="reason">
 			<text style="font-size: 35rpx;">事宜</text>
-			<textarea class="text-box" scroll-y="true" placeholder="详情描述">
-				<input name="detail" class="detail" maxlength="200" placeholder="详情描述" />
-				<text class="number">{{number}}/200</text>
+			<textarea class="text-box" placeholder="详情描述"  @input="sumfontnum">
 			</textarea>
+			<text class="currentWordNumber">{{fontNum}}/200</text>
 		</view>
 	</view>
 </template>
@@ -14,13 +13,18 @@
 	export default {
 		data() {
 			return {
-				number:0
+				fontNum:0,
 			}
 		},
 		methods: {
-			
+			sumfontnum(e) {
+				this.fontNum = e.detail.value.length
+				console.log(this.fontNum)
+			}
 		}
-	}
+
+}
+		
 </script>
 
 <style>
@@ -29,16 +33,19 @@
 	margin: 0 auto;
 	position: relative;
 	padding: 3%;
-	
+	overflow: hidden;
 }
 .text-box {
 	padding-bottom: 125rpx;
+	padding-right: 75rpx;
 	border: 1upx solid #eee;
-	
 }
-.number{
-	position: absolute;
-	right: 80rpx;
-	top: 375rpx;
+
+.currentWordNumber{
+  font-size: 28rpx;
+  color: gray;
+  position: absolute;
+  left: 540rpx;
+  top: 430rpx;
 }
 </style>
