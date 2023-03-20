@@ -9,41 +9,34 @@
 				项目名称
 			</view>
 			<view class="popup-use1">
-				<input class="oldStyle" type="password" v-model="oldPassword" confirm-type="done" @confirm="oldInput">
+				<input class="oldStyle" type="text" v-model="newProjectname" confirm-type="done" @confirm="oldInput">
 			</view>
 			<view class="popup-use1">
 				<view class="error" v-if="errorTips1===1">
 				    <text class="error-text">输入的项目名称不能为空！</text>
 				</view>
 			</view>
+			
 			<view class="popup-use1">
 				<text style="color: red;">*</text>
 				所属巡检活动
 			</view>
 			<view class="popup-use1">
-				<input class="oldStyle" type="password" v-model="newPassword" confirm-type="done" @confirm="newInput">
-			</view>
-			<view class="popup-use1" v-if="errorTips2===1">
-				<view class="error">
-				    <text class="error-text">输入的新密码和旧密码一致！</text>
+				<view class="oldStyle">
+					<picker style="margin-top: 13rpx;text-align: center;" @change="dateSelect" :range="dateChoose">
+						<label >{{ dateName }}</label>
+					</picker>
 				</view>
 			</view>
-			<view class="popup-use1" v-else-if="errorTips2===2">
-				<view class="error">
-				    <text class="error-text">密码至少6位！</text>
-				</view>
-			</view>
+			
+			
 			<view class="popup-use">
 				经纬度
 			</view>
 			<view class="popup-use1">
-				<input class="oldStyle" type="password" v-model="isNew" confirm-type="done" @confirm="isInput">
+				<input class="oldStyle" type="text" v-model="isNew" confirm-type="done" @confirm="isInput">
 			</view>
-			<view class="popup-use1">
-				<view class="error" v-if="errorTips3==1">
-				    <text class="error-text">输入的新密码和确认密码不一致！</text>
-				</view>
-			</view>
+	
 			<button class="buttonStyle" type="primary" @tap="toggle1('top')">
 				确定
 			</button>
@@ -55,45 +48,42 @@
 	export default {
 		data() {
 			return {
-				oldPassword: '',
-				realPassword: '123456',
-				newPassword: '',
+				newProjectname: '',
 				isNew: '',
 				errorTips1: '',
 				errorTips2: '',
 				errorTips3: '',
 				blankSpace: '',
+				dateChoose: ['2023年第一次检查','2023年第二次检查','2023年第三次检查','2023年第四次检查','2023年第五次检查','2023年第六次检查'],
+				dateIndex: 0,
+				dateName:'---请选择---',
+				firstName:'---请选择---',
 			}
 		},
 		methods: {
 			toggle1() {
+				this.newProjectname = this.blankSpace
+				this.dateName = this.firstName
 				this.$refs['popup'].close()
 			},
 			oldInput() {
-				if (this.oldPassword !== this.realPassword){
+				if (this.newProjectname.length === 0){
 					this.errorTips1 = 1
 				} else {
 					this.errorTips1 = 0
 				}
 			},
+			dateSelect(e) {
+			    this.dateIndex = e.detail.value;
+			    this.dateName=this.dateChoose[this.dateIndex]
+			},
 			newInput(){
-				if (this.newPassword.length < 6){
-					this.errorTips2 = 2
-				}
-				if (this.newPassword === this.realPassword){
-					this.errorTips2 = 1
-				} 
-				if (this.newPassword.length >= 6 && this.newPassword !== this.realPassword) {
-					this.errorTips2 = 0
-				}
+				
 			},
 			isInput(){
-				if (this.isNew === this.newPassword){
-					this.errorTips3 = 0
-				} else {
-					this.errorTips3 = 1
-				}
+				
 			},
+			
 		},
 		onNavigationBarButtonTap(e) {
 			this.$refs['popup'].open();
