@@ -9,7 +9,7 @@
 				项目名称
 			</view>
 			<view class="popup-use1">
-				<input class="oldStyle" type="text" v-model="newProjectname" confirm-type="done" @confirm="oldInput">
+				<input class="oldStyle" style="padding-left: 20rpx;" type="text" v-model="newProjectname" confirm-type="done" @confirm="oldInput">
 			</view>
 			<view class="popup-use1">
 				<view class="error" v-if="errorTips1===1">
@@ -31,10 +31,15 @@
 			
 			
 			<view class="popup-use">
-				经纬度
+				<view style="width: 80%;text-align: left;">
+					经纬度
+				</view>
+				<view style="width: 20%;text-align: right;color: blue;" @tap="addressGet">
+					获取
+				</view>
 			</view>
 			<view class="popup-use1">
-				<input class="oldStyle" type="text" v-model="isNew" confirm-type="done" @confirm="isInput">
+				<input class="oldStyle" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done" @confirm="isInput">
 			</view>
 	
 			<button class="buttonStyle" type="primary" @tap="toggle1('top')">
@@ -45,6 +50,7 @@
 </template>
 
 <script>
+import { warn } from "vue"
 	export default {
 		data() {
 			return {
@@ -58,12 +64,16 @@
 				dateIndex: 0,
 				dateName:'---请选择---',
 				firstName:'---请选择---',
+				addressMessage: '',
+				addressData: '',
+				upData: true
 			}
 		},
 		methods: {
 			toggle1() {
 				this.newProjectname = this.blankSpace
 				this.dateName = this.firstName
+				this.addressData = this.blankSpace
 				this.$refs['popup'].close()
 			},
 			oldInput() {
@@ -77,6 +87,32 @@
 			    this.dateIndex = e.detail.value;
 			    this.dateName=this.dateChoose[this.dateIndex]
 			},
+			addressGet(){
+				const that = this;
+				// if (this.addressMessage) {
+				// 	that.addressData = '(' + that.addressMessage.latitude + ', ' + that.addressMessage.longitude + ')'
+				// }
+				uni.getLocation({
+					type: 'wgs84',
+					geocode:true,//设置该参数为true可直接获取经纬度及城市信息
+					success: function (res) {
+						console.log(res)
+						that.addressMessage = res;
+						that.addressData = '(' + res.latitude + ', ' + res.longitude + ')'
+						console.log(that.addressData)
+						uni.showToast({
+							title: '地址获取成功',
+							duration: 1500
+						});
+					},
+					fail: function () {
+						uni.showToast({
+							title: '地址获取失败',
+							duration: 1500
+						});
+					}
+				});
+			},
 			newInput(){
 				
 			},
@@ -88,6 +124,7 @@
 		onNavigationBarButtonTap(e) {
 			this.newProjectname = this.blankSpace
 			this.dateName = this.firstName
+			this.addressData = this.blankSpace
 			this.$refs['popup'].open();
 		},
 	}
