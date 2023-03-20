@@ -86,6 +86,8 @@
 			
 		},
 		onNavigationBarButtonTap(e) {
+			this.newProjectname = this.blankSpace
+			this.dateName = this.firstName
 			this.$refs['popup'].open();
 		},
 	}
