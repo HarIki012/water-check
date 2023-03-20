@@ -1,7 +1,14 @@
 <template>
-
+	<view class="projectSearch">
+		<view class="projectStyle">
+			<picker style="margin-top: 13rpx;text-align: center;" @change="projectSelect" :range="projectChoose">
+				<label>{{ projectselectName }}</label>
+			</picker>
+		</view>
+		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="projectnameSearch" placeholder="项目名称">
+	</view>
 	
-	<!-- 弹窗 -->
+	<!-- 新建项目弹窗 -->
 	<uni-popup ref="popup">
 		<view class="pop">
 			<view class="popup-use">
@@ -61,7 +68,11 @@ import { warn } from "vue"
 				errorTips3: '',
 				blankSpace: '',
 				dateChoose: ['2023年第一次检查','2023年第二次检查','2023年第三次检查','2023年第四次检查','2023年第五次检查','2023年第六次检查'],
+				projectChoose: ['全部', '江夏区', '武昌区'],
+				projectselectIndex: 0,
 				dateIndex: 0,
+				projectselectName: '全部',
+				projectnameSearch: '',
 				dateName:'---请选择---',
 				firstName:'---请选择---',
 				addressMessage: '',
@@ -86,6 +97,10 @@ import { warn } from "vue"
 			dateSelect(e) {
 			    this.dateIndex = e.detail.value;
 			    this.dateName=this.dateChoose[this.dateIndex]
+			},
+			projectSelect(e) {
+			    this.projectselectIndex = e.detail.value;
+			    this.projectselectName=this.projectChoose[this.projectselectIndex]
 			},
 			addressGet(){
 				const that = this;
@@ -182,6 +197,28 @@ import { warn } from "vue"
 	.oldStyle{
 		border: 1rpx solid gray;
 		width: 100%;
+		height: 70rpx;
+	}
+	.projectSearch{
+		margin-top: 30rpx;
+		padding-left: 3%;
+		padding-top: 10rpx;
+		width: 100%;
+		display: flex;
+		justify-content: left;
+		letter-spacing: 2rpx;
+	}
+	.projectStyle{
+		border-radius: 5px;
+		border: 1rpx solid gray;
+		margin-right: 1%;
+		width: 25%;
+		height: 70rpx;
+	}
+	.selectStyle{
+		border-radius: 5px;
+		border: 1rpx solid gray;
+		width: 64%;
 		height: 70rpx;
 	}
 	.buttonStyle{
