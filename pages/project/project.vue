@@ -1,8 +1,8 @@
 <template>
 	<view class="projectSearch">
 		<view class="projectStyle">
-			<picker style="margin-top: 13rpx;text-align: center;" @change="projectSelect" :range="projectChoose">
-				<label>{{ projectselectName }}</label>
+			<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
+				<label style="text-align: center;height: 100%;">{{ projectselectName }}</label>
 			</picker>
 		</view>
 		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="projectnameSearch" placeholder="项目名称">
@@ -30,7 +30,7 @@
 			</view>
 			<view class="popup-use1">
 				<view class="oldStyle">
-					<picker style="margin-top: 13rpx;text-align: center;" @change="dateSelect" :range="dateChoose">
+					<picker class="centerStyle" @change="dateSelect" :range="dateChoose">
 						<label >{{ dateName }}</label>
 					</picker>
 				</view>
@@ -211,9 +211,20 @@ import { warn } from "vue"
 	.projectStyle{
 		border-radius: 5px;
 		border: 1rpx solid gray;
+		text-align: center;
+		align-items: center;
+		flex-direction: row;
 		margin-right: 1%;
 		width: 25%;
 		height: 70rpx;
+	}
+	.centerStyle{
+		flex: auto;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		height: 100%;
 	}
 	.selectStyle{
 		border-radius: 5px;
