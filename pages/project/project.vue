@@ -5,15 +5,19 @@
 				<label style="text-align: center;height: 100%;">{{ projectselectName }}</label>
 			</picker>
 		</view>
-		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="projectnameSearch" placeholder="项目名称">
+		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="projectnameSearch" placeholder="项目名称" confirm-type="search">
 	</view>
 	<view>
-		<view class="tableStyle" v-for="(item,index) in projectTable">
+		<view class="tableStyle" v-for="(item,index) in filterList">
 			<view class="tableContent">
 				{{item.name}}
 			</view>
 			<view class="statusStyle">
-				状态：{{item.status}}
+				状态：
+				<text v-if="item.status === '待检查'" style="color: #EEEE00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
+				<text v-if="item.status === '检查中'" style="color: #00BFFF;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
+				<text v-if="item.status === '已检查'" style="color: #00CD00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
+				<text v-if="item.status === '已中止'" style="color: #EE2C2C;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
 			</view>
 		</view>
 	</view>
@@ -79,7 +83,7 @@ import { warn } from "vue"
 					},
 					{
 						name:'百步亭路（兴业路-幸福街）道排工程',
-						status:'已终止',
+						status:'已中止',
 					},
 					{
 						name:'建设渠（幸福二路明渠-黄孝河明渠）综合整治工程',
@@ -91,7 +95,7 @@ import { warn } from "vue"
 					},
 					{
 						name:'1111百步亭路（兴业路-幸福街）道排工程',
-						status:'已终止',
+						status:'检查中',
 					},
 					{
 						name:'1111建设渠（幸福二路明渠-黄孝河明渠）综合整治工程',
@@ -115,6 +119,17 @@ import { warn } from "vue"
 				addressMessage: '',
 				addressData: '',
 				upData: true
+			}
+		},
+		computed: {
+			filterList() {
+				var arr = [] //定义一个空数组
+				this.projectTable.forEach((item) => arr.push(item)) //在zhiweilist查找数据放入空数组
+				if (this.projectnameSearch) { //如果有这个数据
+					arr = this.projectTable.filter(item => item.name.includes(this.projectnameSearch))
+					//则在zhiweilist里过滤掉filterText
+				}
+				return arr
 			}
 		},
 		methods: {
@@ -182,7 +197,7 @@ import { warn } from "vue"
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.titleStyle{
 		text-align: center;
 		margin-top: 30rpx;
@@ -306,5 +321,11 @@ import { warn } from "vue"
 		padding-bottom: 20rpx;
 		height: 20%;
 		text-align: right;
+	}
+	/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+	@font-face {
+	  font-family: "阿里巴巴普惠体 2.0 65 Medium";font-weight: 500;src: url("//at.alicdn.com/wf/webfont/R3pFSnXNf5DJ/ySEF0qX9msER.woff2") format("woff2"),
+	  url("//at.alicdn.com/wf/webfont/R3pFSnXNf5DJ/wYtU5udvc31K.woff") format("woff");
+	  font-display: swap;
 	}
 </style>
