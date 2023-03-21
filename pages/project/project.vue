@@ -1,5 +1,5 @@
 <template>
-	<view class="projectSearch">
+	<view class="projectSearch" style="position: sticky;top: 5.4%;">
 		<view class="projectStyle">
 			<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
 				<label style="text-align: center;height: 100%;">{{ projectselectName }}</label>
@@ -7,6 +7,17 @@
 		</view>
 		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="projectnameSearch" placeholder="项目名称">
 	</view>
+	<view>
+		<view class="tableStyle" v-for="(item,index) in projectTable">
+			<view class="tableContent">
+				{{item.name}}
+			</view>
+			<view class="statusStyle">
+				状态：{{item.status}}
+			</view>
+		</view>
+	</view>
+	
 	
 	<!-- 新建项目弹窗 -->
 	<uni-popup ref="popup">
@@ -61,6 +72,32 @@ import { warn } from "vue"
 	export default {
 		data() {
 			return {
+				projectTable:[
+					{
+						name:'2017年江岸区沿江商务区现状道路雨污管涵完善工程',
+						status:'待检查',
+					},
+					{
+						name:'百步亭路（兴业路-幸福街）道排工程',
+						status:'已终止',
+					},
+					{
+						name:'建设渠（幸福二路明渠-黄孝河明渠）综合整治工程',
+						status:'已检查',
+					},
+					{
+						name:'2018年江岸区沿江商务区现状道路雨污管涵完善工程',
+						status:'待检查',
+					},
+					{
+						name:'1111百步亭路（兴业路-幸福街）道排工程',
+						status:'已终止',
+					},
+					{
+						name:'1111建设渠（幸福二路明渠-黄孝河明渠）综合整治工程',
+						status:'已检查',
+					},
+				],
 				newProjectname: '',
 				isNew: '',
 				errorTips1: '',
@@ -200,13 +237,14 @@ import { warn } from "vue"
 		height: 70rpx;
 	}
 	.projectSearch{
-		margin-top: 30rpx;
 		padding-left: 3%;
-		padding-top: 10rpx;
+		padding-top: 30rpx;
 		width: 100%;
+		height: 120rpx;
 		display: flex;
 		justify-content: left;
 		letter-spacing: 2rpx;
+		background-color: white;
 	}
 	.projectStyle{
 		border-radius: 5px;
@@ -217,20 +255,22 @@ import { warn } from "vue"
 		margin-right: 1%;
 		width: 25%;
 		height: 70rpx;
+		position: sticky;
+		top: 0;
 	}
 	.centerStyle{
-		flex: auto;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		flex-direction: column;
 		height: 100%;
+		position: sticky;
 	}
 	.selectStyle{
 		border-radius: 5px;
 		border: 1rpx solid gray;
 		width: 64%;
 		height: 70rpx;
+		position: sticky;
 	}
 	.buttonStyle{
 		width: 300rpx;
@@ -240,5 +280,31 @@ import { warn } from "vue"
 		text-align: center;
 		margin-top: 30rpx;
 		margin-bottom: 40rpx;
+	}
+	.tableStyle{
+		width: 90%;
+		margin-top: 30rpx;
+		margin-left: 5%;
+		display: flex;
+		flex-direction: column;
+		height: 300rpx;
+		border: 1rpx solid 	#DCDCDC;
+	}
+	.tableContent{
+		padding-left: 20rpx;
+		padding-top: 20rpx;
+		padding-right: 20rpx;
+		padding-bottom: 20rpx;
+		display: flex;
+		height: 80%;
+		
+	}
+	.statusStyle{
+		padding-left: 20rpx;
+		padding-top: 20rpx;
+		padding-right: 20rpx;
+		padding-bottom: 20rpx;
+		height: 20%;
+		text-align: right;
 	}
 </style>
