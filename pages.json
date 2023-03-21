@@ -20,8 +20,19 @@
             "path" : "pages/project/project",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
+				"navigationBarTitleText": "项目列表",
+				"enablePullDownRefresh": false,
+				"app-plus": {
+						  "titleNView": {
+							"buttons": [
+							  {
+								"text": "新建",
+								"fontSize": "15",
+								"type": "popup"
+							  }
+							]
+						  }
+						}
             }
             
         },
