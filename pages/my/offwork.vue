@@ -2,7 +2,7 @@
 	<view>
 		<view class="reason">
 			<text style="font-size: 35rpx;">事宜</text>
-			<textarea style="word-break:break-all word-wrap:break-word" class="text-box" :value="voiceState" placeholder="详情描述" maxlength="200" @input="sumfontnum">
+			<textarea style="word-break:break-all word-wrap:break-word" class="text-box" :value="voiceResult" placeholder="详情描述" maxlength="200" @input="sumfontnum">
 			</textarea>
 			<button class="iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
 			<text class="currentWordNumber">{{fontNum}}/200</text>
@@ -41,8 +41,8 @@
 				fontNum:0,
 				begindate:currentDate,
 				enddate:currentDate,
-				info:"",
 				voiceState:"",
+				voiceResult:"",
 			}
 		},
 		computed: {
@@ -60,7 +60,7 @@
 
 			sumfontnum(e) {
 				this.fontNum = e.detail.value.length
-				this.info = e.detail.value
+				this.voiceResult = e.detail.value
 				
 				// console.log(this.fontNum)
 			},
@@ -88,7 +88,7 @@
 				return `${year}-${month}-${day}`;
 			},
 			submitAll(){
-				console.log(this.info)
+				console.log(this.voiceResult)
 				console.log(this.begindate)
 				console.log(this.enddate)
 			},
@@ -112,7 +112,7 @@
 				};  
 				//有新的识别内容返回，则会调用此事件  
 				manager.onRecognize = (res) => {  
-					this.voiceState = res.result;  
+					this.voiceResult = res.result;  
 				}  
 
 				// 识别结束事件  
