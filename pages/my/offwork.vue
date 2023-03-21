@@ -2,8 +2,9 @@
 	<view>
 		<view class="reason">
 			<text style="font-size: 35rpx;">事宜</text>
-			<textarea style="word-break:break-all word-wrap:break-word" class="text-box" placeholder="详情描述" maxlength="200" @input="sumfontnum">
+			<textarea style="word-break:break-all word-wrap:break-word" class="text-box" :value="voiceState" placeholder="详情描述" maxlength="200" @input="sumfontnum">
 			</textarea>
+			<button class="iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
 			<text class="currentWordNumber">{{fontNum}}/200</text>
 		</view>
 		<view class="begin">
@@ -27,7 +28,10 @@
 </template>
 
 <script>
+	var plugin = requirePlugin("WechatSI")
+	let manager = plugin.getRecordRecognitionManager()
 	export default {
+		
 		data() {
 			const currentDate = this.getDate({
 				format:true
@@ -38,6 +42,7 @@
 				begindate:currentDate,
 				enddate:currentDate,
 				info:"",
+				voiceState:"",
 			}
 		},
 		computed: {
@@ -48,7 +53,11 @@
 				return this.getDate('end');
 			}
 		},
+		onLoad() {  
+			this.initRecord();  
+		},
 		methods: {
+
 			sumfontnum(e) {
 				this.fontNum = e.detail.value.length
 				this.info = e.detail.value
@@ -82,7 +91,43 @@
 				console.log(this.info)
 				console.log(this.begindate)
 				console.log(this.enddate)
-			}
+			},
+			touchStart: function() {   
+				manager.start({  
+					duration: 60000,  
+					lang: "zh_CN"  
+				});  
+			},  
+			touchEnd: function() {  
+				uni.showToast()  
+				manager.stop();  
+			},  
+			/**  
+			 * 初始化语音识别回调  
+			 * 绑定语音播放开始事件  
+			 */  
+			initRecord: function() {  
+				manager.onStart = function(res) {  
+					this.voiceState ="onStart:"+ res.msg+"正在录音"  
+				};  
+				//有新的识别内容返回，则会调用此事件  
+				manager.onRecognize = (res) => {  
+					this.voiceState = res.result;  
+				}  
+
+				// 识别结束事件  
+				manager.onStop = (res) => {  
+
+					this.voiceState = res.result;  
+				}  
+
+				// 识别错误事件  
+				manager.onError = (res) => {  
+
+					this.voiceState = res.msg;  
+
+				}  
+			},
 		}
 
 }
@@ -108,7 +153,7 @@
   font-size: 28rpx;
   color: gray;
   position: absolute;
-  left: 540rpx;
+  left: 500rpx;
   top: 430rpx;
 }
 .begin,.end{
@@ -132,5 +177,11 @@
 	color: #fff;
 	font-size: 32upx;
 	top: 25rpx;
+}
+.iconfontmico{
+	font-size: 40rpx;
+	position: absolute;
+	left: 590rpx;
+	top: 390rpx;
 }
 </style>
