@@ -7,8 +7,8 @@
 		</view>
 		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="projectnameSearch" placeholder="项目名称" confirm-type="search">
 	</view>
-	<view>
-		<view class="tableStyle" v-for="(item,index) in filterList">
+	<view @click="navigatortoinfo()">
+		<view class="tableStyle"  v-for="(item,index) in filterList">
 			<view class="tableContent">
 				{{item.name}}
 			</view>
@@ -133,6 +133,11 @@ import { warn } from "vue"
 			}
 		},
 		methods: {
+			navigatortoinfo(){
+				uni.navigateTo({
+					url:'/pages/project/info'
+				})
+			},
 			toggle1() {
 				this.newProjectname = this.blankSpace
 				this.dateName = this.firstName

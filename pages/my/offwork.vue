@@ -28,8 +28,8 @@
 </template>
 
 <script>
-	var plugin = requirePlugin("WechatSI")
-	let manager = plugin.getRecordRecognitionManager()
+	// var plugin = requirePlugin("WechatSI")
+	// let manager = plugin.getRecordRecognitionManager()
 	export default {
 		
 		data() {
@@ -43,6 +43,7 @@
 				enddate:currentDate,
 				voiceState:"",
 				voiceResult:"",
+				submitState:false,
 			}
 		},
 		computed: {
@@ -88,6 +89,7 @@
 				return `${year}-${month}-${day}`;
 			},
 			submitAll(){
+				//提交功能没做
 				console.log(this.voiceResult)
 				console.log(this.begindate)
 				console.log(this.enddate)

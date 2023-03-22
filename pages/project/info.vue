@@ -1,17 +1,55 @@
 <template>
-	<view class="border" style="border: 1upx solid #eee;">
+	<view class="border"  :class="{active:flag}" >
 		<view class="content" style="-webkit-flex-wrap: wrap;flex-wrap: wrap; " v-for="(item,index) in list">
 			<view class="projectName" style="width: 200rpx">{{item.name}}</view>
 			<view class="projectName-info" style="-webkit-flex: 1;flex: 1;">{{item.info}}</view>
 		</view>
 	</view>
+	<view class="show-or-noshow" style="text-align: center;border-bottom: 1upx solid #eee;" @click = "showTag">v</view>
+	<view style="padding: 25rpx;"></view>
+	<view class="borderDown" style="border: 1upx solid #eee;" v-for="(item,index) in checks">
+		<view class="contentDown">
+			<view class="check" style="font-weight: 550;padding-bottom: 15rpx;">{{item.check}}</view>
+			<view class="leader">{{item.leader}}：{{item.leaderName}}</view>
+			<view class="teaminfo">{{item.team}}：{{item.teamName}}</view>
+			<view class="end-time" style="padding-bottom: 15rpx;">{{item.endTime}}：{{item.endTimeInfo}}</view>
+		</view>
+		<view class="status" >
+			<text v-if="item.status === '待检查'" style="color: #EEEE00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
+			<text v-if="item.status === '检查中'" style="color: #00BFFF;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
+			<text v-if="item.status === '已检查'" style="color: #00CD00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
+			<text v-if="item.status === '已中止'" style="color: #EE2C2C;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
+		</view>
+	</view>
+	
 </template>
 
 <script>
 	export default {
 		data() {
 			return {
-				
+				flag: false,
+				checks:[
+					{
+						check:"2023年第一次检查",
+						leader:"组长",
+						leaderName:"张三",
+						team:"组员",
+						teamName:"李四，王五",
+						endTime:"结束时间",
+						endTimeInfo:"2023年4月8日",
+						status:"待检查"
+					},{
+						check:"2022年年末检查",
+						leader:"组长",
+						leaderName:"赵六",
+						team:"组员",
+						teamName:"周八，郑十",
+						endTime:"结束时间",
+						endTimeInfo:"2022年12月20日",
+						status:"已检查"
+					}
+				],
 				list:[{
 					name:"项目名称",
 					info:"2017年江岸区沿江商务区现状道路雨污管涵完善工程",
@@ -59,12 +97,22 @@
 
 		},
 		methods: {
-
+			showTag(){
+				this.flag = !this.flag;
+			}, 
 		}
 	}
 </script>
 
 <style lang="scss">
+	.border{
+		height: 500rpx;
+		overflow: hidden;
+	}
+	.active{
+		height: auto;
+		overflow: visible;
+	}
 	.content{
 		margin-top: 35rpx;
 		margin-bottom: 10rpx;
@@ -82,5 +130,20 @@
 		white-space: pre-line;
 		display: flex;
 		align-items: center;
+	}
+	.borderDown{
+		flex-flow: row;
+		justify-content: flex-start;
+		display: flex;
+	}
+	.contentDown{
+		width: 80%;
+	}
+	.status{
+		padding-top:85rpx ;
+	}
+	.check,.leader,.teaminfo,.end-time{
+		padding-left: 32rpx;
+		padding-top: 10rpx;
 	}
 </style>

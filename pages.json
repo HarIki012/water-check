@@ -20,7 +20,7 @@
             "path" : "pages/project/project",
             "style" :                                                                                    
             {
-				"navigationBarTitleText": "项目列表",
+                "navigationBarTitleText": "项目列表",
 				"enablePullDownRefresh": false,
 				"app-plus": {
 						  "titleNView": {
@@ -60,6 +60,18 @@
 		    {
 		        "navigationBarTitleText": "请假报备",
 		        "enablePullDownRefresh": false
+		    }
+		    
+		},
+		{
+		    "path" : "pages/project/info",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "项目详情",
+		        "enablePullDownRefresh": false,
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
 		    }
 		    
 		}
