@@ -140,7 +140,7 @@ import { warn } from "vue"
 				this.$refs['popup'].close()
 			},
 			oldInput() {
-				if (this.newProjectname.length === 0){
+				if (this.newProjectname){
 					this.errorTips1 = 1
 				} else {
 					this.errorTips1 = 0

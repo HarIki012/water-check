@@ -128,15 +128,20 @@
 				}
 			},
 			newInput(){
-				if (this.newPassword.length < 6){
+				if(this.newPassword){
+					if (this.newPassword.length < 6){
+					this.errorTips2 = 2
+					}
+					if (this.newPassword === this.realPassword){
+						this.errorTips2 = 1
+					} 
+					if (this.newPassword.length >= 6 && this.newPassword !== this.realPassword) {
+						this.errorTips2 = 0
+					}
+				} else {
 					this.errorTips2 = 2
 				}
-				if (this.newPassword === this.realPassword){
-					this.errorTips2 = 1
-				} 
-				if (this.newPassword.length >= 6 && this.newPassword !== this.realPassword) {
-					this.errorTips2 = 0
-				}
+				
 			},
 			isInput(){
 				if (this.isNew === this.newPassword){
