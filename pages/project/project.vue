@@ -50,7 +50,11 @@
 					</picker>
 				</view>
 			</view>
-			
+			<view class="popup-use1">
+				<view class="error" v-if="errorTips2===1">
+				    <text class="error-text">请选择所属巡检活动！</text>
+				</view>
+			</view>
 			
 			<view class="popup-use">
 				<view style="width: 80%;text-align: left;">
@@ -61,7 +65,7 @@
 				</view>
 			</view>
 			<view class="popup-use1">
-				<input class="oldStyle" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done" @confirm="isInput">
+				<input class="oldStyle" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done">
 			</view>
 	
 			<button class="buttonStyle" type="primary" @tap="toggle1('top')">
@@ -109,7 +113,7 @@ import { warn } from "vue"
 				errorTips3: '',
 				blankSpace: '',
 				dateChoose: ['2023年第一次检查','2023年第二次检查','2023年第三次检查','2023年第四次检查','2023年第五次检查','2023年第六次检查'],
-				projectChoose: ['全部', '江夏区', '武昌区'],
+				projectChoose: ['全部', '待检查', '检查中', '已检查', '已中止'],
 				projectselectIndex: 0,
 				dateIndex: 0,
 				projectselectName: '全部',
@@ -129,6 +133,9 @@ import { warn } from "vue"
 					arr = this.projectTable.filter(item => item.name.includes(this.projectnameSearch))
 					//则在zhiweilist里过滤掉filterText
 				}
+				if (this.projectselectName !== '全部') {
+					arr = arr.filter(item => item.status.includes(this.projectselectName))
+				}
 				return arr
 			}
 		},
@@ -139,16 +146,27 @@ import { warn } from "vue"
 				})
 			},
 			toggle1() {
-				this.newProjectname = this.blankSpace
-				this.dateName = this.firstName
-				this.addressData = this.blankSpace
-				this.$refs['popup'].close()
-			},
-			oldInput() {
-				if (this.newProjectname){
+				if (!this.newProjectname){
 					this.errorTips1 = 1
 				} else {
 					this.errorTips1 = 0
+				}
+				if (this.dateName === this.firstName) {
+					this.errorTips2 = 1
+				} else {
+					this.errorTips2 = 0
+				}
+				if (this.newProjectname && this.dateName !== this.firstName) {
+					this.newProjectname = this.blankSpace
+					this.addressData = this.blankSpace
+					this.$refs['popup'].close()
+				}
+			},
+			oldInput() {
+				if (this.newProjectname){
+					this.errorTips1 = 0
+				} else {
+					this.errorTips1 = 1
 				}
 			},
 			dateSelect(e) {
@@ -158,6 +176,7 @@ import { warn } from "vue"
 			projectSelect(e) {
 			    this.projectselectIndex = e.detail.value;
 			    this.projectselectName=this.projectChoose[this.projectselectIndex]
+				this.filterList
 			},
 			addressGet(){
 				const that = this;
@@ -185,16 +204,12 @@ import { warn } from "vue"
 					}
 				});
 			},
-			newInput(){
-				
-			},
-			isInput(){
-				
-			},
 			
 		},
 		onNavigationBarButtonTap(e) {
 			this.newProjectname = this.blankSpace
+			this.errorTips1 = this.blankSpace
+			this.errorTips2 = this.blankSpace
 			this.dateName = this.firstName
 			this.addressData = this.blankSpace
 			this.$refs['popup'].open();
