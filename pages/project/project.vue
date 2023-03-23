@@ -7,7 +7,7 @@
 		</view>
 		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="projectnameSearch" placeholder="项目名称" confirm-type="search">
 	</view>
-	<view @click="navigatortoinfo()">
+	<view style="width: 100%;" @click="navigatortoinfo()">
 		<view class="tableStyle"  v-for="(item,index) in filterList">
 			<view class="tableContent">
 				{{item.name}}
@@ -272,7 +272,6 @@ import { warn } from "vue"
 		height: 70rpx;
 	}
 	.projectSearch{
-		padding-left: 3%;
 		padding-top: 30rpx;
 		width: 100%;
 		height: 120rpx;
@@ -282,6 +281,7 @@ import { warn } from "vue"
 		background-color: white;
 	}
 	.projectStyle{
+		margin-left: 3%;
 		border-radius: 5px;
 		border: 1rpx solid gray;
 		text-align: center;
