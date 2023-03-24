@@ -3,11 +3,11 @@
 		<view style="text-align: center;margin-top: 300rpx;margin-bottom: 100rpx;font-weight: 700;font-size: 40rpx;">水务工程巡查</view>
 		<form class="form" @submit="formSubmit">
 			<view class="tel-wrap">
-				<text class="iconfont iconfont1 icon-username"></text>
+				<text class="iconfont icon icon-icon-user"></text>
 				<input name="tel" class="tel" onkeyup="value=value.replace(/[^\d]/g,'')" maxlength=11 placeholder="账号" />
 			</view>
 			<view class="psd-wrap">
-				<text class="iconfont iconfont1 icon-password"></text>
+				<text class="iconfont icon icon-mima"></text>
 				<input name="psd" class="psd" password placeholder="密码" />
 			</view>
 			<button formType="submit" class="login-btn" type="default" >登录</button>

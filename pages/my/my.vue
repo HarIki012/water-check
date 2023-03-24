@@ -1,7 +1,7 @@
 <template>
-	<view class="titleStyle">
+	<!-- <view class="titleStyle">
 		我的
-	</view>
+	</view> -->
 	<view class="name">
 		<view class="nameStyle1">姓名</view>
 		<view style="width: 50%;margin: auto;margin-right: 10rpx;">
@@ -26,7 +26,7 @@
 			<view class="nameStyle" >></view>
 		</view>
 	</view>
-	
+	<view class="quit" @click="redirectToLogin()">退出登录</view>
 	<!-- 修改密码弹窗 -->
 	<uni-popup ref="popup">
 		<view class="pop">
@@ -155,6 +155,11 @@
 				uni.redirectTo({
 					url:'/pages/my/offwork'
 				});
+			},
+			redirectToLogin(){
+				uni.redirectTo({
+					url:'/pages/login/login'
+				})
 			}
 			
 		}
@@ -162,6 +167,15 @@
 </script>
 
 <style>
+	.quit{
+		text-align: center;
+		margin-top: 65rpx;
+		font-size: 35rpx;
+		margin-bottom: 20rpx;
+		padding: 20rpx;
+		border-top: 1rpx solid gray;
+		border-bottom: 1rpx solid gray;
+	}
 	.titleStyle{
 		text-align: center;
 		margin-top: 30rpx;

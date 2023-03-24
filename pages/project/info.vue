@@ -5,7 +5,8 @@
 			<view class="projectName-info" style="-webkit-flex: 1;flex: 1;">{{item.info}}</view>
 		</view>
 	</view>
-	<view class="show-or-noshow" style="text-align: center;border-bottom: 1upx solid #eee;" @click = "showTag">v</view>
+	<view v-if="flag" class="iconfont icon icon-xiangshang" style="font-size: 50rpx; text-align: center;border-bottom: 1upx solid #eee;" @click = "showTag"></view>
+	<view v-else class="show-or-noshow iconfont icon icon-xiangxia" style="font-size: 50rpx; text-align: center;border-bottom: 1upx solid #eee;" @click = "showTag"></view>
 	<view style="padding: 25rpx;"></view>
 	<view class="borderDown" style="border: 1upx solid #eee;" v-for="(item,index) in checks">
 		<view class="contentDown">

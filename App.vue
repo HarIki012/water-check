@@ -16,9 +16,9 @@
 	/*每个页面公共css */
 	/*每个页面公共css */
 	/* @import './uni.scss'; */
-	@import './static/css/iconfont.scss';
 	@import './static/mico/iconfont.css';
-	/* @import './static/css/public.scss';
-	uparse公共样式 */
+	@import './static/icon/iconfont.css';
+	/*   */
+	/* uparse公共样式 */
 	/* @import url("/components/un-parse/u-parse.css"); */
 </style>
