@@ -55,13 +55,17 @@
             "urlCheck" : false
         },
         "usingComponents" : true,
-        "permission" : {},
-		"plugins" : {
-		    "WechatSI" : {
-		        "version" : "0.3.5",
-		        "provider" : "wx069ba97219f66d99"
-		    }
-		}
+        "permission" : {
+            "scope.userLocation" : {
+                "desc" : "需要定位当前位置，方便更新数据库信息"
+            }
+        },
+        "plugins" : {
+            "WechatSI" : {
+                "version" : "0.3.5",
+                "provider" : "wx069ba97219f66d99"
+            }
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true

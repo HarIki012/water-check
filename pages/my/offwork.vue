@@ -28,8 +28,8 @@
 </template>
 
 <script>
-	// var plugin = requirePlugin("WechatSI")
-	// let manager = plugin.getRecordRecognitionManager()
+	var plugin = requirePlugin("WechatSI")
+	let manager = plugin.getRecordRecognitionManager()
 	export default {
 		
 		data() {

@@ -5,7 +5,10 @@
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "",
-		        "enablePullDownRefresh": false
+		        "enablePullDownRefresh": false,
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
 		    }
 		    
 		},
@@ -58,8 +61,11 @@
 		    "path" : "pages/my/offwork",
 		    "style" :                                                                                    
 		    {
-		        "navigationBarTitleText": "请假报备",
-		        "enablePullDownRefresh": false
+		        "navigationBarTitleText": "报备",
+		        "enablePullDownRefresh": false,
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
 		    }
 		    
 		},
@@ -74,13 +80,38 @@
 				}
 		    }
 		    
+		},
+		{
+		    "path" : "pages/project/checks",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "检查内容",
+		        "enablePullDownRefresh": false,
+				"app-plus": {
+					"scrollIndicator": "none"
+				}
+		    }
+		    
 		}
+        ,{
+            "path" : "pages/project/search",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		//"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"scrollIndicator": "none",
+		"app-plus":{
+				"scrollIndicator":"none" //全局 在APP页面都不显示滚动条
+			}
 	},
 	"uniIdRouter": {
 		

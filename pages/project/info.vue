@@ -2,8 +2,11 @@
 	<view class="border"  :class="{active:flag}" >
 		<view class="content" style="-webkit-flex-wrap: wrap;flex-wrap: wrap; " v-for="(item,index) in list">
 			<view class="projectName" style="width: 200rpx">{{item.name}}</view>
-			<view class="projectName-info" style="-webkit-flex: 1;flex: 1;">{{item.info}}</view>
+			<view class="projectName-info" style="-webkit-flex: 1;flex: 1; flex-wrap: wrap; ">{{item.info}}
+			<text class="location iconfont icon icon-zhinanzhen" v-if="item.name === '项目地址'" style="color: #0099ff; " @click="location">校正定位</text>
+			</view>
 		</view>
+		
 	</view>
 	<view v-if="flag" class="iconfont icon icon-xiangshang" style="font-size: 50rpx; text-align: center;border-bottom: 1upx solid #eee;" @click = "showTag"></view>
 	<view v-else class="show-or-noshow iconfont icon icon-xiangxia" style="font-size: 50rpx; text-align: center;border-bottom: 1upx solid #eee;" @click = "showTag"></view>
@@ -16,7 +19,7 @@
 			<view class="end-time" style="padding-bottom: 15rpx;">{{item.endTime}}：{{item.endTimeInfo}}</view>
 		</view>
 		<view class="status" >
-			<text v-if="item.status === '待检查'" style="color: #EEEE00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
+			<text v-if="item.status === '待检查'" style="color: #eebb00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
 			<text v-if="item.status === '检查中'" style="color: #00BFFF;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
 			<text v-if="item.status === '已检查'" style="color: #00CD00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
 			<text v-if="item.status === '已中止'" style="color: #EE2C2C;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
@@ -28,6 +31,7 @@
 <script>
 	export default {
 		data() {
+			
 			return {
 				flag: false,
 				checks:[
@@ -101,6 +105,12 @@
 			showTag(){
 				this.flag = !this.flag;
 			}, 
+			location(){
+				uni.showToast({
+					title:"校正定位成功",
+					duration:1000,
+				})
+			}
 		}
 	}
 </script>
@@ -131,6 +141,12 @@
 		white-space: pre-line;
 		display: flex;
 		align-items: center;
+		flex-direction: row;
+	}
+	.location{
+		display: flex;
+		justify-content: left;
+		-webkit-flex: 1;flex: 1;
 	}
 	.borderDown{
 		flex-flow: row;
@@ -146,5 +162,10 @@
 	.check,.leader,.teaminfo,.end-time{
 		padding-left: 32rpx;
 		padding-top: 10rpx;
+	}
+	@font-face {
+	  font-family: "阿里巴巴普惠体 2.0 65 Medium";font-weight: 500;src: url("//at.alicdn.com/wf/webfont/R3pFSnXNf5DJ/ySEF0qX9msER.woff2") format("woff2"),
+	  url("//at.alicdn.com/wf/webfont/R3pFSnXNf5DJ/wYtU5udvc31K.woff") format("woff");
+	  font-display: swap;
 	}
 </style>
