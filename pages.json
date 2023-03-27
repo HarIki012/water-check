@@ -89,7 +89,18 @@
 		        "enablePullDownRefresh": false,
 				"app-plus": {
 					"scrollIndicator": "none"
-				}
+				},
+				"app-plus": {
+						  "titleNView": {
+							"buttons": [
+							  {
+								"text": "提交",
+								"fontSize": "15",
+								"type": "popup"
+							  }
+							]
+						  }
+						}
 		    }
 		    
 		}

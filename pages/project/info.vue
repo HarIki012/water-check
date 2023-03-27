@@ -11,7 +11,7 @@
 	<view v-if="flag" class="iconfont icon icon-xiangshang" style="font-size: 50rpx; text-align: center;border-bottom: 1upx solid #eee;" @click = "showTag"></view>
 	<view v-else class="show-or-noshow iconfont icon icon-xiangxia" style="font-size: 50rpx; text-align: center;border-bottom: 1upx solid #eee;" @click = "showTag"></view>
 	<view style="padding: 25rpx;"></view>
-	<view class="borderDown" style="border: 1upx solid #eee;" v-for="(item,index) in checks">
+	<view class="borderDown" style="border: 1upx solid #eee;" v-for="(item,index) in checks" @tap="gonavigate()">
 		<view class="contentDown">
 			<view class="check" style="font-weight: 550;padding-bottom: 15rpx;">{{item.check}}</view>
 			<view class="leader">{{item.leader}}：{{item.leaderName}}</view>
@@ -109,6 +109,12 @@
 				uni.showToast({
 					title:"校正定位成功",
 					duration:1000,
+				})
+			},
+			gonavigate(){
+				uni.navigateTo({
+					//保留当前页面，跳转到应用内的某个页面
+					url: '/pages/project/checks'
 				})
 			}
 		}
