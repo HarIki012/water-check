@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url('iconfont.ttf?t=1679881104089') format('truetype');
+  src: url('iconfont.ttf?t=1679897042870') format('truetype');
 }
 
 .iconfont {
@@ -45,6 +45,10 @@
 
 .icon-shexiangtou:before {
   content: "\eca5";
+}
+
+.icon-xiangyou:before {
+  content: "\e626";
 }
 
 .icon-24gf-ellipsis:before {

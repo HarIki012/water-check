@@ -123,7 +123,7 @@
 
 <style lang="scss">
 	.border{
-		height: 500rpx;
+		height: 530rpx;
 		overflow: hidden;
 	}
 	.active{

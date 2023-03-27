@@ -108,6 +108,15 @@
             "path" : "pages/project/search",
             "style" :                                                                                    
             {
+                "navigationBarTitleText": "问题检索",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/project/detail",
+            "style" :                                                                                    
+            {
                 "navigationBarTitleText": "",
                 "enablePullDownRefresh": false
             }
