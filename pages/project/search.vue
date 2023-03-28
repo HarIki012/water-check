@@ -10,9 +10,9 @@
 	<view class="sortBorder">
 		<view class="sort" v-for="(item,index) in sort">
 			
-				<view v-if="flag" class="iconfont icon icon-xiangxia1" @click = "showTag()">{{item.name}}</view>
-				<view v-else class="sortItem iconfont icon icon-xiangyou" @click="showTag()">{{item.name}}</view>
-				<view class="border" :class="{active:flag}">
+				<view v-if="item.flag" class="iconfont icon icon-xiangxia1" @click = "showTag(index)">{{item.name}}</view>
+				<view v-else class="sortItem iconfont icon icon-xiangyou" @click="showTag(index)">{{item.name}}</view>
+				<view class="border" :class="{active:item.flag}">
 					<view class="info" v-for="(item,index) in item.info">
 						<view class="detail">{{item.detail}}</view>
 					</view>
@@ -101,7 +101,9 @@
 		
 		methods:{
 			showTag(index){
-				sort[index].flag = !sort[index].flag
+				console.log(index)
+				this.sort[index].flag = !this.sort[index].flag
+				console.log(this.sort[index].flag)
 			}
 		}
 	}
@@ -150,7 +152,7 @@
 		padding-left: 15rpx;
 	}
 	.border{
-		height: 49rpx;
+		height: 7rpx;
 		overflow: hidden;
 	}
 	.active{
