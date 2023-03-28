@@ -41,10 +41,65 @@
 				active:'',
 				typeList: ['质量', '安全', '文明施工'],
 				selectPoint: '',
+				problemList: [
+					{
+						id: 1,
+						projectName:'南湖水环境提升工程',
+						type: '安全',
+						severity: '较严重',
+						description: '问题描述略',
+						detail: '详细描述略',
+						photoUrl: '',   //放图片
+						rectify: '整改要求略',
+					},
+					{
+						id: 2,
+						projectName:'南湖水环境提升工程',
+						type: '安全',
+						severity: '较严重',
+						description: '问题描述略',
+						detail: '详细描述略',
+						photoUrl: '',   //放图片
+						rectify: '整改要求略',
+					},
+					{
+						id: 3,
+						projectName:'南湖水环境提升工程',
+						type: '安全',
+						severity: '较严重',
+						description: '问题描述略',
+						detail: '详细描述略',
+						photoUrl: '',   //放图片
+						rectify: '整改要求略',
+					},
+					{
+						id: 4,
+						projectName:'土石方工程',
+						type: '安全',
+						severity: '较严重',
+						description: '问题描述略',
+						detail: '详细描述略',
+						photoUrl: '',   //放图片
+						rectify: '整改要求略',
+					},
+					{
+						id: 5,
+						projectName:'土石方工程',
+						type: '安全',
+						severity: '较严重',
+						description: '问题描述略',
+						detail: '详细描述略',
+						photoUrl: '',   //放图片
+						rectify: '整改要求略',
+					}
+				]
 			}
 		},
 		onLoad() {
 
+		},
+		mounted() {
+			
 		},
 		methods: {
 			sequ(id) {
