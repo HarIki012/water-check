@@ -104,6 +104,9 @@
 		methods: {
 			sequ(id) {
 				this.selectPoint = this.typeList[id]
+			},
+			changeData() {
+				
 			}
 		}
 	}
