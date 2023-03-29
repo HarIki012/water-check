@@ -9,13 +9,15 @@
 	</view>
 	<view class="sortBorder">
 		<view class="sort" v-for="(item,index) in sort">
-			
-				<view v-if="item.flag" class="iconfont icon icon-xiangxia1" @click = "showTag(index)">{{item.name}}</view>
-				<view v-else class="sortItem iconfont icon icon-xiangyou" @click="showTag(index)">{{item.name}}</view>
-				<view class="border" :class="{active:item.flag}">
-					<view class="info" v-for="(item,index) in item.info">
-						<view class="detail">{{item.detail}}</view>
-					</view>
+				<view v-if="item.delete">
+					<view class="delete iconfont icon icon-shanchu2" @click="deleteTag(index)"> </view>
+					<view v-if="item.flag" class="sortItem iconfont icon icon-xiangxia1" @click = "showTag(index)">{{item.name}}</view>
+					<view v-else class="sortItem iconfont icon icon-xiangyou" @click="showTag(index)">{{item.name}}</view>
+						<view class="border" :class="{active:item.flag}">
+							<view class="info" v-for="(item,index) in item.info">
+								<view class="detail">{{item.detail}}</view>
+							</view>
+						</view>
 				</view>
 		</view>
 	</view>
@@ -40,6 +42,7 @@
 					{
 						name:"土石方工程",
 						flag:true,
+						delete:true,
 						info:[
 							{
 								detail:"地基处理不符合要求"
@@ -49,6 +52,7 @@
 					{
 						name:"地基及基础处理工程",
 						flag:true,
+						delete:true,
 						info:[
 							{
 								detail:"防渗墙施工平台、导墙修筑不满足规范或设计要求"
@@ -67,6 +71,7 @@
 					{
 						name:"现场作业安全管理",
 						flag:true,
+						delete:true,
 						info:""
 					}
 				],
@@ -101,9 +106,12 @@
 		
 		methods:{
 			showTag(index){
-				console.log(index)
+				// console.log(index)
 				this.sort[index].flag = !this.sort[index].flag
-				console.log(this.sort[index].flag)
+				// console.log(this.sort[index].flag)
+			},
+			deleteTag(index){
+				this.sort[index].delete = !this.sort[index].delete
 			}
 		}
 	}
@@ -148,15 +156,38 @@
 		height: 70rpx;
 		position: sticky;
 	}
+	.sortItem{
+		font-size: 35rpx;
+	}
 	.sortBorder{
 		padding-left: 15rpx;
 	}
 	.border{
-		height: 7rpx;
+		
+		height: 0rpx;
 		overflow: hidden;
+		// padding-bottom: 5rpx;
 	}
 	.active{
 		height: auto;
 		overflow: visible;
+	}
+	.detail{
+		// width: 600rpx;
+		background-color: #e3e3e3;
+		padding: 10rpx;
+		border-radius: 10rpx;
+		margin: 15rpx;
+		margin-right: 60rpx;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	.delete{
+		font-size: 35rpx;
+		
+		position: relative;
+		left: 630rpx;
+		top: 40rpx;
 	}
 </style>

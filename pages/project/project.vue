@@ -1,5 +1,5 @@
 <template>
-	<view class="projectSearch" style="position: sticky;top: 5.4%;">
+	<view class="projectSearch" style="position: sticky;top: 0;">
 		<view class="projectStyle">
 			<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
 				<label style="text-align: center;height: 100%;">{{ projectselectName }}</label>
