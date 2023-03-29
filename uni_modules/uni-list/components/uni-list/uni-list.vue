@@ -104,7 +104,8 @@
 		height: 1px;
 		-webkit-transform: scaleY(0.5);
 		transform: scaleY(0.5);
-		background-color: $uni-border-color;
+		// 上边框颜色
+		// background-color: $uni-border-color;
 		z-index: 1;
 	}
 
@@ -116,7 +117,8 @@
 		height: 1px;
 		-webkit-transform: scaleY(0.5);
 		transform: scaleY(0.5);
-		background-color: $uni-border-color;
+		// 下边框颜色
+		// background-color: $uni-border-color;
 	}
 
 	/* #endif */

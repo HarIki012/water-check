@@ -1,12 +1,50 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/login/login",
+    "pages/index/index",
+    "pages/project/project",
+    "pages/my/my",
+    "pages/map/map",
+    "pages/my/offwork",
+    "pages/project/info",
+    "pages/project/checks",
+    "pages/project/search",
+    "pages/project/detail"
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-app",
     "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "backgroundColor": "#F8F8F8",
+    "scrollIndicator": "none"
+  },
+  "tabBar": {
+    "color": "#000000",
+    "selectedColor": "#ff003b",
+    "list": [
+      {
+        "text": "项目",
+        "pagePath": "pages/project/project"
+      },
+      {
+        "text": "地图",
+        "pagePath": "pages/map/map"
+      },
+      {
+        "text": "我的",
+        "pagePath": "pages/my/my"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "需要定位当前位置，方便更新数据库信息"
+    }
+  },
+  "plugins": {
+    "WechatSI": {
+      "version": "0.3.5",
+      "provider": "wx069ba97219f66d99"
+    }
   },
   "usingComponents": {}
 }

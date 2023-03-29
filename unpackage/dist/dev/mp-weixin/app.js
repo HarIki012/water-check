@@ -2,7 +2,16 @@
 Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 const common_vendor = require("./common/vendor.js");
 if (!Math) {
+  "./pages/login/login.js";
   "./pages/index/index.js";
+  "./pages/project/project.js";
+  "./pages/my/my.js";
+  "./pages/map/map.js";
+  "./pages/my/offwork.js";
+  "./pages/project/info.js";
+  "./pages/project/checks.js";
+  "./pages/project/search.js";
+  "./pages/project/detail.js";
 }
 const _sfc_main = {
   onLaunch: function() {
@@ -15,7 +24,7 @@ const _sfc_main = {
     console.log("App Hide");
   }
 };
-const App = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "E:/uni-app/shuiwu/shuiwu/App.vue"]]);
+const App = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["__file", "E:/water-check-project/App.vue"]]);
 function createApp() {
   const app = common_vendor.createSSRApp(App);
   return {

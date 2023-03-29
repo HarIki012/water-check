@@ -11,23 +11,53 @@
 				</button>
 			</view>
 		</view>
-		<uni-collapse style="margin-top: 30rpx;">
-		    <!-- 因为list默认带一条分隔线，所以使用 titleBorder="none" 取消面板的分隔线 -->
-		    <uni-collapse-item title-border="none" :border="false">
-		        <template v-slot:title>
-		            <uni-list style="display: flex;">
-						<view style="display: flex;">
-							<uni-list-item title="标题使用自定义标题插槽" :show-extra-icon="true" :extra-icon="extraIcon" style="display: flex;width: 75%;">
-							</uni-list-item>
-							<view class="deleteStyle">删除</view>
+		<view v-for="(item, index) in newList" :key="index" style="text-align: center" @click="heightChange">
+			<uni-collapse style="margin-top: 30rpx;" ref="collapse" accordion @change="heightChange">
+				<uni-collapse-item title-border="none" :border="false" :open="true">
+					<template v-slot:title>
+						<uni-list>
+							<view style="display: flex;">
+								<uni-list-item title='' :show-extra-icon="true" style="display: flex;width: 1%;"  @click="heightChange">
+								</uni-list-item>
+								<view class="titleStyle">▼{{item.projectName}}</view>
+							</view>
+						</uni-list>
+					</template>
+					<view>
+						<view class="content" v-for="(it, id) in item.data" :key="id" style="text-align: center" @click="heightChange">
+							<!-- <view v-for="(t,d) in it" :key="d">
+								{{t}}
+							</view> -->
+							<!-- <text class="text">{{ it.description }}</text> -->
+							<uni-collapse ref="collapsetwo" accordion @change="heightChange">
+								<uni-collapse-item  title-border="none" :border="false" :open="false">
+									<template v-slot:title>
+										<uni-list>
+											<view style="display: flex;" @click="heightChange">
+												<uni-list-item title='' :show-extra-icon="true" style="display: flex;width: 1%;"  @click="heightChange">
+												</uni-list-item>
+												<view style="display: flex;width: 80%;text-align: left;background-color: #F5F5F5;">{{it.description}}</view>
+												<view class="deleteStyle">删除</view>
+											</view>
+										</uni-list>
+									</template>
+									<view style="display: flex;flex-direction: column;" @click="heightChange">
+										<text class="text">{{ it.description }}</text>
+										<text class="text">{{ it.detail }}</text>
+										<text class="text">{{ it.rectify }}</text>
+										<text class="text">{{ it.severity }}</text>
+									</view>
+									
+								</uni-collapse-item>
+								
+							</uni-collapse>
 						</view>
-		            </uni-list>
-		        </template>
-		        <view class="content">
-		            <text class="text">折叠内容主体，可自定义内容及样式</text>
-		        </view>
-		    </uni-collapse-item>
-		</uni-collapse>
+					</view>
+					
+				</uni-collapse-item>
+			</uni-collapse>
+		</view>
+		
 	</view>
 	
 	  
@@ -47,7 +77,7 @@
 						projectName:'南湖水环境提升工程',
 						type: '安全',
 						severity: '较严重',
-						description: '问题描述略',
+						description: '问题描述略1',
 						detail: '详细描述略',
 						photoUrl: '',   //放图片
 						rectify: '整改要求略',
@@ -57,7 +87,7 @@
 						projectName:'南湖水环境提升工程',
 						type: '安全',
 						severity: '较严重',
-						description: '问题描述略',
+						description: '问题描述略2',
 						detail: '详细描述略',
 						photoUrl: '',   //放图片
 						rectify: '整改要求略',
@@ -67,7 +97,7 @@
 						projectName:'南湖水环境提升工程',
 						type: '安全',
 						severity: '较严重',
-						description: '问题描述略',
+						description: '问题描述略3',
 						detail: '详细描述略',
 						photoUrl: '',   //放图片
 						rectify: '整改要求略',
@@ -77,7 +107,7 @@
 						projectName:'土石方工程',
 						type: '安全',
 						severity: '较严重',
-						description: '问题描述略',
+						description: '问题描述略4',
 						detail: '详细描述略',
 						photoUrl: '',   //放图片
 						rectify: '整改要求略',
@@ -87,26 +117,58 @@
 						projectName:'土石方工程',
 						type: '安全',
 						severity: '较严重',
-						description: '问题描述略',
+						description: '问题描述略5',
 						detail: '详细描述略',
 						photoUrl: '',   //放图片
 						rectify: '整改要求略',
 					}
-				]
+				],
+				newList:'',
 			}
 		},
-		onLoad() {
 
-		},
 		mounted() {
-			
+			this.changeData()
 		},
 		methods: {
+			heightChange(){
+				this.$nextTick(() => {
+					setTimeout(()=>{
+						this.$refs.collapse.resize();
+						this.$refs.collapsetwo.resize();
+					},500)
+				});
+			},
 			sequ(id) {
 				this.selectPoint = this.typeList[id]
+
+			},
+			testM(){
+				console.log(this.problemList.length)
 			},
 			changeData() {
-				
+				var map = {}
+				var nList = []
+				for (var i = 0; i < this.problemList.length; i++) {
+					var item = this.problemList[i]
+				    if (!map[item.projectName]) {
+						nList.push({
+							projectName: item.projectName,
+							data: [item]
+						})
+						map[item.projectName] = item
+				    } else {
+						for (var j = 0; j < nList.length; j++) {
+							var nItem = nList[j]
+							if (nItem.projectName == item.projectName) {
+								nItem.data.push(item)
+								break
+							}
+						}
+				    }
+				}
+				console.log(nList)
+				this.newList = nList
 			}
 		}
 	}
@@ -184,5 +246,25 @@
 		justify-content: center;
 		align-items: center;
 		color: #1E90FF;
+		background-color: #F5F5F5;
+	}
+	.titleStyle{
+		width: 80%;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
+		text-align: left;
+		font-size: 40rpx;
+	}
+	.content{
+		flex-direction: column;
+		margin-top: 10rpx;
+		margin-left: 30rpx;
+		margin-right: 30rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
+		background-color: #F5F5F5;
 	}
 </style>

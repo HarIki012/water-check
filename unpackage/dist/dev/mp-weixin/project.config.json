@@ -1,8 +1,7 @@
 {
   "description": "项目配置文件。",
   "packOptions": {
-    "ignore": [],
-    "include": []
+    "ignore": []
   },
   "setting": {
     "urlCheck": false,
@@ -10,21 +9,35 @@
     "postcss": false,
     "minified": false,
     "newFeature": true,
-    "bigPackageSizeSupport": true,
-    "babelSetting": {
-      "ignore": [],
-      "disablePlugins": [],
-      "outputPath": ""
-    },
-    "condition": false
+    "bigPackageSizeSupport": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.30.2",
-  "appid": "touristappid",
+  "libVersion": "",
+  "appid": "wx867140b834e73682",
   "projectname": "shuiwu",
-  "condition": {},
-  "editorSetting": {
-    "tabIndent": "insertSpaces",
-    "tabSize": 2
+  "condition": {
+    "search": {
+      "current": -1,
+      "list": []
+    },
+    "conversation": {
+      "current": -1,
+      "list": []
+    },
+    "game": {
+      "current": -1,
+      "list": []
+    },
+    "miniprogram": {
+      "current": 0,
+      "list": [
+        {
+          "id": 0,
+          "name": "pages/project/checks",
+          "pathName": "pages/project/checks",
+          "query": ""
+        }
+      ]
+    }
   }
 }
