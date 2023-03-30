@@ -60,7 +60,7 @@
 		
 	</view>
 	
-	  
+	<button class="button-bottom">自定义问题添加</button>
 </template>
 
 <script>
@@ -266,5 +266,13 @@
 		padding-left: 30rpx;
 		font-size: 35rpx;
 		background-color: #F5F5F5;
+	}
+	.button-bottom{
+		position: fixed;
+		width: 100%;
+		bottom: 0;
+		color: #F5F5F5;
+		background-color: #1E90FF;
+		border-radius: 0rpx;
 	}
 </style>

@@ -15,7 +15,7 @@
 					<view v-else class="sortItem iconfont icon icon-xiangyou" @click="showTag(index)">{{item.name}}</view>
 						<view class="border" :class="{active:item.flag}">
 							<view class="info" v-for="(item,index) in item.info">
-								<view class="detail">{{item.detail}}</view>
+								<view class="detail" @click="redirectTodetail">{{item.detail}}</view>
 							</view>
 						</view>
 				</view>
@@ -112,6 +112,11 @@
 			},
 			deleteTag(index){
 				this.sort[index].delete = !this.sort[index].delete
+			},
+			redirectTodetail(){
+				uni.redirectTo({
+					url:'/pages/project/detail'
+				})
 			}
 		}
 	}

@@ -152,7 +152,7 @@
 			},
 			redirectTo()
 			{
-				uni.redirectTo({
+				uni.navigateTo({
 					url:'/pages/my/offwork'
 				});
 			},
