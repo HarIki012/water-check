@@ -19,7 +19,8 @@
 				"enablePullDownRefresh": true
 			}
 		}
-        ,{
+        ,
+		{
             "path" : "pages/project/project",
             "style" :                                                                                    
             {
@@ -117,7 +118,7 @@
             "path" : "pages/project/detail",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "条款说明",
                 "enablePullDownRefresh": false
             }
             

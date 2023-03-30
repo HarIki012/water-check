@@ -1,7 +1,7 @@
 <template>
 	<view class="projectSearch" >
 		<view class="projectStyle">
-			<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
+			<picker class="centerStyle" @change="projectSelect" :range="projectChoose" >
 				<label style="text-align: center;height: 100%;">{{ projectselectName }}</label>
 			</picker>
 		</view>
@@ -11,16 +11,30 @@
 		<view class="sort" v-for="(item,index) in sort">
 				<view v-if="item.delete">
 					<view class="delete iconfont icon icon-shanchu2" @click="deleteTag(index)"> </view>
-					<view v-if="item.flag" class="sortItem iconfont icon icon-xiangxia1" @click = "showTag(index)">{{item.name}}</view>
-					<view v-else class="sortItem iconfont icon icon-xiangyou" @click="showTag(index)">{{item.name}}</view>
-						<view class="border" :class="{active:item.flag}">
+<!-- 					<view v-if="item.flag" class="sortItem iconfont icon icon-xiangxia1" @click = "showTag(index)">{{item.name}}</view>
+					<view v-else class="sortItem iconfont icon icon-xiangyou" @click="showTag(index)">{{item.name}}</view> -->
+					<view :class="item.flag ? 'sortItemOpen iconfont icon icon-xiangxia1' : 'sortItem iconfont icon icon-xiangyou'" @click="showTag(index)">{{item.name}}</view>
+						<view :class="item.flag ? 'active':'border'">
 							<view class="info" v-for="(item,index) in item.info">
-								<view class="detail" @click="redirectTodetail">{{item.detail}}</view>
+								<view  class="detail" @click="redirectTodetail">{{item.detail}}</view>
 							</view>
 						</view>
 				</view>
 		</view>
 	</view>
+	<view class="sortBorder">
+			<view class="sort" v-for="(item,index) in data">
+				<view v-if="item.delete">
+					<view class="delete iconfont icon icon-shanchu2" @click="deleteTagData(index)"> </view>
+					<view :class="item.flag ? 'sortItemOpen iconfont icon icon-xiangxia1' : 'sortItem iconfont icon icon-xiangyou'" @click="showTagData(index)">{{item.description}}</view>
+					<view :class="item.flag ? 'active':'border'">
+						<!-- <view class="info" v-for="(item,index) in item.info"> -->
+							<view  class="detail" @click="redirectTodetail">{{item.detail}}</view>
+						<!-- </view> -->
+					</view>
+				</view>
+			</view>
+		</view>
 <!-- 	<uni-collapse class="sortBorder"  v-for="(item,index) in sort" :open="true">
 		<uni-collapse-item class="sort" title="111111">
 			<view class="info" v-for="(item,index) in item.info">
@@ -38,6 +52,8 @@
 				flag:false,
 				projectselectName: '全部',
 				projectnameSearch: '',
+				projectChoose: ['全部', '质量', '安全', '文明施工'],
+				projectselectIndex: 0,
 				sort:[
 					{
 						name:"土石方工程",
@@ -83,6 +99,8 @@
 				            severity: "较严重",
 				            description: "问题描述略",
 				            detail: "详细描述略",
+							flag:true,
+							delete:true,
 				        },
 				        {
 				            id: 2,
@@ -91,6 +109,8 @@
 				            severity: "严重",
 				            description: "问题描述略",
 				            detail: "详细描述略",
+							flag:true,
+							delete:true,
 				        },
 				        {
 				            id: 3,
@@ -99,12 +119,46 @@
 				            severity: "严重",
 				            description: "问题描述略",
 				            detail: "详细描述略",
+							flag:true,
+							delete:true,
 				        }
-				    ]
+				    ],
+					dataList: [],
+					searchDetail: ''
 			};
+
 		},
-		
+		onLoad(value) {
+			console.log(value.username)
+			this.getSearch(value.username)
+			// if(!value){
+			// 	this.getSearch(value.username)
+			// }
+		},
+		computed: {
+			filterList() {
+				var arr = [] //定义一个空数组
+				this.data.forEach((item) => arr.push(item)) //在zhiweilist查找数据放入空数组
+				if (this.projectnameSearch) { //如果有这个数据
+					arr = this.data.filter(item => item.name.includes(this.projectnameSearch))
+					//则在zhiweilist里过滤掉filterText
+				}
+				if (this.projectselectName !== '全部') {
+					arr = arr.filter(item => item.status.includes(this.projectselectName))
+				}
+				return arr
+			}
+		},
 		methods:{
+			getSearch(value){
+				this.projectnameSearch = value
+				console.log(this.projectnameSearch)
+			},
+			projectSelect(e) {
+			    this.projectselectIndex = e.detail.value;
+			    this.projectselectName=this.projectChoose[this.projectselectIndex]
+				this.filterList
+			},
 			showTag(index){
 				// console.log(index)
 				this.sort[index].flag = !this.sort[index].flag
@@ -113,6 +167,16 @@
 			deleteTag(index){
 				this.sort[index].delete = !this.sort[index].delete
 			},
+			
+			showTagData(index){
+				// console.log(index)
+				this.data[index].flag = !this.data[index].flag
+				// console.log(this.sort[index].flag)
+			},
+			deleteTagData(index){
+				this.data[index].delete = !this.data[index].delete
+			},
+			
 			redirectTodetail(){
 				uni.redirectTo({
 					url:'/pages/project/detail'
@@ -132,7 +196,7 @@
 		letter-spacing: 2rpx;
 		background-color: white;
 		position: sticky;
-		top: 5.4%;
+		top: 0%;
 	}
 	.projectStyle{
 		margin-left: 3%;
@@ -163,19 +227,26 @@
 	}
 	.sortItem{
 		font-size: 35rpx;
+		transition: all 0.3s;
+	}
+	.sortItemOpen{
+		font-size: 35rpx;
+		transition: all 0.3s;
 	}
 	.sortBorder{
+		// padding-top: 15rpx;
 		padding-left: 15rpx;
 	}
 	.border{
-		
 		height: 0rpx;
 		overflow: hidden;
 		// padding-bottom: 5rpx;
+		transition: all 0.3s;
 	}
 	.active{
 		height: auto;
 		overflow: visible;
+		transition: all 0.3s;
 	}
 	.detail{
 		// width: 600rpx;
@@ -188,6 +259,7 @@
 		overflow: hidden;
 		white-space: nowrap;
 	}
+	
 	.delete{
 		font-size: 35rpx;
 		

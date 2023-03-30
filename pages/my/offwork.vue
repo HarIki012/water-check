@@ -58,7 +58,6 @@
 			this.initRecord();  
 		},
 		methods: {
-
 			sumfontnum(e) {
 				this.fontNum = e.detail.value.length
 				this.voiceResult = e.detail.value
@@ -93,6 +92,9 @@
 				console.log(this.voiceResult)
 				console.log(this.begindate)
 				console.log(this.enddate)
+				uni.navigateTo({
+					url:'/pages/my/my'
+				})
 			},
 			touchStart: function() {   
 				manager.start({  
