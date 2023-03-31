@@ -6,7 +6,7 @@
 		    {
 		        "navigationBarTitleText": "",
 		        "enablePullDownRefresh": false,
-				"app-plus": {
+				"mp-weixin": {
 					"scrollIndicator": "none"
 				}
 		    }
@@ -64,7 +64,7 @@
 		    {
 		        "navigationBarTitleText": "报备",
 		        "enablePullDownRefresh": false,
-				"app-plus": {
+				"mp-weixin": {
 					"scrollIndicator": "none"
 				}
 		    }
@@ -76,7 +76,7 @@
 		    {
 		        "navigationBarTitleText": "项目详情",
 		        "enablePullDownRefresh": false,
-				"app-plus": {
+				"mp-weixin": {
 					"scrollIndicator": "none"
 				}
 		    }
@@ -89,9 +89,7 @@
 		        "navigationBarTitleText": "检查内容",
 		        "enablePullDownRefresh": false,
 				"app-plus": {
-					"scrollIndicator": "none"
-				},
-				"app-plus": {
+					"scrollIndicator": "none",
 						  "titleNView": {
 							"buttons": [
 							  {
@@ -119,7 +117,18 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "条款说明",
-                "enablePullDownRefresh": false
+                "enablePullDownRefresh": false,
+				"mp-weixin": {
+					  "titleNView": {
+						"buttons": [
+						  {
+							"text": "生成问题",
+							"fontSize": "14",
+							"type": "popup"
+						  }
+						]
+					  }
+					}
             }
             
         }
@@ -130,8 +139,8 @@
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"scrollIndicator": "none",
-		"app-plus":{
-				"scrollIndicator":"none" //全局 在APP页面都不显示滚动条
+		"mp-weixin":{
+				"scrollIndicator":"none" //全局 在小程序页面都不显示滚动条
 			}
 	},
 	"uniIdRouter": {

@@ -1,9 +1,11 @@
 <template>
 	<view class="totalSearch" style="position: sticky;top: 5%;">
+		<form class="form" @submit="search">
 		<view class="checkSearch">
 			<image class="logo" mode="scaleToFill" src="/static/logo.png"></image>
-			<input class="selectStyle" style="padding-left: 20rpx;" type="text" placeholder="问题检索" confirm-type="search">
+			<input class="selectStyle"  style="padding-left: 20rpx;" type="text" placeholder="问题检索" confirm-type="search" @confirm="search">
 		</view>
+		</form>
 		<view class="typeStyle">
 			<view  v-for="(item, index) in typeList"  :key="index" style="text-align: center;display: flex">
 				<button :class="item==selectPoint?'chooseType':'unChoose'" type="default" @click="sequ(index)">
@@ -141,6 +143,15 @@
 			this.changeData()
 		},
 		methods: {
+			search(e){
+				uni.navigateTo({
+							 url:'/pages/project/search?username=' + e.detail.value
+								}) //由搜索页传递到搜索结果页
+						 //  uniCloud.database().collection('接口').get().then(res =>{
+							// 		this.userName = ''
+							// 		console.log(res);
+							// })
+			},
 			changeBig(e){
 				 this.newList[e].bigisOpen = !this.newList[e].bigisOpen
 				 this.$forceUpdate()
@@ -164,14 +175,14 @@
 				var nList = []
 				for (var i = 0; i < this.problemList.length; i++) {
 					var item = this.problemList[i]
-				    if (!map[item.projectName]) {
+					if (!map[item.projectName]) {
 						nList.push({
 							projectName: item.projectName,
 							data: [item],
 							bigisOpen: true,
 						})
 						map[item.projectName] = item
-				    } else {
+					} else {
 						for (var j = 0; j < nList.length; j++) {
 							var nItem = nList[j]
 							if (nItem.projectName == item.projectName) {
@@ -179,7 +190,7 @@
 								break
 							}
 						}
-				    }
+					}
 				}
 				console.log(nList)
 				this.newList = nList
@@ -188,13 +199,14 @@
 	}
 </script>
 
+
 <style lang="scss">
 	.logo {
-		margin-left: 20rpx;
-		height: 50rpx;
-		width: 50rpx;
-		display: flex;
-	}
+			margin-left: 20rpx;
+			height: 50rpx;
+			width: 50rpx;
+			display: flex;
+		}
 	.detailPic{
 		margin-top: 25rpx;
 		height: 100rpx;
@@ -279,6 +291,7 @@
 		font-size: 35rpx;
 	}
 	.closeStyle{
+		border-radius: 15rpx;
 		display: flex;
 		width: 100%;
 		margin-top: 30rpx;
@@ -328,6 +341,14 @@
 		height: 300rpx;
 		border: 1rpx solid darkgray;
 		border-radius: 10rpx;
+	}
+	.button-bottom{
+		position: fixed;
+		width: 100%;
+		bottom: 0;
+		color: #F5F5F5;
+		background-color: #1E90FF;
+		border-radius: 0rpx;
 	}
 	.button-bottom{
 		position: fixed;

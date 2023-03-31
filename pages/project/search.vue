@@ -42,11 +42,15 @@
 			</view>
 		</uni-collapse-item>
 	</uni-collapse> -->
-	
+	<!-- <view>
+		<checkItemDetail></checkItemDetail>
+	</view> -->
 </template>
 
 <script>
+	// import checkItemDetail from '/common/checkItemDetail.vue'
 	export default {
+		
 		data() {
 			return {
 				flag:false,
@@ -128,12 +132,14 @@
 			};
 
 		},
+		// components:{
+		// 	checkItemDetail
+		// },
 		onLoad(value) {
 			console.log(value.username)
-			this.getSearch(value.username)
-			// if(!value){
-			// 	this.getSearch(value.username)
-			// }
+			if(value.username){
+				this.getSearch(value.username)
+			}
 		},
 		computed: {
 			filterList() {
