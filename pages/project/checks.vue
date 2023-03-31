@@ -11,52 +11,62 @@
 				</button>
 			</view>
 		</view>
-		<view v-for="(item, index) in newList" :key="index" style="text-align: center" @click="heightChange">
-			<uni-collapse style="margin-top: 30rpx;" ref="collapse" accordion @change="heightChange">
-				<uni-collapse-item title-border="none" :border="false" :open="true">
-					<template v-slot:title>
-						<uni-list>
-							<view style="display: flex;">
-								<uni-list-item title='' :show-extra-icon="true" style="display: flex;width: 1%;"  @click="heightChange">
-								</uni-list-item>
-								<view class="titleStyle">▼{{item.projectName}}</view>
-							</view>
-						</uni-list>
-					</template>
-					<view>
-						<view class="content" v-for="(it, id) in item.data" :key="id" style="text-align: center" @click="heightChange">
-							<!-- <view v-for="(t,d) in it" :key="d">
-								{{t}}
-							</view> -->
-							<!-- <text class="text">{{ it.description }}</text> -->
-							<uni-collapse ref="collapsetwo" accordion @change="heightChange">
-								<uni-collapse-item  title-border="none" :border="false" :open="false">
-									<template v-slot:title>
-										<uni-list>
-											<view style="display: flex;" @click="heightChange">
-												<uni-list-item title='' :show-extra-icon="true" style="display: flex;width: 1%;"  @click="heightChange">
-												</uni-list-item>
-												<view style="display: flex;width: 80%;text-align: left;background-color: #F5F5F5;">{{it.description}}</view>
-												<view class="deleteStyle">删除</view>
-											</view>
-										</uni-list>
-									</template>
-									<view style="display: flex;flex-direction: column;" @click="heightChange">
-										<text class="text">{{ it.description }}</text>
-										<text class="text">{{ it.detail }}</text>
-										<text class="text">{{ it.rectify }}</text>
-										<text class="text">{{ it.severity }}</text>
+		<view style="margin-bottom: 150rpx;">
+			<view v-for="(item, index) in newList" :key="index">
+				<view class="titleStyle" @click="changeBig(index)" style="margin-top: 30rpx;">▼{{item.projectName}}</view>
+				<view v-if="newList[index].bigisOpen">
+					<view v-for="(it, id) in item.data" :key="id">
+						<view style="display: flex;flex-direction: row;">
+							<view :class="newList[index].data[id].isOpen===false?'closeStyle':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">{{it.description}}</view>
+							<text v-if="newList[index].data[id].isOpen" class="deleteStyle" style="color: blue;background-color: #e3e3e3;">
+								<text style="text-align: center;">
+									删除
+								</text>
+							</text>
+						</view>
+						
+						<view v-if="newList[index].data[id].isOpen">
+							<view style="display: flex;flex-direction: column;border-bottom: 1rpx solid darkgray;">
+								<view style="height: 20rpx;text-align: center;border: 1rpx solid darkgray;font-size: 20rpx;padding-top: 0rpx;">
+									<text>···</text>
+								</view>
+								<view class="text">
+									<text style="margin-bottom: 20rpx;">问题描述</text>
+									<text style="font-size: 33rpx;">{{ it.description }}</text>
+								</view>
+								<view class="text" style="flex-direction: row;">
+									<text style="width: 95%;">查看规范</text>
+									<text style="display: flex;text-align: right;">></text>
+								</view>
+								<view class="text" style="flex-direction: row;">
+									<text style="color: red;">*</text>
+									<text style="width: 50%;">严重程度</text>
+									<text style="width: 40%;text-align: right">{{ it.severity }}</text>
+									<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
+								</view>
+								<view class="text">
+									<text style="margin-bottom: 20rpx;">详情描述</text>
+									<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="it.detail" placeholder="详情描述"></textarea>
+									<image class="detailPic" mode="scaleToFill" src="/static/logo.png"></image>
+								</view>
+								<view class="text">
+									<view style="flex-direction: row; margin-bottom: 20rpx;">
+										<text style="color: red;">*</text>
+										<text style="margin-bottom: 20rpx;">整改要求</text>
 									</view>
-									
-								</uni-collapse-item>
-								
-							</uni-collapse>
+									<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="it.rectify" placeholder="详情描述"></textarea>
+								</view>
+								<view style="height: 60rpx;text-align: center;" @click="changeSmall(index,id)">
+									^
+								</view>
+							</view>
 						</view>
 					</view>
-					
-				</uni-collapse-item>
-			</uni-collapse>
+				</view>
+			</view>
 		</view>
+			
+
 		
 	</view>
 	
@@ -131,13 +141,13 @@
 			this.changeData()
 		},
 		methods: {
-			heightChange(){
-				this.$nextTick(() => {
-					setTimeout(()=>{
-						this.$refs.collapse.resize();
-						this.$refs.collapsetwo.resize();
-					},500)
-				});
+			changeBig(e){
+				 this.newList[e].bigisOpen = !this.newList[e].bigisOpen
+				 this.$forceUpdate()
+			},
+			changeSmall(e,n){
+				this.newList[e].data[n].isOpen = !this.newList[e].data[n].isOpen
+				this.$forceUpdate()
 			},
 			sequ(id) {
 				this.selectPoint = this.typeList[id]
@@ -147,6 +157,9 @@
 				console.log(this.problemList.length)
 			},
 			changeData() {
+				for (var j = 0; j < this.problemList.length; j++){
+					this.problemList[j].isOpen = false
+				}
 				var map = {}
 				var nList = []
 				for (var i = 0; i < this.problemList.length; i++) {
@@ -154,7 +167,8 @@
 				    if (!map[item.projectName]) {
 						nList.push({
 							projectName: item.projectName,
-							data: [item]
+							data: [item],
+							bigisOpen: true,
 						})
 						map[item.projectName] = item
 				    } else {
@@ -179,6 +193,12 @@
 		margin-left: 20rpx;
 		height: 50rpx;
 		width: 50rpx;
+		display: flex;
+	}
+	.detailPic{
+		margin-top: 25rpx;
+		height: 100rpx;
+		width: 100rpx;
 		display: flex;
 	}
 	.selectStyle{
@@ -239,15 +259,6 @@
 		display: flex;
 		border: 0.5rpx solid #DCDCDC;
 	}
-	.deleteStyle{
-		display: flex;
-		width: 20%;
-		text-align: center;
-		justify-content: center;
-		align-items: center;
-		color: #1E90FF;
-		background-color: #F5F5F5;
-	}
 	.titleStyle{
 		width: 80%;
 		padding-top: 10rpx;
@@ -257,15 +268,66 @@
 		font-size: 40rpx;
 	}
 	.content{
+		display: flex;
 		flex-direction: column;
-		margin-top: 10rpx;
+		margin-top: 30rpx;
 		margin-left: 30rpx;
 		margin-right: 30rpx;
 		padding-top: 10rpx;
 		padding-bottom: 10rpx;
 		padding-left: 30rpx;
 		font-size: 35rpx;
-		background-color: #F5F5F5;
+	}
+	.closeStyle{
+		display: flex;
+		width: 100%;
+		margin-top: 30rpx;
+		margin-left: 30rpx;
+		margin-right: 30rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
+	}
+	.openStyle{
+		display: flex;
+		width: 80%;
+		margin-top: 30rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
+	}
+	.deleteStyle{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		width: 20%;
+		margin-top: 30rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		font-size: 35rpx;
+	}
+	.text{
+		display: flex;
+		flex-direction: column;
+		margin-left: 30rpx;
+		margin-right: 30rpx;
+		padding-top: 20rpx;
+		padding-bottom: 20rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
+		border-top: 1rpx solid darkgray;
+	}
+	.detailStyle{
+		display: flex;
+		padding-top: 10rpx;
+		position: relative;
+		width: 90%;
+		height: 300rpx;
+		border: 1rpx solid darkgray;
+		border-radius: 10rpx;
 	}
 	.button-bottom{
 		position: fixed;
