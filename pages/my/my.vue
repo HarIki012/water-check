@@ -1,23 +1,30 @@
 <template>
-	<view>
+	<view class="backgroundStyle">
 		<!-- 我的界面展示 -->
 		<view class="name">
+			<image class="logoStyle" src="../../static/logo.png"></image>
 			<view class="leftStyle">姓名</view>
 			<view class="rightStyle">{{adminname}}</view>
 		</view>
 		<view class="name">
+			<image class="logoStyle" src="../../static/logo.png"></image>
 			<view class="leftStyle">手机号</view>
 			<view class="rightStyle">{{phonenumber}}</view>
 		</view>
+		<view class="gapStyle"></view>
 		<view class="name" @tap="openPop('top')">
+			<image class="logoStyle" src="../../static/logo.png"></image>
 			<view class="leftStyle">修改密码</view>
 			<view class="rightStyle">></view>
 		</view>
 		<view class="name1" @click="redirectTo()">
+			<image class="logoStyle" src="../../static/logo.png"></image>
 			<view class="leftStyle">请假报备</view>
 			<view class="rightStyle" >></view>
 		</view>
-		<view class="quit" @click="redirectToLogin()">退出登录</view>
+		<view class="quit" @click="redirectToLogin()">
+			退出登录
+		</view>
 		
 		<!-- 修改密码弹窗 -->
 		<uni-popup ref="popup">
@@ -166,14 +173,27 @@
 </script>
 
 <style>
+	.backgroundStyle{
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(to bottom, #f2f5f8, #f0f3f5);
+	}
+	.logoStyle{
+		margin: auto;
+		margin-left: 20rpx;
+		height: 50rpx;
+		width: 50rpx;
+		display: flex;
+	}
 	.quit{
-		text-align: center;
-		margin-top: 65rpx;
+		height: 110rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin-top: 30rpx;
 		font-size: 35rpx;
-		margin-bottom: 20rpx;
-		padding: 20rpx;
-		border-top: 1rpx solid gray;
-		border-bottom: 1rpx solid gray;
+		background-color: white;
 	}
 	.titleStyle{
 		text-align: center;
@@ -183,31 +203,36 @@
 	}
 	.name{
 		width: 100%;
-		height: 80rpx;
+		height: 110rpx;
 		display: flex;
-		border-top: 1upx solid gray;
+		background-color: white;
+		border-top: 1upx solid #DCDCDC;
+	}
+	.gapStyle{
+		height: 30rpx;
 	}
 	.name1{
 		width: 100%;
-		height: 80rpx;
+		height: 110rpx;
 		flex-flow: row;
 		display: flex;
-		border-top: 1upx solid gray;
-		border-bottom: 1upx solid gray;
+		background-color: white;
+		border-top: 1upx solid #DCDCDC;
+		border-bottom: 1upx solid #DCDCDC;
 	}
 	.leftStyle{
 		display: flex;
 		width: 50%;
 		font-size: 35rpx;
 		margin: auto;
-		margin-left: 10rpx;
+		margin-left: 20rpx;
 	}
 	.rightStyle{
 		text-align: right;
 		width: 50%;
 		font-size: 35rpx;
 		margin: auto;
-		margin-right: 10rpx;
+		margin-right: 20rpx;
 		text-align: right;
 	}
 	.pop{
