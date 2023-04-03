@@ -2,8 +2,8 @@
 	<view class="totalSearch" style="position: sticky;top: 5%;">
 		<form class="form" @submit="search">
 		<view class="checkSearch">
-			<image class="logo" mode="scaleToFill" src="/static/logo.png"></image>
-			<input class="selectStyle"  style="padding-left: 20rpx;" type="text" placeholder="问题检索" confirm-type="search" @confirm="search">
+			<image class="logo iconfont icon icon-chazhao" ></image>
+			<input class="selectStyle "  style="padding-left: 20rpx;" type="text" placeholder="问题检索" confirm-type="search" @confirm="search">
 		</view>
 		</form>
 		<view class="typeStyle">
@@ -15,7 +15,7 @@
 		</view>
 		<view style="margin-bottom: 150rpx;">
 			<view v-for="(item, index) in newList" :key="index">
-				<view class="titleStyle" @click="changeBig(index)" style="margin-top: 30rpx;">▼{{item.projectName}}</view>
+				<view :class="newList[index].bigisOpen ? 'titleStyle iconfont icon icon-xiangxia1' : 'titleStyle iconfont icon icon-xiangyou'" @click="changeBig(index)" style="margin-top: 30rpx;">{{item.projectName}}</view>
 				<view v-if="newList[index].bigisOpen">
 					<view v-for="(it, id) in item.data" :key="id">
 						<view style="display: flex;flex-direction: row;">
@@ -49,7 +49,9 @@
 								<view class="text">
 									<text style="margin-bottom: 20rpx;">详情描述</text>
 									<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="it.detail" placeholder="详情描述"></textarea>
-									<image class="detailPic" mode="scaleToFill" src="/static/logo.png"></image>
+									<text class="detailToPicture iconfont icon icon-paizhao"></text>
+									<text class="detailToVideo iconfont icon icon-shexiangtou"></text>
+									<image class="detailPic " mode="scaleToFill" src="/static/logo.png"></image>
 								</view>
 								<view class="text">
 									<view style="flex-direction: row; margin-bottom: 20rpx;">
@@ -155,6 +157,7 @@
 			changeBig(e){
 				 this.newList[e].bigisOpen = !this.newList[e].bigisOpen
 				 this.$forceUpdate()
+				 this.active = !this.active
 			},
 			changeSmall(e,n){
 				this.newList[e].data[n].isOpen = !this.newList[e].data[n].isOpen
@@ -201,17 +204,33 @@
 
 
 <style lang="scss">
+	.detailToPicture{
+		font-size: 50rpx;
+		position: relative;
+		top: -65rpx;
+		left: 25rpx;
+	}
+	.detailToVideo{
+		font-size: 60rpx;
+		position: relative;
+		top: -120rpx;
+		left: 105rpx;
+		color: #707070;
+	}
 	.logo {
-			margin-left: 20rpx;
-			height: 50rpx;
-			width: 50rpx;
-			display: flex;
-		}
+		margin-left: 20rpx;
+		height: 40rpx;
+		width: 50rpx;
+		display: flex;
+		font-size: 45rpx;
+	}
 	.detailPic{
-		margin-top: 25rpx;
+		position: relative;
+		// margin-top: 25rpx;
 		height: 100rpx;
 		width: 100rpx;
 		display: flex;
+		top: -50rpx;
 	}
 	.selectStyle{
 		width: 100%;
