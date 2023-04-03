@@ -1,81 +1,72 @@
 <template>
-	<!-- <view class="titleStyle">
-		我的
-	</view> -->
-	<view class="name">
-		<view class="nameStyle1">姓名</view>
-		<view style="width: 50%;margin: auto;margin-right: 10rpx;">
-			<view class="nameStyle">{{adminname}}</view>
+	<view>
+		<view class="name">
+			<view class="leftStyle">姓名</view>
+			<view class="rightStyle">{{adminname}}</view>
 		</view>
-	</view>
-	<view class="name">
-		<view class="nameStyle1">手机号</view>
-		<view style="width: 50%;margin: auto;margin-right: 10rpx;">
-			<view class="nameStyle">{{phonenumber}}</view>
+		<view class="name">
+			<view class="leftStyle">手机号</view>
+			<view class="rightStyle">{{phonenumber}}</view>
 		</view>
-	</view>
-	<view class="name" @tap="toggle('top')">
-		<view class="nameStyle1">修改密码</view>
-		<view style="width: 50%;margin: auto;margin-right: 10rpx;">
-			<view class="nameStyle">></view>
+		<view class="name" @tap="toggle('top')">
+			<view class="leftStyle">修改密码</view>
+			<view class="rightStyle">></view>
 		</view>
-	</view>
-	<view class="name1" @click="redirectTo()">
-		<view class="nameStyle1">请假报备</view>
-		<view style="width: 50%;margin: auto;margin-right: 10rpx;">
-			<view class="nameStyle" >></view>
+		<view class="name1" @click="redirectTo()">
+			<view class="leftStyle">请假报备</view>
+			<view class="rightStyle" >></view>
 		</view>
-	</view>
-	<view class="quit" @click="redirectToLogin()">退出登录</view>
-	<!-- 修改密码弹窗 -->
-	<uni-popup ref="popup">
-		<view class="pop">
-			<view class="popup-use">
-				<text style="color: red;">*</text>
-				旧密码
-			</view>
-			<view class="popup-use1">
-				<input class="oldStyle" type="password" v-model="oldPassword" confirm-type="done" @confirm="oldInput">
-			</view>
-			<view class="popup-use1">
-				<view class="error" v-if="errorTips1===1">
-				    <text class="error-text">输入的旧密码错误！</text>
+		<view class="quit" @click="redirectToLogin()">退出登录</view>
+		<!-- 修改密码弹窗 -->
+		<uni-popup ref="popup">
+			<view class="pop">
+				<view class="popup-use">
+					<text style="color: red;">*</text>
+					旧密码
 				</view>
-			</view>
-			<view class="popup-use1">
-				<text style="color: red;">*</text>
-				新密码
-			</view>
-			<view class="popup-use1">
-				<input class="oldStyle" type="password" v-model="newPassword" confirm-type="done" @confirm="newInput">
-			</view>
-			<view class="popup-use1" v-if="errorTips2===1">
-				<view class="error">
-				    <text class="error-text">输入的新密码和旧密码一致！</text>
+				<view class="popup-use1">
+					<input class="oldStyle" type="password" v-model="oldPassword" confirm-type="done" @confirm="oldInput">
 				</view>
-			</view>
-			<view class="popup-use1" v-else-if="errorTips2===2">
-				<view class="error">
-				    <text class="error-text">密码至少6位！</text>
+				<view class="popup-use1">
+					<view class="error" v-if="errorTips1===1">
+						<text class="error-text">输入的旧密码错误！</text>
+					</view>
 				</view>
-			</view>
-			<view class="popup-use">
-				<text style="color: red;">*</text>
-				确认密码
-			</view>
-			<view class="popup-use1">
-				<input class="oldStyle" type="password" v-model="isNew" confirm-type="done" @confirm="isInput">
-			</view>
-			<view class="popup-use1">
-				<view class="error" v-if="errorTips3==1">
-				    <text class="error-text">输入的新密码和确认密码不一致！</text>
+				<view class="popup-use1">
+					<text style="color: red;">*</text>
+					新密码
 				</view>
+				<view class="popup-use1">
+					<input class="oldStyle" type="password" v-model="newPassword" confirm-type="done" @confirm="newInput">
+				</view>
+				<view class="popup-use1" v-if="errorTips2===1">
+					<view class="error">
+						<text class="error-text">输入的新密码和旧密码一致！</text>
+					</view>
+				</view>
+				<view class="popup-use1" v-else-if="errorTips2===2">
+					<view class="error">
+						<text class="error-text">密码至少6位！</text>
+					</view>
+				</view>
+				<view class="popup-use">
+					<text style="color: red;">*</text>
+					确认密码
+				</view>
+				<view class="popup-use1">
+					<input class="oldStyle" type="password" v-model="isNew" confirm-type="done" @confirm="isInput">
+				</view>
+				<view class="popup-use1">
+					<view class="error" v-if="errorTips3==1">
+						<text class="error-text">输入的新密码和确认密码不一致！</text>
+					</view>
+				</view>
+				<button class="buttonStyle" type="primary" @tap="toggle1('top')">
+					确定
+				</button>
 			</view>
-			<button class="buttonStyle" type="primary" @tap="toggle1('top')">
-				确定
-			</button>
-		</view>
-	</uni-popup>
+		</uni-popup>
+	</view>
 </template>
 
 <script>
@@ -95,8 +86,7 @@
 			}
 		},
 		methods: {
-			toggle() {
-				this.$refs['popup'].open();
+			initPop() {
 				this.oldPassword = this.blankSpace
 				this.newPassword = this.blankSpace
 				this.isNew = this.blankSpace
@@ -104,15 +94,16 @@
 				this.errorTips2 = this.blankSpace
 				this.errorTips3 = this.blankSpace
 			},
+			toggle() {
+				this.$refs['popup'].open();
+				this.initPop()
+			},
 			toggle1() {
 				this.oldInput()
 				this.newInput()
 				this.isInput()
 				if (this.errorTips1 === 0 && this.errorTips2 === 0 && this.errorTips3 === 0){
-					this.realPassword = this.newPassword
-					this.oldPassword = this.blankSpace
-					this.newPassword = this.blankSpace
-					this.isNew = this.blankSpace
+					this.initPop()
 					this.$refs['popup'].close();
 					uni.showToast({
 						title: '密码修改成功',
@@ -185,7 +176,6 @@
 	.name{
 		width: 100%;
 		height: 80rpx;
-		flex-flow: row;
 		display: flex;
 		border-top: 1upx solid gray;
 	}
@@ -197,17 +187,20 @@
 		border-top: 1upx solid gray;
 		border-bottom: 1upx solid gray;
 	}
-	.nameStyle1{
+	.leftStyle{
+		display: flex;
 		width: 50%;
 		font-size: 35rpx;
 		margin: auto;
 		margin-left: 10rpx;
 	}
-	.nameStyle{
+	.rightStyle{
 		text-align: right;
+		width: 50%;
 		font-size: 35rpx;
 		margin: auto;
 		margin-right: 10rpx;
+		text-align: right;
 	}
 	.pop{
 		width: 100%;
