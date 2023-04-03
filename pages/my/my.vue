@@ -1,5 +1,6 @@
 <template>
 	<view>
+		<!-- 我的界面展示 -->
 		<view class="name">
 			<view class="leftStyle">姓名</view>
 			<view class="rightStyle">{{adminname}}</view>
@@ -8,7 +9,7 @@
 			<view class="leftStyle">手机号</view>
 			<view class="rightStyle">{{phonenumber}}</view>
 		</view>
-		<view class="name" @tap="toggle('top')">
+		<view class="name" @tap="openPop('top')">
 			<view class="leftStyle">修改密码</view>
 			<view class="rightStyle">></view>
 		</view>
@@ -17,6 +18,7 @@
 			<view class="rightStyle" >></view>
 		</view>
 		<view class="quit" @click="redirectToLogin()">退出登录</view>
+		
 		<!-- 修改密码弹窗 -->
 		<uni-popup ref="popup">
 			<view class="pop">
@@ -61,7 +63,7 @@
 						<text class="error-text">输入的新密码和确认密码不一致！</text>
 					</view>
 				</view>
-				<button class="buttonStyle" type="primary" @tap="toggle1('top')">
+				<button class="buttonStyle" type="primary" @tap="closePop('top')">
 					确定
 				</button>
 			</view>
@@ -86,6 +88,7 @@
 			}
 		},
 		methods: {
+			// 初始化修改密码弹窗
 			initPop() {
 				this.oldPassword = this.blankSpace
 				this.newPassword = this.blankSpace
@@ -94,11 +97,13 @@
 				this.errorTips2 = this.blankSpace
 				this.errorTips3 = this.blankSpace
 			},
-			toggle() {
+			// 打开弹窗
+			openPop() {
 				this.$refs['popup'].open();
 				this.initPop()
 			},
-			toggle1() {
+			// 关闭弹窗
+			closePop() {
 				this.oldInput()
 				this.newInput()
 				this.isInput()
@@ -111,6 +116,7 @@
 					});
 				}
 			},
+			// 验证旧密码
 			oldInput() {
 				if (this.oldPassword !== this.realPassword){
 					this.errorTips1 = 1
@@ -118,6 +124,7 @@
 					this.errorTips1 = 0
 				}
 			},
+			// 验证新密码规范
 			newInput(){
 				if(this.newPassword){
 					if (this.newPassword.length < 6){
@@ -134,6 +141,7 @@
 				}
 				
 			},
+			// 验证 确认密码
 			isInput(){
 				if (this.isNew === this.newPassword){
 					this.errorTips3 = 0
