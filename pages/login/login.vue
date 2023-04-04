@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view style="text-align: center;margin-top: 300rpx;margin-bottom: 100rpx;font-weight: 700;font-size: 40rpx;">水务工程巡查</view>
+		<view style="text-align: center;margin-top: 300rpx;margin-bottom: 100rpx;font-weight: 700;font-size: 40rpx;">青山区水务工程巡查系统</view>
 		<form class="form" @submit="formSubmit">
 			<view class="tel-wrap">
 				<text class="iconfont icon icon-icon-user"></text>
@@ -59,50 +59,6 @@
 	}
 </script>
 
-<style lang="scss">
-	page, .content{
-		width: 100%;
-		height: 100%;
-	}
-	.content {
-		//background: url("../../static/imgs/login/login-background1.png") no-repeat;
-		background-size: cover;
-		
-		.form{
-			display: block;
-			padding-top: 40upx;
-		}
-		.tel-wrap, .psd-wrap {
-			width: 80%;
-			margin: 0 auto;
-			position: relative;
-			height: 100upx;
-			border: 1upx solid #eee;
-			.iconfont {
-				position: absolute;
-				left: 20upx;
-				top: 25upx;
-				font-size: 48upx;
-			}
-			input{
-				padding-left: 100upx;
-				padding-top: 28upx;
-				font-size: 36upx;
-			}
-		}
-		.tel-wrap{
-			margin-bottom: 20upx;
-		}
-		.psd-wrap{
-			margin-bottom: 80upx;
-		}
-		.login-btn{
-			width: 80%;
-			margin: 0 auto 40upx;
-			background: #0055ff;
-			border-radius: 80upx;
-			color: #fff;
-			font-size: 32upx;
-		}
-	}
+<style lang="scss" scoped>
+@import 'login.scss';
 </style>
