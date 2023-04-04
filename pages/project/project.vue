@@ -36,6 +36,10 @@
 		<!-- 新建项目弹窗 -->
 		<uni-popup ref="popup">
 			<view class="pop">
+				<view class="newStyle">
+					<text style="width: 100%;text-align: center;padding-left: 30rpx;">新建项目</text>
+					<view class="iconfont icon icon-shanchu2" style="margin-right: 10rpx;" @click="closeButton"></view>
+				</view>
 				<view class="popup-use">
 					<text style="color: red;">*</text>
 					项目名称
@@ -172,6 +176,9 @@ import { warn } from "vue"
 					this.addressData = this.blankSpace
 					this.$refs['popup'].close()
 				}
+			},
+			closeButton(){
+				this.$refs['popup'].close()
 			},
 			oldInput() {
 				if (this.newProjectname){
@@ -381,6 +388,15 @@ import { warn } from "vue"
 		flex-direction: row;
 		height: 80%;
 		font-size: 35rpx;
+	}
+	.newStyle{
+		width: 100%;
+		height: 100rpx;
+		font-size: 35rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: aqua;
 	}
 	.statusStyle{
 		padding-left: 20rpx;
