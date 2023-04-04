@@ -1,78 +1,89 @@
 <template>
-	<view class="projectSearch" style="position: sticky;top: 0;">
-		<view class="projectStyle">
-			<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
-				<label style="text-align: center;height: 100%;">{{ projectselectName }}</label>
-			</picker>
+	<view class="backgroundStyle">
+		<view class="projectSearch">
+			<view class="projectStyle">
+				<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
+					<label style="text-align: center;height: 100%;">{{ projectselectName }}</label>
+					<text class="show-or-noshow iconfont icon icon-xiangxia"></text>
+				</picker>
+			</view>
+			<view class="selectStyle">
+				<image class="logo iconfont icon icon-chazhao" ></image>
+				<input type="text" v-model="projectnameSearch" placeholder="项目名称" confirm-type="search">
+			</view>
+			<text class="searchButton">搜索</text>
 		</view>
-		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="projectnameSearch" placeholder="项目名称" confirm-type="search">
+		<view style="width: 100%;" @click="navigatortoinfo()">
+			<view class="tableStyle" v-for="(item,index) in filterList">
+				<view class="tableContent">
+					<view class="logoItem iconfont icon icon-chazhao"></view>
+					<view style="width: 80%;">
+						{{item.name}}
+					</view>
+				</view>
+				
+				<view class="statusStyle">
+					<text style="color: darkgray;">状态：</text>
+					<text v-if="item.status === '待检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+					<text v-if="item.status === '检查中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+					<text v-if="item.status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+					<text v-if="item.status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+				</view>
+			</view>
+		</view>
+		
+		
+		<!-- 新建项目弹窗 -->
+		<uni-popup ref="popup">
+			<view class="pop">
+				<view class="popup-use">
+					<text style="color: red;">*</text>
+					项目名称
+				</view>
+				<view class="popup-use1">
+					<input class="oldStyle" style="padding-left: 20rpx;" type="text" v-model="newProjectname" confirm-type="done" @confirm="oldInput">
+				</view>
+				<view class="popup-use1">
+					<view class="error" v-if="errorTips1===1">
+						<text class="error-text">输入的项目名称不能为空！</text>
+					</view>
+				</view>
+				
+				<view class="popup-use1">
+					<text style="color: red;">*</text>
+					所属巡检活动
+				</view>
+				<view class="popup-use1">
+					<view class="oldStyle">
+						<picker class="centerStyle" @change="dateSelect" :range="dateChoose">
+							<label >{{ dateName }}</label>
+						</picker>
+					</view>
+				</view>
+				<view class="popup-use1">
+					<view class="error" v-if="errorTips2===1">
+						<text class="error-text">请选择所属巡检活动！</text>
+					</view>
+				</view>
+				
+				<view class="popup-use">
+					<view style="width: 80%;text-align: left;">
+						经纬度
+					</view>
+					<view style="width: 20%;text-align: right;color: blue;" @tap="addressGet">
+						获取
+					</view>
+				</view>
+				<view class="popup-use1">
+					<input class="oldStyle" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done">
+				</view>
+		
+				<button class="buttonStyle" type="primary" @tap="toggle1('top')">
+					确定
+				</button>
+			</view>
+		</uni-popup>
 	</view>
-	<view style="width: 100%;" @click="navigatortoinfo()">
-		<view class="tableStyle"  v-for="(item,index) in filterList">
-			<view class="tableContent">
-				{{item.name}}
-			</view>
-			<view class="statusStyle">
-				状态：
-				<text v-if="item.status === '待检查'" style="color: #EEEE00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
-				<text v-if="item.status === '检查中'" style="color: #00BFFF;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
-				<text v-if="item.status === '已检查'" style="color: #00CD00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
-				<text v-if="item.status === '已中止'" style="color: #EE2C2C;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
-			</view>
-		</view>
-	</view>
-	
-	
-	<!-- 新建项目弹窗 -->
-	<uni-popup ref="popup">
-		<view class="pop">
-			<view class="popup-use">
-				<text style="color: red;">*</text>
-				项目名称
-			</view>
-			<view class="popup-use1">
-				<input class="oldStyle" style="padding-left: 20rpx;" type="text" v-model="newProjectname" confirm-type="done" @confirm="oldInput">
-			</view>
-			<view class="popup-use1">
-				<view class="error" v-if="errorTips1===1">
-				    <text class="error-text">输入的项目名称不能为空！</text>
-				</view>
-			</view>
-			
-			<view class="popup-use1">
-				<text style="color: red;">*</text>
-				所属巡检活动
-			</view>
-			<view class="popup-use1">
-				<view class="oldStyle">
-					<picker class="centerStyle" @change="dateSelect" :range="dateChoose">
-						<label >{{ dateName }}</label>
-					</picker>
-				</view>
-			</view>
-			<view class="popup-use1">
-				<view class="error" v-if="errorTips2===1">
-				    <text class="error-text">请选择所属巡检活动！</text>
-				</view>
-			</view>
-			
-			<view class="popup-use">
-				<view style="width: 80%;text-align: left;">
-					经纬度
-				</view>
-				<view style="width: 20%;text-align: right;color: blue;" @tap="addressGet">
-					获取
-				</view>
-			</view>
-			<view class="popup-use1">
-				<input class="oldStyle" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done">
-			</view>
-	
-			<button class="buttonStyle" type="primary" @tap="toggle1('top')">
-				确定
-			</button>
-		</view>
-	</uni-popup>
 </template>
 
 <script>
@@ -113,10 +124,10 @@ import { warn } from "vue"
 				errorTips3: '',
 				blankSpace: '',
 				dateChoose: ['2023年第一次检查','2023年第二次检查','2023年第三次检查','2023年第四次检查','2023年第五次检查','2023年第六次检查'],
-				projectChoose: ['全部', '待检查', '检查中', '已检查', '已中止'],
+				projectChoose: ['区域选择', '待检查', '检查中', '已检查', '已中止'],
 				projectselectIndex: 0,
 				dateIndex: 0,
-				projectselectName: '全部',
+				projectselectName: '区域选择',
 				projectnameSearch: '',
 				dateName:'---请选择---',
 				firstName:'---请选择---',
@@ -133,7 +144,7 @@ import { warn } from "vue"
 					arr = this.projectTable.filter(item => item.name.includes(this.projectnameSearch))
 					//则在zhiweilist里过滤掉filterText
 				}
-				if (this.projectselectName !== '全部') {
+				if (this.projectselectName !== '区域选择') {
 					arr = arr.filter(item => item.status.includes(this.projectselectName))
 				}
 				return arr
@@ -218,6 +229,11 @@ import { warn } from "vue"
 </script>
 
 <style lang="scss">
+	.backgroundStyle{
+		width: 100%;
+		height: 100%;
+		background-color: #f2f5f8;
+	}
 	.titleStyle{
 		text-align: center;
 		margin-top: 30rpx;
@@ -225,6 +241,14 @@ import { warn } from "vue"
 		margin-bottom: 20rpx;
 		border-bottom: 1rpx solid lightslategray;
 		padding-bottom: 20rpx;
+	}
+	.logo {
+		margin-left: 10rpx;
+		margin-right: 10rpx;
+		height: 50rpx;
+		width: 50rpx;
+		display: flex;
+		font-size: 45rpx;
 	}
 	.pop{
 		width: 100%;
@@ -274,16 +298,17 @@ import { warn } from "vue"
 	.projectSearch{
 		padding-top: 30rpx;
 		width: 100%;
-		height: 120rpx;
+		height: 80rpx;
 		display: flex;
 		justify-content: left;
 		letter-spacing: 2rpx;
-		background-color: white;
+		background-color: #f2f5f8;
+		position: sticky;
+		top: 0;
 	}
 	.projectStyle{
 		margin-left: 3%;
 		border-radius: 5px;
-		border: 1rpx solid gray;
 		text-align: center;
 		align-items: center;
 		flex-direction: row;
@@ -301,11 +326,22 @@ import { warn } from "vue"
 		position: sticky;
 	}
 	.selectStyle{
-		border-radius: 5px;
-		border: 1rpx solid gray;
-		width: 64%;
+		border-radius: 15px;
+		width: 55%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		height: 70rpx;
 		position: sticky;
+		background-color: white;
+	}
+	.searchButton{
+		margin-left: 25rpx;
+		display: flex;
+		height: 70rpx;
+		justify-content: center;
+		align-items: center;
+		color: blue;
 	}
 	.buttonStyle{
 		width: 300rpx;
@@ -318,12 +354,23 @@ import { warn } from "vue"
 	}
 	.tableStyle{
 		width: 90%;
-		margin-top: 30rpx;
+		margin-top: 25rpx;
 		margin-left: 5%;
 		display: flex;
 		flex-direction: column;
-		height: 300rpx;
-		border: 1rpx solid 	#DCDCDC;
+		height: 250rpx;
+		background-color: white;
+	}
+	.logoItem{
+		width: 100rpx;
+		height: 100rpx;
+		font-size: 60rpx;
+		border-radius: 100rpx;
+		margin-right: 20rpx;
+		display: flex;
+		justify-content: center;
+		background-color: aliceblue;
+		align-items: center;
 	}
 	.tableContent{
 		padding-left: 20rpx;
@@ -331,8 +378,9 @@ import { warn } from "vue"
 		padding-right: 20rpx;
 		padding-bottom: 20rpx;
 		display: flex;
+		flex-direction: row;
 		height: 80%;
-		
+		font-size: 35rpx;
 	}
 	.statusStyle{
 		padding-left: 20rpx;
@@ -341,6 +389,7 @@ import { warn } from "vue"
 		padding-bottom: 20rpx;
 		height: 20%;
 		text-align: right;
+		font-family: '阿里巴巴普惠体 2.0 65 Medium';
 	}
 	/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 	@font-face {
