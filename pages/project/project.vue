@@ -3,7 +3,7 @@
 		<view class="projectSearch">
 			<view class="projectStyle">
 				<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
-					<label style="text-align: center;height: 100%;">{{ projectselectName }}</label>
+					<label>{{ projectselectName }}</label>
 					<text class="show-or-noshow iconfont icon icon-xiangxia"></text>
 				</picker>
 			</view>
@@ -78,7 +78,7 @@
 					<input class="oldStyle" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done">
 				</view>
 		
-				<button class="buttonStyle" type="primary" @tap="toggle1('top')">
+				<button class="buttonStyle" type="primary" @tap="closePop('top')">
 					确定
 				</button>
 			</view>
@@ -156,7 +156,7 @@ import { warn } from "vue"
 					url:'/pages/project/info'
 				})
 			},
-			toggle1() {
+			closePop() {
 				if (!this.newProjectname){
 					this.errorTips1 = 1
 				} else {
