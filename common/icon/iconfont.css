@@ -1,6 +1,6 @@
 @font-face {
   font-family: "iconfont"; /* Project id  */
-  src: url('iconfont.ttf?t=1680000386542') format('truetype');
+  src: url('iconfont.ttf?t=1680506820265') format('truetype');
 }
 
 .iconfont {
@@ -21,13 +21,14 @@
 
 .icon-shanchu2:before {
   content: "\f012a";
-  color: #434343;
 }
 
 .icon-xiangxia1:before {
   content: "\e771";
-  color: #919191;
-  padding: 8rpx;
+}
+
+.icon-jiahao:before {
+  content: "\e613";
 }
 
 .icon-icon-user:before {
@@ -56,8 +57,6 @@
 
 .icon-xiangyou:before {
   content: "\e626";
-  color: #919191;
-  padding: 8rpx;
 }
 
 .icon-24gf-ellipsis:before {
