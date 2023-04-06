@@ -3,7 +3,7 @@
 		<view class="projectSearch">
 			<view class="projectStyle">
 				<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
-					<label>{{ projectselectName }}</label>
+					<label style="color: #929293;">{{ projectselectName }}</label>
 					<text class="iconfont icon icon-xiangxia"></text>
 				</picker>
 			</view>
@@ -37,20 +37,20 @@
 		<uni-popup ref="popup">
 			<view class="pop">
 				<view class="newStyle">
-					<text style="width: 100%;text-align: center;padding-left: 30rpx;">新建项目</text>
-					<view class="iconfont icon icon-shanchu2" style="margin-right: 10rpx;" @click="closeButton"></view>
+					<text style="width: 100%;text-align: center;padding-left: 50rpx;">新建项目</text>
+					<view class="iconfont icon icon-shanchu2" style="margin-right: 30rpx;" @click="closeButton"></view>
 				</view>
 				<view class="popup-use">
+					<text style="color: #5547ae;">项目名称</text>
 					<text style="color: red;">*</text>
-					项目名称
 				</view>
 				<view class="popup-use1">
 					<input class="oldStyle" style="padding-left: 20rpx;" placeholder="请输入项目名称" type="text" v-model="newProjectname" confirm-type="done" @confirm="oldInput">
 				</view>
 				
-				<view class="popup-use1">
+				<view class="popup-use">
+					<text style="color: #5547ae;">所属巡检活动</text>
 					<text style="color: red;">*</text>
-					所属巡检活动
 				</view>
 				<view class="popup-use1">
 					<view class="project-time">
@@ -63,11 +63,11 @@
 					</view>
 				</view>
 				
-				<view class="popup-use1">
-					<view style="width: 70%;text-align: left;">
+				<view class="popup-use">
+					<view style="width: 70%;text-align: left;color: #5547ae;">
 						经纬度
 					</view>
-					<view style="width: 30%;text-align: right;color: blue;" @tap="addressGet">
+					<view style="width: 30%;text-align: right;color: #83ABC7;" @tap="addressGet">
 						<text class="iconfont icon icon-xiangxia"></text>
 						获取
 					</view>
@@ -156,7 +156,7 @@ import { warn } from "vue"
 		methods: {
 			navigatortoinfo(){
 				uni.navigateTo({
-					url:'/pages/project/info'
+					url:'/pages/project/info/info'
 				})
 			},
 			closePop() {
@@ -192,7 +192,7 @@ import { warn } from "vue"
 					success: function (res) {
 						console.log(res)
 						that.addressMessage = res;
-						that.addressData = '(' + res.latitude + ', ' + res.longitude + ')'
+						that.addressData = res.latitude + ', ' + res.longitude
 						console.log(that.addressData)
 						uni.showToast({
 							title: '地址获取成功',
