@@ -22,7 +22,7 @@
 		}
         ,
 		{
-            "path" : "pages/project/project",
+            "path" : "pages/project/list/project",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "项目列表",
