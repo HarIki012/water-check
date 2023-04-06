@@ -121,58 +121,6 @@
 	}
 </script>
 
-<style lang="scss">
-	.border{
-		height: 530rpx;
-		overflow: hidden;
-	}
-	.active{
-		height: auto;
-		overflow: visible;
-	}
-	.content{
-		margin-top: 35rpx;
-		margin-bottom: 10rpx;
-		flex-direction: row;
-		justify-content: flex-start;
-		display: flex;
-	}
-	.projectName{
-		display: flex;
-		justify-content: center;
-	}
-	.projectName-info{
-		word-wrap: break-word;
-		word-break: break-all;
-		white-space: pre-line;
-		display: flex;
-		align-items: center;
-		flex-direction: row;
-	}
-	.location{
-		display: flex;
-		justify-content: left;
-		-webkit-flex: 1;flex: 1;
-	}
-	.borderDown{
-		flex-flow: row;
-		justify-content: flex-start;
-		display: flex;
-
-	}
-	.contentDown{
-		width: 80%;
-	}
-	.status{
-		padding-top:85rpx ;
-	}
-	.check,.leader,.teaminfo,.end-time{
-		padding-left: 32rpx;
-		padding-top: 10rpx;
-	}
-	@font-face {
-	  font-family: "阿里巴巴普惠体 2.0 65 Medium";font-weight: 500;src: url("//at.alicdn.com/wf/webfont/R3pFSnXNf5DJ/ySEF0qX9msER.woff2") format("woff2"),
-	  url("//at.alicdn.com/wf/webfont/R3pFSnXNf5DJ/wYtU5udvc31K.woff") format("woff");
-	  font-display: swap;
-	}
+<style lang="scss" scoped>
+@import url('info.scss');
 </style>

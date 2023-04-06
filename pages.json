@@ -4,8 +4,9 @@
 		    "path" : "pages/login/login",
 		    "style" :                                                                                    
 		    {
-		        "navigationBarTitleText": "",
+		        "navigationBarTitleText": "登录",
 		        "enablePullDownRefresh": false,
+				
 				"mp-weixin": {
 					"scrollIndicator": "none"
 				}
@@ -41,7 +42,7 @@
             
         },
 		{
-		    "path" : "pages/my/my",
+		    "path" : "pages/my/my/my",
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "我的",
@@ -59,7 +60,7 @@
 		    
 		},
 		{
-		    "path" : "pages/my/offwork",
+		    "path" : "pages/my/offwork/offwork",
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "报备",
@@ -71,7 +72,7 @@
 		    
 		},
 		{
-		    "path" : "pages/project/info",
+		    "path" : "pages/project/info/info",
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "项目详情",
@@ -83,7 +84,7 @@
 		    
 		},
 		{
-		    "path" : "pages/project/checks",
+		    "path" : "pages/project/checks/checks",
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "检查内容",
@@ -104,7 +105,7 @@
 		    
 		}
         ,{
-            "path" : "pages/project/search",
+            "path" : "pages/project/search/search",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "问题检索",
@@ -113,7 +114,7 @@
             
         }
         ,{
-            "path" : "pages/project/detail",
+            "path" : "pages/project/detail/detail",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "条款说明",
@@ -163,7 +164,7 @@
 			},
 			{
 				"text": "我的",
-				"pagePath": "pages/my/my"
+				"pagePath": "pages/my/my/my"
 			}
 		]
 	},

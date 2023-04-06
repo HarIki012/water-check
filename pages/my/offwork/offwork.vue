@@ -28,8 +28,8 @@
 </template>
 
 <script>
-	var plugin = requirePlugin("WechatSI")
-	let manager = plugin.getRecordRecognitionManager()
+	// var plugin = requirePlugin("WechatSI")
+	// let manager = plugin.getRecordRecognitionManager()
 	export default {
 		
 		data() {
@@ -138,54 +138,6 @@
 		
 </script>
 
-<style>
-.reason{
-	width: 90%;
-	margin: 0 auto;
-	position: relative;
-	padding: 3%;
-	overflow: hidden;
-}
-.text-box {
-	position: relative;
-	padding-bottom: 125rpx;
-	padding-right: 75rpx;
-	border: 1upx solid #eee;
-}
-
-.currentWordNumber{
-  font-size: 28rpx;
-  color: gray;
-  position: absolute;
-  left: 500rpx;
-  top: 430rpx;
-}
-.begin,.end{
-	border: 1upx solid #eee;
-}
-.begin-word,.end-word{
-	position: relative;
-	top: 20rpx;
-	left: 45rpx;
-}
-.begin-input,.end-input{
-	position: relative;
-	left: 540rpx;
-	top: -26rpx;
-}
-.submit-btn{
-	width: 80%;
-	margin: 0 auto 40upx;
-	background: #0055ff;
-	border-radius: 80upx;
-	color: #fff;
-	font-size: 32upx;
-	top: 25rpx;
-}
-.iconfontmico{
-	font-size: 40rpx;
-	position: absolute;
-	left: 590rpx;
-	top: 390rpx;
-}
+<style lang="scss" scoped>
+@import url('offwork.scss');
 </style>

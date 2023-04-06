@@ -2,23 +2,23 @@
 	<view class="backgroundStyle">
 		<!-- 我的界面展示 -->
 		<view class="name">
-			<image class="logoStyle" src="../../static/logo.png"></image>
-			<view class="leftStyle">姓名</view>
+			<image class="logoStyle iconfont icon icon-yonghu" ></image>
+			<view class="leftStyle ">姓名</view>
 			<view class="rightStyle">{{adminname}}</view>
 		</view>
 		<view class="name">
-			<image class="logoStyle" src="../../static/logo.png"></image>
+			<image class="logoStyle iconfont icon icon-shouji"></image>
 			<view class="leftStyle">手机号</view>
 			<view class="rightStyle">{{phonenumber}}</view>
 		</view>
 		<view class="gapStyle"></view>
 		<view class="name" @tap="openPop('top')">
-			<image class="logoStyle" src="../../static/logo.png"></image>
+			<image class="logoStyle iconfont icon icon-xiugaimima" ></image>
 			<view class="leftStyle">修改密码</view>
 			<view class="rightStyle">></view>
 		</view>
 		<view class="name1" @click="redirectTo()">
-			<image class="logoStyle" src="../../static/logo.png"></image>
+			<image class="logoStyle iconfont icon icon-qingjiashenqing"></image>
 			<view class="leftStyle">请假报备</view>
 			<view class="rightStyle" >></view>
 		</view>
@@ -172,121 +172,6 @@
 	}
 </script>
 
-<style>
-	.backgroundStyle{
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		background: linear-gradient(to bottom, #f2f5f8, #f0f3f5);
-	}
-	.logoStyle{
-		margin: auto;
-		margin-left: 20rpx;
-		height: 50rpx;
-		width: 50rpx;
-		display: flex;
-	}
-	.quit{
-		height: 110rpx;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		margin-top: 30rpx;
-		font-size: 35rpx;
-		background-color: white;
-	}
-	.titleStyle{
-		text-align: center;
-		margin-top: 30rpx;
-		font-size: 40rpx;
-		margin-bottom: 20rpx;
-	}
-	.name{
-		width: 100%;
-		height: 110rpx;
-		display: flex;
-		background-color: white;
-		border-top: 1upx solid #DCDCDC;
-	}
-	.gapStyle{
-		height: 30rpx;
-	}
-	.name1{
-		width: 100%;
-		height: 110rpx;
-		flex-flow: row;
-		display: flex;
-		background-color: white;
-		border-top: 1upx solid #DCDCDC;
-		border-bottom: 1upx solid #DCDCDC;
-	}
-	.leftStyle{
-		display: flex;
-		width: 50%;
-		font-size: 35rpx;
-		margin: auto;
-		margin-left: 20rpx;
-	}
-	.rightStyle{
-		text-align: right;
-		width: 50%;
-		font-size: 35rpx;
-		margin: auto;
-		margin-right: 20rpx;
-		text-align: right;
-	}
-	.pop{
-		width: 100%;
-		background-color: white;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	.popup-use{
-		padding: 10rpx 30rpx;
-		padding-top: 30rpx;
-		width: 530rpx;
-		display: flex;
-		justify-content: left;
-		letter-spacing: 2rpx;
-	}
-	.popup-use1{
-		padding: 10rpx 30rpx;
-		padding-top: 10rpx;
-		width: 530rpx;
-		display: flex;
-		justify-content: left;
-		letter-spacing: 2rpx;
-	}
-	.error-icon{
-		font-size: 28rpx;
-		padding-left: 40rpx;
-		display: inline-block;
-		width: 2rpx;
-		height: 30rpx;
-		line-height: 30rpx;
-		border-radius: 20rpx;
-		background-color: #fe3535;
-		color: #FFFFFF;
-		margin-right: 20rpx
-	}
-	.error-text{
-		font-size: 28rpx;
-		padding-top: 10rpx;
-		color: red;
-	}
-	.oldStyle{
-		border: 1rpx solid gray;
-		width: 100%;
-		height: 70rpx;
-	}
-	.buttonStyle{
-		width: 300rpx;
-		height: 88rpx;
-		padding-top: 0rpx;
-		font-size: 35rpx;
-		text-align: center;
-		margin-top: 30rpx;
-		margin-bottom: 40rpx;
-	}
+<style lang="scss" scoped>
+@import url("my.scss");
 </style>

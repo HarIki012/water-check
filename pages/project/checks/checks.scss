@@ -1,0 +1,172 @@
+	.detailToPicture{
+		font-size: 50rpx;
+		position: relative;
+		top: -65rpx;
+		left: 25rpx;
+	}
+	.detailToVideo{
+		font-size: 60rpx;
+		position: relative;
+		top: -120rpx;
+		left: 105rpx;
+		color: #707070;
+	}
+	.logo {
+		margin-left: 20rpx;
+		height: 40rpx;
+		width: 50rpx;
+		display: flex;
+		font-size: 45rpx;
+	}
+	.detailPic{
+		position: relative;
+		height: 100rpx;
+		width: 100rpx;
+		display: flex;
+		top: -50rpx;
+	}
+	.selectStyle{
+		width: 100%;
+		height: 50rpx;
+		margin-left: 10rpx;
+		text-align: left;
+	}
+	.checkSearch{
+		display: flex;
+		margin-left: 5%;
+		margin-top: 30rpx;
+		border-radius: 5px;
+		border: 1rpx solid gray;
+		text-align: center;
+		align-items: center;
+		flex-direction: row;
+		margin-right: 1%;
+		width: 90%;
+		height: 90rpx;
+		position: sticky;
+		top: 0;
+	}
+	.totalSearch{
+		padding-top: 10rpx;
+		width: 100%;
+		justify-content: left;
+		letter-spacing: 2rpx;
+		background-color: white;
+	}
+	.typeStyle{
+		margin-top: 30rpx;
+		width: 100%;
+		padding-left: 0rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		
+	}
+	.chooseType{
+		width: 220rpx;
+		height: 85rpx;
+		background-color: #1E90FF;
+		color: white;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		border: 0.5rpx solid #DCDCDC;
+	}
+	.unChoose{
+		width: 220rpx;
+		height: 85rpx;
+		text-align: center;
+		justify-content: center;
+		align-items: center;
+		background-color: white;
+		display: flex;
+		border: 0.5rpx solid #DCDCDC;
+	}
+	.titleStyle{
+		width: 80%;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
+		text-align: left;
+		font-size: 40rpx;
+	}
+	.content{
+		display: flex;
+		flex-direction: column;
+		margin-top: 30rpx;
+		margin-left: 30rpx;
+		margin-right: 30rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
+	}
+	.closeStyle{
+		border-radius: 15rpx;
+		display: flex;
+		width: 100%;
+		margin-top: 30rpx;
+		margin-left: 30rpx;
+		margin-right: 30rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
+	}
+	.openStyle{
+		display: flex;
+		width: 80%;
+		margin-top: 30rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
+	}
+	.deleteStyle{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		width: 20%;
+		margin-top: 30rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		font-size: 35rpx;
+	}
+	.text{
+		display: flex;
+		flex-direction: column;
+		margin-left: 30rpx;
+		margin-right: 30rpx;
+		padding-top: 20rpx;
+		padding-bottom: 20rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
+		border-top: 1rpx solid darkgray;
+	}
+	.detailStyle{
+		display: flex;
+		padding-top: 10rpx;
+		position: relative;
+		width: 90%;
+		height: 300rpx;
+		border: 1rpx solid darkgray;
+		border-radius: 10rpx;
+	}
+	.button-bottom{
+		position: fixed;
+		width: 100%;
+		bottom: 0;
+		color: #F5F5F5;
+		background-color: #1E90FF;
+		border-radius: 0rpx;
+	}
+	.button-bottom{
+		position: fixed;
+		width: 100%;
+		bottom: 0;
+		color: #F5F5F5;
+		background-color: #1E90FF;
+		border-radius: 0rpx;
+	}

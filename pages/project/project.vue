@@ -82,7 +82,7 @@
 					<input class="oldStyle" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done">
 				</view>
 		
-				<button class="buttonStyle" type="primary" @tap="closePop('top')">
+				<button class="buttonStyle"  type="primary" @tap="closePop('top')">
 					确定
 				</button>
 			</view>

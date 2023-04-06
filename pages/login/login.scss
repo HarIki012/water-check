@@ -1,45 +1,58 @@
-	page, .content{
-		width: 100%;
-		height: 100%;
+.hs-content{
+	width: 100%;
+	height: 100%;
+}
+.hs-content {
+	// background: url("../../static/login.png") no-repeat;
+	background-size: cover;
+	
+	.hs-title{
+		text-align: center;
+		margin-top: 300rpx;
+		margin-bottom: 100rpx;
+		font-weight: 700;
+		font-size: 40rpx;
 	}
-	.content {
-		//background: url("../../static/imgs/login/login-background1.png") no-repeat;
-		background-size: cover;
-		
-		.form{
-			display: block;
-			padding-top: 40upx;
+	
+	.hs-form{
+		display: block;
+		padding-top: 40upx;
+	}
+	.hs-tel-wrap, .hs-psd-wrap {
+		width: 80%;
+		margin: 0 auto;
+		position: relative;
+		height: 100upx;
+		border: 1upx solid #eee;
+		border-radius: 52rpx;
+		.iconfont {
+			position: absolute;
+			left: 27upx;
+			top: 25upx;
+			font-size: 48upx;
+			color: #83ABC7;
 		}
-		.tel-wrap, .psd-wrap {
-			width: 80%;
-			margin: 0 auto;
-			position: relative;
-			height: 100upx;
-			border: 1upx solid #eee;
-			.iconfont {
-				position: absolute;
-				left: 20upx;
-				top: 25upx;
-				font-size: 48upx;
-			}
-			input{
-				padding-left: 100upx;
-				padding-top: 28upx;
-				font-size: 36upx;
-			}
-		}
-		.tel-wrap{
-			margin-bottom: 20upx;
-		}
-		.psd-wrap{
-			margin-bottom: 80upx;
-		}
-		.login-btn{
-			width: 80%;
-			margin: 0 auto 40upx;
-			background: #0055ff;
-			border-radius: 80upx;
-			color: #fff;
-			font-size: 32upx;
+		input{
+			padding-left: 100upx;
+			padding-top: 28upx;
+			font-size: 36upx;
 		}
 	}
+	.hs-tel-wrap{
+		margin-bottom: 20upx;
+	}
+	.hs-psd-wrap{
+		margin-bottom: 80upx;
+	}
+	.hs-login-btn{
+		width: 80%;
+		margin: 0 auto 40upx;
+		background: #83ABC7;
+		border-radius: 80upx;
+		color: #fff;
+		font-size: 32upx;
+	}
+	.hs-plh-psw,.hs-plh-tel{
+		color: #83ABC7;
+	}
+}
