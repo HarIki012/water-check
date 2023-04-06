@@ -31,9 +31,19 @@
 						  "titleNView": {
 							"buttons": [
 							  {
-								"text": "新建",
-								"fontSize": "15",
-								"type": "popup"
+								 "text": "\ue771",
+								"fontSrc": "/common/icon/iconfont.ttf",
+								"fontSize": "17px",
+								"type": "popup",
+								"float": "left",
+								"width":"auto"
+							  },
+							  {
+								  "text": "新建",
+								  "fontSize": "17px",
+								  "type": "popup",
+								  "float": "left",
+								  "width":"auto"
 							  }
 							]
 						  }
@@ -155,7 +165,7 @@
 		"list": [
 			{
 				"text": "项目",
-				"pagePath": "pages/project/project"
+				"pagePath": "pages/project/list/project"
 				
 			},
 			{
