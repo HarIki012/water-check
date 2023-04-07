@@ -1,0 +1,50 @@
+
+.choose-pic{
+		display: flex;
+		margin-left: 20rpx;
+		margin-right: 30rpx;
+		padding-top: 20rpx;
+		padding-bottom: 40rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
+}
+.text{
+	display: flex;
+	flex-direction: column;
+	margin-left: 30rpx;
+	margin-right: 30rpx;
+	padding-top: 20rpx;
+	padding-bottom: 20rpx;
+	padding-left: 30rpx;
+	font-size: 35rpx;
+	border-top: 1rpx solid darkgray;
+}
+.detailStyle{
+		display: flex;
+		padding-top: 10rpx;
+		position: relative;
+		width: 90%;
+		height: 300rpx;
+		border: 1rpx solid darkgray;
+		border-radius: 10rpx;
+}
+.detailPic{
+	position: relative;
+	height: 100rpx;
+	width: 100rpx;
+	display: flex;
+	top: -50rpx;
+}
+.detailToPicture{
+		font-size: 50rpx;
+		position: relative;
+		top: -65rpx;
+		left: 25rpx;
+}
+.detailToVideo{
+		font-size: 60rpx;
+		position: relative;
+		top: -120rpx;
+		left: 105rpx;
+		color: #707070;
+}

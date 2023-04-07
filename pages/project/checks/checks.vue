@@ -29,37 +29,7 @@
 						
 						<view v-if="newList[index].data[id].isOpen">
 							<view style="display: flex;flex-direction: column;border-bottom: 1rpx solid darkgray;">
-								<view style="height: 20rpx;text-align: center;border: 1rpx solid darkgray;font-size: 20rpx;padding-top: 0rpx;">
-									<text>···</text>
-								</view>
-								<view class="text">
-									<text style="margin-bottom: 20rpx;">问题描述</text>
-									<text style="font-size: 33rpx;">{{ it.description }}</text>
-								</view>
-								<view class="text" style="flex-direction: row;">
-									<text style="width: 95%;">查看规范</text>
-									<text style="display: flex;text-align: right;">></text>
-								</view>
-								<view class="text" style="flex-direction: row;">
-									<text style="color: red;">*</text>
-									<text style="width: 50%;">严重程度</text>
-									<text style="width: 40%;text-align: right">{{ it.severity }}</text>
-									<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
-								</view>
-								<view class="text">
-									<text style="margin-bottom: 20rpx;">详情描述</text>
-									<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="it.detail" placeholder="详情描述"></textarea>
-									<text class="detailToPicture iconfont icon icon-paizhao"></text>
-									<text class="detailToVideo iconfont icon icon-shexiangtou"></text>
-									<image class="detailPic " mode="scaleToFill" src="/static/logo.png"></image>
-								</view>
-								<view class="text">
-									<view style="flex-direction: row; margin-bottom: 20rpx;">
-										<text style="color: red;">*</text>
-										<text style="margin-bottom: 20rpx;">整改要求</text>
-									</view>
-									<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="it.rectify" placeholder="详情描述"></textarea>
-								</view>
+								<projectdetail :projectData="it"></projectdetail>
 								<view style="height: 60rpx;text-align: center;" @click="changeSmall(index,id)">
 									^
 								</view>
@@ -78,6 +48,7 @@
 </template>
 
 <script>
+import projectdetail from "/components/projectdetail/projectdetail.vue";
 	export default {
 		data() {
 			return {
@@ -140,7 +111,9 @@
 				newList:'',
 			}
 		},
-
+		components:{
+			projectdetail
+		},
 		mounted() {
 			this.changeData()
 		},
