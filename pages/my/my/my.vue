@@ -159,7 +159,7 @@
 			redirectTo()
 			{
 				uni.navigateTo({
-					url:'/pages/my/offwork'
+					url:'/pages/my/offwork/offwork'
 				});
 			},
 			redirectToLogin(){

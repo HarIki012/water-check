@@ -158,23 +158,31 @@
 		
 	},
 	"tabBar": {
-		"color": "#000000",
-		"selectedColor": "#ff003b",
+		"color": "#BFBFBF",
+		"selectedColor": "#0D72BE",
 		"fontSize": "18px",
+		"backgroundColor": "#FFFFFF",
+		"iconWidth": "100rpx",
+		"height": "100rpx",
 		
 		"list": [
 			{
 				"text": "项目",
-				"pagePath": "pages/project/list/project"
-				
+				"pagePath": "pages/project/list/project",
+				"selectedIconPath": "static/list-chose.png",
+				"iconPath": "static/list-none.png"
 			},
 			{
 				"text": "地图",
-				"pagePath": "pages/map/map"
+				"pagePath": "pages/map/map",
+				"selectedIconPath": "static/map-chose.png",
+				"iconPath": "static/map-none.png"
 			},
 			{
 				"text": "我的",
-				"pagePath": "pages/my/my/my"
+				"pagePath": "pages/my/my/my",
+				"selectedIconPath": "static/my-chose.png",
+				"iconPath": "static/my-none.png"
 			}
 		]
 	},

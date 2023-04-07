@@ -147,7 +147,7 @@
 		methods: {
 			search(e){
 				uni.navigateTo({
-							 url:'/pages/project/search?username=' + e.detail.value
+							 url:'/pages/project/search/search?username=' + e.detail.value
 								}) //由搜索页传递到搜索结果页
 						 //  uniCloud.database().collection('接口').get().then(res =>{
 							// 		this.userName = ''

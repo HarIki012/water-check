@@ -56,7 +56,7 @@
 				else if (formData.tel == this.phone & formData.psd == this.password){
 					// 跳转到项目页面
 					uni.switchTab({
-						url: '/pages/project/project'
+						url: '/pages/project/list/project'
 					});
 				}
 				
