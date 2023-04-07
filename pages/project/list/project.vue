@@ -1,18 +1,28 @@
 <template>
 	<view class="backgroundStyle">
-		<view class="projectSearch">
-			<view class="projectStyle">
-				<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
-					<label style="color: #929293;">{{ projectselectName }}</label>
-					<text class="iconfont icon icon-xiangxia"></text>
-				</picker>
+		<view style="position: sticky;top: 0;">
+			<view class="wx-top">
+				<!-- 搜索图标 -->
+				<view class="iconfont icon icon-xiangxia" style="font-size: 50rpx;width: 10%;padding-top: 20rpx;" @click="openPop"></view>
+				<view style="width: 90%;text-align: center;padding-right: 50rpx;font-size: 40rpx;padding-top: 20rpx;">项目列表</view>
 			</view>
-			<view class="selectStyle">
-				<image class="logo iconfont icon icon-chazhao" ></image>
-				<input type="text" v-model="projectnameSearch" placeholder="项目名称" confirm-type="search">
+			<view class="projectSearch">
+				<view class="projectStyle">
+					<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
+						<label style="color: #929293;">{{ projectselectName }}</label>
+						<text class="iconfont icon icon-xiangxia"></text>
+					</picker>
+				</view>
+				<view class="selectStyle">
+					<image class="logo iconfont icon icon-chazhao" ></image>
+					<input type="text" v-model="projectnameSearch" placeholder="项目名称" confirm-type="search">
+				</view>
+				<text class="searchButton">搜索</text>
 			</view>
-			<text class="searchButton">搜索</text>
 		</view>
+		
+		
+		
 		<view style="width: 100%;" @click="navigatortoinfo()">
 			<view class="tableStyle" v-for="(item,index) in filterList">
 				<view class="tableContent">
@@ -144,13 +154,6 @@ import { warn } from "vue"
 					arr = arr.filter(item => item.status.includes(this.projectselectName))
 				}
 				return arr
-			},
-			activeButton(){
-				if (this.newProjectname && this.dateName !== this.firstName) {
-					this.buttonUse = false
-				} else {
-					this.buttonUse = true
-				}
 			}
 		},
 		methods: {
@@ -158,6 +161,14 @@ import { warn } from "vue"
 				uni.navigateTo({
 					url:'/pages/project/info/info'
 				})
+			},
+			openPop(){
+				this.newProjectname = this.blankSpace
+				this.errorTips1 = this.blankSpace
+				this.errorTips2 = this.blankSpace
+				this.dateName = this.firstName
+				this.addressData = this.blankSpace
+				this.$refs['popup'].open();
 			},
 			closePop() {
 				this.$refs['popup'].close()
@@ -186,7 +197,7 @@ import { warn } from "vue"
 				// if (this.addressMessage) {
 				// 	that.addressData = '(' + that.addressMessage.latitude + ', ' + that.addressMessage.longitude + ')'
 				// }
-				uni.getLocation({
+				wx.getLocation({
 					type: 'wgs84',
 					geocode:true,//设置该参数为true可直接获取经纬度及城市信息
 					success: function (res) {
@@ -208,14 +219,6 @@ import { warn } from "vue"
 				});
 			},
 			
-		},
-		onNavigationBarButtonTap(e) {
-			this.newProjectname = this.blankSpace
-			this.errorTips1 = this.blankSpace
-			this.errorTips2 = this.blankSpace
-			this.dateName = this.firstName
-			this.addressData = this.blankSpace
-			this.$refs['popup'].open();
 		},
 	}
 </script>

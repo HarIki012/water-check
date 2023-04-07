@@ -2,14 +2,14 @@
   "pages": [
     "pages/login/login",
     "pages/index/index",
-    "pages/project/project",
-    "pages/my/my",
+    "pages/project/list/project",
+    "pages/my/my/my",
     "pages/map/map",
-    "pages/my/offwork",
-    "pages/project/info",
-    "pages/project/checks",
-    "pages/project/search",
-    "pages/project/detail"
+    "pages/my/offwork/offwork",
+    "pages/project/info/info",
+    "pages/project/checks/checks",
+    "pages/project/search/search",
+    "pages/project/detail/detail"
   ],
   "window": {
     "navigationBarTextStyle": "black",
@@ -18,20 +18,27 @@
     "scrollIndicator": "none"
   },
   "tabBar": {
-    "color": "#000000",
-    "selectedColor": "#ff003b",
+    "color": "#BFBFBF",
+    "selectedColor": "#0D72BE",
+    "backgroundColor": "#FFFFFF",
     "list": [
       {
         "text": "项目",
-        "pagePath": "pages/project/project"
+        "pagePath": "pages/project/list/project",
+        "selectedIconPath": "static/list-chose.png",
+        "iconPath": "static/list-none.png"
       },
       {
         "text": "地图",
-        "pagePath": "pages/map/map"
+        "pagePath": "pages/map/map",
+        "selectedIconPath": "static/map-chose.png",
+        "iconPath": "static/map-none.png"
       },
       {
         "text": "我的",
-        "pagePath": "pages/my/my"
+        "pagePath": "pages/my/my/my",
+        "selectedIconPath": "static/my-chose.png",
+        "iconPath": "static/my-none.png"
       }
     ]
   },
@@ -40,6 +47,9 @@
       "desc": "需要定位当前位置，方便更新数据库信息"
     }
   },
+  "requiredPrivateInfos": [
+    "getLocation"
+    ],
   "plugins": {
     "WechatSI": {
       "version": "0.3.5",

@@ -27,6 +27,7 @@
             {
                 "navigationBarTitleText": "项目列表",
 				"enablePullDownRefresh": false,
+				"navigationStyle": "custom",
 				"app-plus": {
 						  "titleNView": {
 							"buttons": [
@@ -99,7 +100,7 @@
 		    {
 		        "navigationBarTitleText": "检查内容",
 		        "enablePullDownRefresh": false,
-				"app-plus": {
+				"mp-weixin": {
 					"scrollIndicator": "none",
 						  "titleNView": {
 							"buttons": [
