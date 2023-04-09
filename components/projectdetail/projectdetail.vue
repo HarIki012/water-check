@@ -14,7 +14,11 @@
 		<view class="text" style="flex-direction: row;">
 			<text style="color: red;">*</text>
 			<text style="width: 50%;">严重程度</text>
-			<text style="width: 40%;text-align: right">{{projectData.severity}}</text>
+			<view style="width: 40%;text-align: right">
+				<picker @change="severitySelect" :range="severityChoose">
+					<label>{{ severityselectName }}</label>
+				</picker>
+			</view>
 			<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
 		</view>
 		<view class="text">
@@ -52,11 +56,23 @@
 					photoUrl: '',   //放图片
 					rectify: '整改要求略',
 					}
-				]
+				],
+				severityChoose:['无','一般','较严重','严重','非常严重'],
+				severityselectIndex:'0',
+				severityselectName:'无',
 			};
 		},
+		mounted() {
+			this.initData()
+		},
 		methods:{
-			
+			initData(){
+				this.severityselectName = this.projectData.severity
+			},
+			severitySelect(e) {
+			    this.severityselectIndex = e.detail.value;
+			    this.severityselectName=this.severityChoose[this.severityselectIndex]
+			},
 		}
 	}
 </script>

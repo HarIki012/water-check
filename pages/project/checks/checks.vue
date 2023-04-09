@@ -20,7 +20,7 @@
 					<view v-for="(it, id) in item.data" :key="id">
 						<view style="display: flex;flex-direction: row;">
 							<view :class="newList[index].data[id].isOpen===false?'closeStyle':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">{{it.description}}</view>
-							<text v-if="newList[index].data[id].isOpen" class="deleteStyle" style="color: blue;background-color: #e3e3e3;">
+							<text v-if="newList[index].data[id].isOpen" class="deleteStyle" @click="deleteProject(newList[index].data[id])">
 								<text style="text-align: center;">
 									删除
 								</text>
@@ -39,12 +39,16 @@
 				</view>
 			</view>
 		</view>
-			
-
 		
+		<uni-popup ref="deletePop" type="dialog">
+			<uni-popup-dialog :type="msgType" cancelText="取消" confirmText="确定" title="是否删除此项问题" :content=deleteName @confirm="dialogConfirm"
+								@close="dialogClose"></uni-popup-dialog>
+		</uni-popup>
+
+		<button class="button-bottom">自定义问题添加</button>	
 	</view>
 	
-	<button class="button-bottom">自定义问题添加</button>
+	
 </template>
 
 <script>
@@ -56,7 +60,9 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 				active:'',
 				typeList: ['质量', '安全', '文明施工'],
 				selectPoint: '',
-				problemList: [
+				problemList:'',
+				msgType: 'type',
+				initproblemList: [
 					{
 						id: 1,
 						projectName:'南湖水环境提升工程',
@@ -70,7 +76,7 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 					{
 						id: 2,
 						projectName:'南湖水环境提升工程',
-						type: '安全',
+						type: '质量',
 						severity: '较严重',
 						description: '问题描述略2',
 						detail: '详细描述略',
@@ -90,7 +96,7 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 					{
 						id: 4,
 						projectName:'土石方工程',
-						type: '安全',
+						type: '质量',
 						severity: '较严重',
 						description: '问题描述略4',
 						detail: '详细描述略',
@@ -100,7 +106,7 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 					{
 						id: 5,
 						projectName:'土石方工程',
-						type: '安全',
+						type: '文明施工',
 						severity: '较严重',
 						description: '问题描述略5',
 						detail: '详细描述略',
@@ -109,6 +115,8 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 					}
 				],
 				newList:'',
+				deleteName:'',
+				deleteId:''
 			}
 		},
 		components:{
@@ -116,6 +124,9 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 		},
 		mounted() {
 			this.changeData()
+		},
+		computed: {
+			
 		},
 		methods: {
 			search(e){
@@ -137,13 +148,43 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 				this.$forceUpdate()
 			},
 			sequ(id) {
-				this.selectPoint = this.typeList[id]
-
+				if(this.selectPoint === this.typeList[id]){
+					this.selectPoint = null
+				} else {
+					this.selectPoint = this.typeList[id]
+				}
+				this.changeData()
 			},
 			testM(){
 				console.log(this.problemList.length)
 			},
+			filterList() {
+				var arr = [] //定义一个空数组
+				this.problemList.forEach((item) => arr.push(item)) //在zhiweilist查找数据放入空数组
+				if (this.selectPoint) { //如果有这个数据
+					arr = this.problemList.filter(item => item.type.includes(this.selectPoint))
+					//则在zhiweilist里过滤掉filterText
+				}
+				console.log(arr)
+				this.problemList = arr
+			},
+			deleteProject(e) {
+				console.log(e)
+				this.deleteName = e.description
+				this.deleteId = e.id
+				this.$refs['deletePop'].open()
+			},
+			dialogConfirm(e) {
+				console.log(this.deleteName)
+				this.initproblemList = this.initproblemList.filter(item => item.id != this.deleteId)
+				this.changeData()
+			},
+			dialogClose() {
+				this.$refs['deletePop'].close()
+			},
 			changeData() {
+				this.problemList = this.initproblemList
+				this.filterList()
 				for (var j = 0; j < this.problemList.length; j++){
 					this.problemList[j].isOpen = false
 				}
