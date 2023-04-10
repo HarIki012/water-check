@@ -185,7 +185,7 @@
 			
 			redirectTodetail(){
 				uni.redirectTo({
-					url:'/pages/project/detail'
+					url:'/pages/project/detail/detail'
 				})
 			}
 		}

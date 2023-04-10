@@ -32,6 +32,16 @@
 			font-size: 48upx;
 			color: #83ABC7;
 		}
+		.hs-show{
+			position: absolute;
+			left: 500upx;
+			top: 25upx;
+			font-size: 48upx;
+			color: #83ABC7;
+		}
+		.hs-eye-active {
+		    color: #007AFF;
+		}
 		input{
 			padding-left: 100upx;
 			padding-top: 28upx;
@@ -55,4 +65,5 @@
 	.hs-plh-psw,.hs-plh-tel{
 		color: #83ABC7;
 	}
+	
 }

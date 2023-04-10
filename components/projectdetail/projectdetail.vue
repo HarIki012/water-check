@@ -8,7 +8,7 @@
 			<text v-if="projectData.projectName !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
 			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="详情描述"></textarea>
 		</view>
-		<view class="text" style="flex-direction: row;">
+		<view class="text" style="flex-direction: row;" @click="redirectToDetail()">
 			<text style="width: 95%;">查看规范</text>
 			<text style="display: flex;text-align: right;">></text>
 		</view>
@@ -61,6 +61,7 @@
 				severityChoose:['无','一般','较严重','严重','非常严重'],
 				severityselectIndex:'0',
 				severityselectName:'无',
+				from:1,
 			};
 		},
 		mounted() {
@@ -74,6 +75,11 @@
 			    this.severityselectIndex = e.detail.value;
 			    this.severityselectName=this.severityChoose[this.severityselectIndex]
 			},
+			redirectToDetail(){
+				uni.redirectTo({
+					url:'/pages/project/detail/detail?from=' + this.from
+				})
+			}
 		}
 	}
 </script>

@@ -1,29 +1,29 @@
 <template>
 	<view>
 		<view class="reason">
-			<text style="font-size: 35rpx;">事宜</text>
-			<textarea style="word-break:break-all word-wrap:break-word" class="text-box" :value="voiceResult" placeholder="详情描述" maxlength="200" @input="sumfontnum">
+			<text class="hs-offwork-name" >请假事宜</text>
+				<textarea  class="hs-text-box" :value="voiceResult" placeholder="请输入请假原因..." maxlength="200" @input="sumfontnum">
 			</textarea>
-			<button class="iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
-			<text class="currentWordNumber">{{fontNum}}/200</text>
+			<!-- <button class="iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+			<text class="currentWordNumber">{{fontNum}}/200</text> -->
 		</view>
-		<view class="begin">
-			<view class="begin-word">开始时间</view>
+		<view class="hs-begin">
+			<view class="begin-word">开始时间 <text class="hs-required">*</text> </view>
 			<view class="begin-time">
 				<picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChangebegin">
 					<view class="begin-input">{{begindate}}</view>
 				</picker>
 			</view>
 		</view>
-		<view class="end">
-			<view class="end-word">结束时间</view>
+		<view class="hs-end">
+			<view class="end-word">结束时间 <text class="hs-required">*</text> </view>
 			<view class="end-time">
 				<picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChangeend">
 					<view class="end-input">{{enddate}}</view>
 				</picker>
 			</view>
 		</view>
-		<button class="submit-btn" type="default" @tap="submitAll">提交</button>
+		<button class="hs-submit-btn" type="default" @tap="submitAll">提  交</button>
 	</view>
 </template>
 
@@ -96,42 +96,44 @@
 					url:'/pages/my/my'
 				})
 			},
-			touchStart: function() {   
-				manager.start({  
-					duration: 60000,  
-					lang: "zh_CN"  
-				});  
-			},  
-			touchEnd: function() {  
-				uni.showToast()  
-				manager.stop();  
-			},  
+			//语音识别功能
+			
+			// touchStart: function() {   
+			// 	manager.start({  
+			// 		duration: 60000,  
+			// 		lang: "zh_CN"  
+			// 	});  
+			// },  
+			// touchEnd: function() {  
+			// 	uni.showToast()  
+			// 	manager.stop();  
+			// },  
 			/**  
 			 * 初始化语音识别回调  
 			 * 绑定语音播放开始事件  
 			 */  
-			initRecord: function() {  
-				manager.onStart = function(res) {  
-					this.voiceState ="onStart:"+ res.msg+"正在录音"  
-				};  
-				//有新的识别内容返回，则会调用此事件  
-				manager.onRecognize = (res) => {  
-					this.voiceResult = res.result;  
-				}  
+			// initRecord: function() {  
+			// 	manager.onStart = function(res) {  
+			// 		this.voiceState ="onStart:"+ res.msg+"正在录音"  
+			// 	};  
+			// 	//有新的识别内容返回，则会调用此事件  
+			// 	manager.onRecognize = (res) => {  
+			// 		this.voiceResult = res.result;  
+			// 	}  
 
-				// 识别结束事件  
-				manager.onStop = (res) => {  
+			// 	// 识别结束事件  
+			// 	manager.onStop = (res) => {  
 
-					this.voiceState = res.result;  
-				}  
+			// 		this.voiceState = res.result;  
+			// 	}  
 
-				// 识别错误事件  
-				manager.onError = (res) => {  
+			// 	// 识别错误事件  
+			// 	manager.onError = (res) => {  
 
-					this.voiceState = res.msg;  
+			// 		this.voiceState = res.msg;  
 
-				}  
-			},
+			// 	}  
+			// },
 		}
 
 }

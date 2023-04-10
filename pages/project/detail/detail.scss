@@ -1,12 +1,12 @@
 .description{
 	margin-top: 20rpx;
 	padding-bottom: 20rpx;
-	border-bottom: 1rpx solid #cacaca;
 	-webkit-flex-wrap: wrap;
 	flex-wrap: wrap; 
 	flex-direction: row;
 	justify-content: flex-start;
 	display: flex;
+	white-space:pre-wrap;
 }
 .name{
 	margin-left: 15rpx;
@@ -31,10 +31,19 @@
 	border-radius: 40rpx;
 	color: #ffffff;
 }
-.feedback{
-	color: #ca0000;
+.hs-create{
+	width: 95%;
+	border-radius: 50rpx;
+	background-color: #0CBCC2;
+	margin-top: 30rpx;
+	color: #ffffff;
+	margin-bottom: 15rpx;
+}
+.hs-feedback{
+	color: #0CBCC2;
 	position: relative;
-	left: 380rpx;
+	left: 200rpx;
+	padding-bottom: 40rpx;
 }
 .pop{
 	width: 600rpx;
@@ -44,6 +53,7 @@
 	align-items: center;
 }
 .Name{
+	color: #0D72BE;
 	padding: 10rpx 30rpx;
 	padding-top: 30rpx;
 	width: 530rpx;
@@ -59,4 +69,13 @@
 	display: flex;
 	justify-content: left;
 	letter-spacing: 2rpx;
+}
+.hs-choose-pic{
+		display: flex;
+		margin-left: 20rpx;
+		margin-right: 30rpx;
+		padding-top: 20rpx;
+		padding-bottom: 40rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
 }

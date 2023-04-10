@@ -5,45 +5,49 @@
 	padding: 3%;
 	overflow: hidden;
 }
-.text-box {
+.hs-offwork-name{
+	font-size: 35rpx;
+	color: #0D72BE;
+}
+.hs-text-box {
+	word-break:break-all; 
+	word-wrap:break-word;
 	position: relative;
 	padding-bottom: 125rpx;
 	padding-right: 75rpx;
 	border: 1upx solid #eee;
+	margin-top: 15rpx;
 }
 
-.currentWordNumber{
-  font-size: 28rpx;
-  color: gray;
-  position: absolute;
-  left: 500rpx;
-  top: 430rpx;
-}
-.begin,.end{
+.hs-begin,.hs-end{
 	border: 1upx solid #eee;
 }
 .begin-word,.end-word{
 	position: relative;
 	top: 20rpx;
 	left: 45rpx;
+	color: #0D72BE;
 }
 .begin-input,.end-input{
 	position: relative;
 	left: 540rpx;
 	top: -26rpx;
 }
-.submit-btn{
-	width: 80%;
+.hs-submit-btn{
+	width: 95%;
 	margin: 0 auto 40upx;
 	background: #0055ff;
-	border-radius: 80upx;
+	border-radius: 15rpx;
 	color: #fff;
 	font-size: 32upx;
-	top: 25rpx;
+	top: 400rpx;
 }
 .iconfontmico{
 	font-size: 40rpx;
 	position: absolute;
 	left: 590rpx;
 	top: 390rpx;
+}
+.hs-required{
+	color: #FF4538;
 }
