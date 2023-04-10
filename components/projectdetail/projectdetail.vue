@@ -5,7 +5,8 @@
 		</view>
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">问题描述</text>
-			<text style="font-size: 33rpx;">{{projectData.description}}</text>
+			<text v-if="projectData.projectName !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
+			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="详情描述"></textarea>
 		</view>
 		<view class="text" style="flex-direction: row;">
 			<text style="width: 95%;">查看规范</text>

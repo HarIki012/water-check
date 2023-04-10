@@ -45,7 +45,7 @@
 								@close="dialogClose"></uni-popup-dialog>
 		</uni-popup>
 
-		<button class="button-bottom">自定义问题添加</button>	
+		<button class="button-bottom" @tap="addProject">自定义问题添加</button>	
 	</view>
 	
 	
@@ -116,19 +116,25 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 				],
 				newList:'',
 				deleteName:'',
-				deleteId:''
+				deleteId:'',
+				newProject:'',
+				sumProjects:''
 			}
 		},
 		components:{
 			projectdetail
 		},
 		mounted() {
-			this.changeData()
+			this.changeData(),
+			this.getLength()
 		},
 		computed: {
 			
 		},
 		methods: {
+			getLength(){
+				this.sumProjects = this.initproblemList.length
+			},
 			search(e){
 				uni.navigateTo({
 							 url:'/pages/project/search/search?username=' + e.detail.value
@@ -181,6 +187,22 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 			},
 			dialogClose() {
 				this.$refs['deletePop'].close()
+			},
+			addProject() {
+				this.sumProjects = this.sumProjects + 1
+				this.newProject = {
+						id: this.sumProjects,
+						projectName:'自定义',
+						type: '质量',
+						severity: '一般',
+						description: '自定义问题描述',
+						detail: '',
+						photoUrl: '',   //放图片
+						rectify: '',
+					}
+				// this.initproblemList[this.sumProjects] = this.newProject
+				this.initproblemList.push(this.newProject)
+				this.changeData()
 			},
 			changeData() {
 				this.problemList = this.initproblemList
