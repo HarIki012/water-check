@@ -24,7 +24,7 @@
 			<view class="name">责任主体</view>
 			<view class="detail">{{data[0].responsibleParties}}</view>
 		</view>
-		<button v-if="camefrom === 1" class="hs-create">生成问题</button>
+		<button v-if="this.cameFrom === '1'" class="hs-create">生成问题</button>
 		<view class="hs-feedback" @click="feedBack('top')">条款存在问题？点我反馈</view>
 		
 		<!-- 反馈弹窗 -->
@@ -102,12 +102,14 @@
 				            ]
 				        }
 				    ],
-				camefrom:0
+				cameFrom:0
 				
 			}
 		},
 		onLoad(value) {
-			this.camefrom = value.from
+			console.log(value.from)
+			this.cameFrom = value.from
+			console.log(this.cameFrom)
 		},
 		methods: {
 			feedBack(){

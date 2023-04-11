@@ -7,12 +7,12 @@
 		</view>
 		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="projectnameSearch" placeholder="项目名称" confirm-type="search">
 	</view>
-	<view class="sortBorder">
+<!-- 	<view class="sortBorder">
 		<view class="sort" v-for="(item,index) in sort">
 				<view v-if="item.delete">
 					<view class="delete iconfont icon icon-shanchu2" @click="deleteTag(index)"> </view>
-<!-- 					<view v-if="item.flag" class="sortItem iconfont icon icon-xiangxia1" @click = "showTag(index)">{{item.name}}</view>
-					<view v-else class="sortItem iconfont icon icon-xiangyou" @click="showTag(index)">{{item.name}}</view> -->
+					<view v-if="item.flag" class="sortItem iconfont icon icon-xiangxia1" @click = "showTag(index)">{{item.name}}</view>
+					<view v-else class="sortItem iconfont icon icon-xiangyou" @click="showTag(index)">{{item.name}}</view>
 					<view :class="item.flag ? 'sortItemOpen iconfont icon icon-xiangxia1' : 'sortItem iconfont icon icon-xiangyou'" @click="showTag(index)">{{item.name}}</view>
 						<view :class="item.flag ? 'active':'border'">
 							<view class="info" v-for="(item,index) in item.info">
@@ -21,7 +21,7 @@
 						</view>
 				</view>
 		</view>
-	</view>
+	</view> -->
 	<view class="sortBorder">
 			<view class="sort" v-for="(item,index) in data">
 				<view v-if="item.delete">
@@ -29,7 +29,7 @@
 					<view :class="item.flag ? 'sortItemOpen iconfont icon icon-xiangxia1' : 'sortItem iconfont icon icon-xiangyou'" @click="showTagData(index)">{{item.description}}</view>
 					<view :class="item.flag ? 'active':'border'">
 						<!-- <view class="info" v-for="(item,index) in item.info"> -->
-							<view  class="detail" @click="redirectTodetail">{{item.detail}}</view>
+							<view  class="detail" @click="redirectTodetail()">{{item.detail}}</view>
 						<!-- </view> -->
 					</view>
 				</view>
@@ -58,43 +58,6 @@
 				projectnameSearch: '',
 				projectChoose: ['全部', '质量', '安全', '文明施工'],
 				projectselectIndex: 0,
-				sort:[
-					{
-						name:"土石方工程",
-						flag:true,
-						delete:true,
-						info:[
-							{
-								detail:"地基处理不符合要求"
-							}
-						]
-					},
-					{
-						name:"地基及基础处理工程",
-						flag:true,
-						delete:true,
-						info:[
-							{
-								detail:"防渗墙施工平台、导墙修筑不满足规范或设计要求"
-							},
-							{
-								detail:"槽孔（入岩深度、孔斜、宽度、中.........）"
-							},
-							{
-								detail:"清孔不彻底、空地淤积厚度超标......"
-							},
-							{
-								detail:"墙体不完整、不连续、不均匀"
-							}
-						]
-					},
-					{
-						name:"现场作业安全管理",
-						flag:true,
-						delete:true,
-						info:""
-					}
-				],
 				data: [
 				        {
 				            id: 1,
@@ -128,7 +91,8 @@
 				        }
 				    ],
 					dataList: [],
-					searchDetail: ''
+					searchDetail: '',
+					from:0,
 			};
 
 		},
@@ -185,7 +149,7 @@
 			
 			redirectTodetail(){
 				uni.redirectTo({
-					url:'/pages/project/detail/detail'
+					url:'/pages/project/detail/detail?from='+this.from
 				})
 			}
 		}

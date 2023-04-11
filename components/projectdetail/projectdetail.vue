@@ -6,7 +6,7 @@
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">问题描述</text>
 			<text v-if="projectData.projectName !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
-			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="详情描述" @blur="projectChange"></textarea>
+			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange"></textarea>
 		</view>
 		<view v-if="projectData.projectName === '自定义'" class="text" style="flex-direction: row;">
 			<text style="width: 25%;">严重类型</text>
@@ -18,11 +18,11 @@
 			</view>
 			<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
 		</view>
-		<view class="text" v-if="projectData.projectName !== '自定义'" style="flex-direction: row;">
+		<view class="text" v-if="projectData.projectName !== '自定义'" style="flex-direction: row;" @click="redirectToDetail()">
 			<text style="width: 95%;">条文规范</text>
 			<text style="display: flex;text-align: right;">></text>
 		</view>
-		<view class="text" v-if="projectData.projectName === '自定义'">
+		<view class="text" v-if="projectData.projectName === '自定义'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="newRule" placeholder="条文规范" @blur="projectChange"></textarea>
 		</view>
@@ -77,7 +77,8 @@
 				typeChoose:['质量','安全','文明施工'],
 				typeIndex:'0',
 				typeName:'质量',
-				newRule:''
+				newRule:'',
+				from:1,//跳转页面确定
 			};
 		},
 		mounted() {
@@ -105,6 +106,11 @@
 			},
 			projectChange(){
 				this.$emit("sendData",this.projectData)
+			},
+			redirectToDetail(){
+				uni.redirectTo({
+					url:'/pages/project/detail/detail?from='+this.from
+				})
 			}
 		}
 	}
