@@ -29,7 +29,7 @@
 						
 						<view v-if="newList[index].data[id].isOpen">
 							<view style="display: flex;flex-direction: column;border-bottom: 1rpx solid darkgray;">
-								<projectdetail :projectData="it"></projectdetail>
+								<projectdetail :projectData="it" @sendData="getData"></projectdetail>
 								<view style="height: 60rpx;text-align: center;" @click="changeSmall(index,id)">
 									^
 								</view>
@@ -45,9 +45,9 @@
 								@close="dialogClose"></uni-popup-dialog>
 		</uni-popup>
 
-		<button class="button-bottom" @tap="addProject">自定义问题添加</button>	
+			
 	</view>
-	
+	<button class="button-bottom" @tap="addProject">自定义问题添加</button>
 	
 </template>
 
@@ -134,6 +134,15 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 		methods: {
 			getLength(){
 				this.sumProjects = this.initproblemList.length
+			},
+			getData(res){
+				console.log(this.initproblemList)
+				for (var i = 0; i < this.initproblemList.length;i++){
+					if (this.initproblemList[i].id === res.id) {
+						this.initproblemList[i] = res
+						console.log(this.initproblemList)
+					}
+				}
 			},
 			search(e){
 				uni.navigateTo({

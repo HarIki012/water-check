@@ -6,15 +6,29 @@
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">问题描述</text>
 			<text v-if="projectData.projectName !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
-			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="详情描述"></textarea>
+			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="详情描述" @blur="projectChange"></textarea>
 		</view>
-		<view class="text" style="flex-direction: row;" @click="redirectToDetail()">
-			<text style="width: 95%;">查看规范</text>
+		<view v-if="projectData.projectName === '自定义'" class="text" style="flex-direction: row;">
+			<text style="width: 25%;">严重类型</text>
+			<text style="color: red;width: 25%;">*</text>
+			<view style="width: 40%;text-align: right">
+				<picker @change="typeSelect" :range="typeChoose">
+					<label>{{ typeName }}</label>
+				</picker>
+			</view>
+			<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
+		</view>
+		<view class="text" v-if="projectData.projectName !== '自定义'" style="flex-direction: row;">
+			<text style="width: 95%;">条文规范</text>
 			<text style="display: flex;text-align: right;">></text>
 		</view>
+		<view class="text" v-if="projectData.projectName === '自定义'">
+			<text style="margin-bottom: 20rpx;">条文规范</text>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="newRule" placeholder="条文规范" @blur="projectChange"></textarea>
+		</view>
 		<view class="text" style="flex-direction: row;">
-			<text style="color: red;">*</text>
-			<text style="width: 50%;">严重程度</text>
+			<text style="width: 25%;">严重程度</text>
+			<text style="color: red;width: 25%;">*</text>
 			<view style="width: 40%;text-align: right">
 				<picker @change="severitySelect" :range="severityChoose">
 					<label>{{ severityselectName }}</label>
@@ -24,17 +38,16 @@
 		</view>
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">详情描述</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述"></textarea>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange"></textarea>
 		</view>
 		<view class="choose-pic">
 			<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
 		</view>
 		<view class="text">
 			<view style="flex-direction: row; margin-bottom: 20rpx;">
-				<text style="color: red;">*</text>
 				<text style="margin-bottom: 20rpx;">整改要求</text>
 			</view>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.rectify" placeholder="详情描述"></textarea>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.rectify" placeholder="整改要求" @blur="projectChange"></textarea>
 		</view>
 	</view>
 </template>
@@ -61,24 +74,37 @@
 				severityChoose:['无','一般','较严重','严重','非常严重'],
 				severityselectIndex:'0',
 				severityselectName:'无',
-				from:1,
+				typeChoose:['质量','安全','文明施工'],
+				typeIndex:'0',
+				typeName:'质量',
+				newRule:''
 			};
 		},
 		mounted() {
 			this.initData()
 		},
 		methods:{
+			hello(){
+				console.log('hello')
+			},
 			initData(){
 				this.severityselectName = this.projectData.severity
+				this.typeName = this.projectData.type
 			},
 			severitySelect(e) {
 			    this.severityselectIndex = e.detail.value;
 			    this.severityselectName=this.severityChoose[this.severityselectIndex]
+				this.projectData.severity = this.severityselectName
+				this.$emit("sendData",this.projectData)
 			},
-			redirectToDetail(){
-				uni.redirectTo({
-					url:'/pages/project/detail/detail?from=' + this.from
-				})
+			typeSelect(e) {
+			    this.typeIndex = e.detail.value;
+			    this.typeName=this.typeChoose[this.typeIndex]
+				this.projectData.type = this.typeName
+				this.$emit("sendData",this.projectData)
+			},
+			projectChange(){
+				this.$emit("sendData",this.projectData)
 			}
 		}
 	}
