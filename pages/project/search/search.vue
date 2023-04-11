@@ -29,7 +29,7 @@
 					<view :class="item.flag ? 'sortItemOpen iconfont icon icon-xiangxia1' : 'sortItem iconfont icon icon-xiangyou'" @click="showTagData(index)">{{item.description}}</view>
 					<view :class="item.flag ? 'active':'border'">
 						<!-- <view class="info" v-for="(item,index) in item.info"> -->
-							<view  class="detail" @click="redirectTodetail()">{{item.detail}}</view>
+							<view  class="detail" @click="navigateTodetail()">{{item.detail}}</view>
 						<!-- </view> -->
 					</view>
 				</view>
@@ -100,9 +100,9 @@
 		// 	checkItemDetail
 		// },
 		onLoad(value) {
-			console.log(value.username)
-			if(value.username){
-				this.getSearch(value.username)
+			console.log(value.searchText)
+			if(value.searchText){
+				this.getSearch(value.searchText)
 			}
 		},
 		computed: {
@@ -147,8 +147,8 @@
 				this.data[index].delete = !this.data[index].delete
 			},
 			
-			redirectTodetail(){
-				uni.redirectTo({
+			navigateTodetail(){
+				uni.navigateTo({
 					url:'/pages/project/detail/detail?from='+this.from
 				})
 			}

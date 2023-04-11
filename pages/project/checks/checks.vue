@@ -150,12 +150,8 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 			},
 			search(e){
 				uni.navigateTo({
-							 url:'/pages/project/search/search?username=' + e.detail.value
+							 url:'/pages/project/search/search?searchText=' + e.detail.value
 								}) //由搜索页传递到搜索结果页
-						 //  uniCloud.database().collection('接口').get().then(res =>{
-							// 		this.userName = ''
-							// 		console.log(res);
-							// })
 			},
 			changeBig(e){
 				 this.newList[e].bigisOpen = !this.newList[e].bigisOpen

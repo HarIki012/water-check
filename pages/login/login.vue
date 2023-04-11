@@ -9,8 +9,8 @@
 			</view>
 			<view class="hs-psd-wrap">
 				<text class="iconfont icon icon-mima"></text>
-				<input name="psd" class="psd"  placeholder="请输入密码" placeholder-class="hs-plh-psw" :password="showPassword"/>
-				<text class="hs-show iconfont icon icon-chakan" :class="[!showPassword ? 'hs-eye-active' : '']" @click="changePassword">&#xe568;</text>
+				<input name="psd" class="psd" type="text" placeholder="请输入密码" placeholder-class="hs-plh-psw" :password="showPassword"/>
+				<text class="hs-show iconfont icon icon-chakan" :class="[!this.showPassword ? 'hs-eye-active' : 'hs-show']" @click="changePassword">&#xe568;</text>
 			</view>
 			<button formType="submit" class="hs-login-btn" type="default" >登 录</button>
 		</form>
@@ -66,6 +66,7 @@
 			
 			changePassword: function() {
 			    this.showPassword = !this.showPassword;
+				console.log(this.showPassword)
 			}
 		}
 	}

@@ -18,7 +18,7 @@
 			</view>
 			<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
 		</view>
-		<view class="text" v-if="projectData.projectName !== '自定义'" style="flex-direction: row;" @click="redirectToDetail()">
+		<view class="text" v-if="projectData.projectName !== '自定义'" style="flex-direction: row;" @click="navigateToDetail()">
 			<text style="width: 95%;">条文规范</text>
 			<text style="display: flex;text-align: right;">></text>
 		</view>
@@ -107,8 +107,8 @@
 			projectChange(){
 				this.$emit("sendData",this.projectData)
 			},
-			redirectToDetail(){
-				uni.redirectTo({
+			navigateToDetail(){
+				uni.navigateTo({
 					url:'/pages/project/detail/detail?from='+this.from
 				})
 			}
