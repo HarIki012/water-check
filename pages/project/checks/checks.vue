@@ -47,7 +47,11 @@
 
 			
 	</view>
-	<button class="button-bottom" @tap="addProject">自定义问题添加</button>
+	<view class="button-bottom">
+		<button class="submit-button">提交</button>
+		<button class="self-add-button" @tap="addProject">自定义问题添加</button>
+	</view>
+	
 	
 </template>
 
