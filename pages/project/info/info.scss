@@ -1,5 +1,5 @@
 	.border{
-		height: 530rpx;
+		height: 460rpx;
 		overflow: hidden;
 	}
 	.active{
@@ -11,7 +11,7 @@
 		margin-bottom: 10rpx;
 		flex-direction: row;
 		justify-content: flex-start;
-		display: flex;
+		display: flex; 
 	}
 	.projectName{
 		display: flex;
@@ -31,23 +31,45 @@
 		-webkit-flex: 1;flex: 1;
 	}
 	.borderDown{
+		margin-bottom: 15rpx;
+	}
+	.contentDown{
 		flex-flow: row;
 		justify-content: flex-start;
 		display: flex;
-
-	}
-	.contentDown{
-		width: 80%;
+		padding-bottom: 15rpx;
+		border-bottom: 1rpx solid #F0F3F5;
 	}
 	.status{
-		padding-top:85rpx ;
+		padding-top:10rpx ;
 	}
 	.check,.leader,.teaminfo,.end-time{
 		padding-left: 32rpx;
 		padding-top: 10rpx;
+	}
+	.check{
+		width: 75%;
 	}
 	@font-face {
 	  font-family: "阿里巴巴普惠体 2.0 65 Medium";font-weight: 500;src: url("//at.alicdn.com/wf/webfont/R3pFSnXNf5DJ/ySEF0qX9msER.woff2") format("woff2"),
 	  url("//at.alicdn.com/wf/webfont/R3pFSnXNf5DJ/wYtU5udvc31K.woff") format("woff");
 	  font-display: swap;
 	}
+	.show-container{
+		font-size: 35rpx;
+		color: #399CFF;
+		text-align: center;
+		-webkit-flex-wrap: wrap;
+		flex-wrap: wrap;
+		display: flex;
+		margin-bottom: 40rpx;
+	}
+	.show-icon{
+		text-align: left;
+		width: 50%;
+	}
+	.show-text{
+		text-align: right;
+		width: 50%;
+	}
+	

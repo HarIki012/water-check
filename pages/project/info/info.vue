@@ -1,29 +1,42 @@
 <template>
 	<view class="border"  :class="{active:flag}" >
 		<view class="content" style="-webkit-flex-wrap: wrap;flex-wrap: wrap; " v-for="(item,index) in list">
-			<view class="projectName" style="width: 200rpx">{{item.name}}</view>
+			<view class="projectName" style="font-weight: 100; width: 200rpx">{{item.name}}</view>
 			<view class="projectName-info" style="-webkit-flex: 1;flex: 1; flex-wrap: wrap; ">{{item.info}}
-			<text class="location iconfont icon icon-zhinanzhen" v-if="item.name === '项目地址'" style="color: #0099ff; " @click="location">校正定位</text>
+			<text class="location iconfont icon icon-dingwei" v-if="item.name === '项目地址'" style="color: #0099ff; " @click="addressGet()">校正定位</text>
 			</view>
 		</view>
 		
 	</view>
-	<view v-if="flag" class="iconfont icon icon-xiangshang" style="font-size: 50rpx; text-align: center;border-bottom: 1rpx solid gray;" @click = "showTag"></view>
-	<view v-else class="show-or-noshow iconfont icon icon-xiangxia" style="font-size: 50rpx; text-align: center;border-bottom: 1rpx solid gray;" @click = "showTag"></view>
-	<view style="padding: 25rpx;border-bottom: 1rpx solid gray;"></view>
-	<view class="borderDown" style="border-bottom: 1rpx solid gray;" v-for="(item,index) in checks" @tap="gonavigate()">
+	<view v-if="flag" class="show-container" @click = "showTag">
+		<text class="show-text">收起 </text>
+		<view class="show-icon iconfont icon icon-xiangshang"> </view>
+	</view>
+	<view v-else class="show-container" @click = "showTag">
+		<text class="show-text">展开 </text>
+		<view class="show-icon iconfont icon icon-xiangxia"> </view>
+	</view>
+	
+	
+	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate()">
+		<view style="padding: 25rpx;background-color: #F0F3F5;"></view>
 		<view class="contentDown">
-			<view class="check" style="font-weight: 550;padding-bottom: 15rpx;">{{item.check}}</view>
+			<view class="check" >{{item.check}}</view>
+			<view class="status" >
+				<text v-if="item.status === '待检查'" style="color: #eebb00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
+				<text v-if="item.status === '检查中'" style="color: #00BFFF;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
+				<text v-if="item.status === '已检查'" style="color: #00CD00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
+				<text v-if="item.status === '已中止'" style="color: #EE2C2C;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
+			</view>
+		</view>
+		
+		<view class="group-contianer">
 			<view class="leader">{{item.leader}}：{{item.leaderName}}</view>
 			<view class="teaminfo">{{item.team}}：{{item.teamName}}</view>
 			<view class="end-time" style="padding-bottom: 15rpx;">{{item.endTime}}：{{item.endTimeInfo}}</view>
 		</view>
-		<view class="status" >
-			<text v-if="item.status === '待检查'" style="color: #eebb00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
-			<text v-if="item.status === '检查中'" style="color: #00BFFF;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
-			<text v-if="item.status === '已检查'" style="color: #00CD00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
-			<text v-if="item.status === '已中止'" style="color: #EE2C2C;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}></text>
-		</view>
+		
+		
 	</view>
 	
 </template>
@@ -95,7 +108,9 @@
 					name:"形象进度",
 					info:"已完成合同额80%",
 				}
-				]
+				],
+				addressMessage:'',
+				addressData:'',
 			}
 		},
 		onLoad() {
@@ -105,11 +120,28 @@
 			showTag(){
 				this.flag = !this.flag;
 			}, 
-			location(){
-				uni.showToast({
-					title:"校正定位成功",
-					duration:1000,
-				})
+			addressGet(){
+				const that = this;
+				wx.getLocation({
+					type: 'wgs84',
+					geocode:true,//设置该参数为true可直接获取经纬度及城市信息
+					success: function (res) {
+						console.log(res)
+						that.addressMessage = res;
+						that.addressData = res.latitude + ', ' + res.longitude
+						console.log(that.addressData)
+						uni.showToast({
+							title: '地址更新成功',
+							duration: 1500
+						});
+					},
+					fail: function () {
+						uni.showToast({
+							title: '地址更新失败',
+							duration: 1500
+						});
+					}
+				});
 			},
 			gonavigate(){
 				uni.navigateTo({
