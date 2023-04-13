@@ -27,11 +27,11 @@
 		<view class="text" v-if="projectData.projectName === '自定义'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="newRule" placeholder="条文规范" @blur="projectChange"></textarea>
-			
+			<view class="choose-pic">
+				<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
+			</view>
 		</view>
-		<view class="choose-pic">
-			<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
-		</view>
+		
 		<view class="text" style="flex-direction: row;">
 			<text style="width: 25%;">严重程度</text>
 			<text style="color: red;width: 25%;">*</text>
