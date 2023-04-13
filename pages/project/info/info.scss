@@ -48,8 +48,8 @@
 		padding-top: 10rpx;
 	}
 	.check{
-		width: 75%;
-		padding-left: 32rpx;
+		width: 65%;
+		padding-left: 1rpx;
 		padding-top: 25rpx;
 		padding-bottom: 15rpx;
 	}
@@ -70,5 +70,14 @@
 	.show-text{
 		text-align: right;
 		width: 50%;
+	}
+	.check-before{
+		width: 10px;
+		height: 15px;
+		border-top: 2px solid transparent;
+		border-right: 2px solid transparent;
+		border-bottom: 2px solid transparent;
+		margin-top: 25rpx;
+		margin-left: 15rpx;
 	}
 	

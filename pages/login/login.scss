@@ -6,14 +6,6 @@
 	// background: url("../../static/login.png") no-repeat;
 	background-size: cover;
 	
-	.hs-title{
-		text-align: center;
-		margin-top: 300rpx;
-		margin-bottom: 100rpx;
-		font-weight: 700;
-		font-size: 40rpx;
-	}
-	
 	.hs-form{
 		display: block;
 		padding-top: 40upx;
@@ -59,13 +51,50 @@
 	.hs-login-btn{
 		width: 80%;
 		margin: 0 auto 40upx;
-		background: #83ABC7;
+		background: #0D72BE;
 		border-radius: 80upx;
 		color: #fff;
 		font-size: 32upx;
 	}
+	.hs-login-btn-disable{
+		background:#83ABC7;
+	}
 	.hs-plh-psw,.hs-plh-tel{
 		color: #83ABC7;
 	}
-	
+	.tel,.psd{
+		color: #007AFF;
+	}
+	.head-container{
+		background-color: #0D72BE;
+		padding-top: 100rpx;
+		padding-bottom: 170rpx;
+		border-radius: 400px/71px;
+		border-top-right-radius: 0;
+		border-top-left-radius: 0;
+	}
+	.hs-logo{
+		background-color: #fff;
+		position: relative;
+		left: 250rpx;
+		margin: 15rpx;
+		width: 200rpx;
+		height: 160rpx;
+		padding-left: 15rpx;
+		padding-right: 15rpx;
+		padding-top: 25rpx;
+		padding-bottom: 25rpx;
+		border-radius: 35rpx;
+	}
+	.hs-title{
+		position: relative;
+		top:85rpx;
+		word-break:keep-all;
+		white-space:nowrap;
+		left: 126rpx;
+		color: #fff;
+		font-weight: 700;
+		font-size: 47rpx;
+		
+	}
 }

@@ -21,7 +21,10 @@
 	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate()">
 		<view style="padding: 25rpx;background-color: #F0F3F5;"></view>
 		<view class="contentDown">
-			
+			<text v-if="item.status === '待检查'" class="check-before" style="color: #f1a532;border-left: 5px solid #f1a532;"></text>
+			<text v-if="item.status === '检查中'" class="check-before" style="color: #02baf7;border-left: 5px solid #02baf7;"></text>
+			<text v-if="item.status === '已检查'" class="check-before" style="color: #00CD00;border-left: 5px solid #00CD00;"></text>
+			<text v-if="item.status === '已中止'" class="check-before" style="color: #EE2C2C;border-left: 5px solid #EE2C2C;"></text>
 			<view class="check" >{{item.check}}</view>
 			<view class="status" >
 				<text v-if="item.status === '待检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
