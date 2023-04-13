@@ -1,5 +1,5 @@
 <template>
-	<view class="totalSearch" style="position: sticky;top: 5%;">
+	<view class="totalSearch">
 		<form class="form" @submit="search">
 		<view class="checkSearch">
 			<image class="logo iconfont icon icon-chazhao" ></image>
@@ -217,7 +217,12 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 				this.problemList = this.initproblemList
 				this.filterList()
 				for (var j = 0; j < this.problemList.length; j++){
-					this.problemList[j].isOpen = false
+					if (this.problemList[j].projectName === '自定义'){
+						this.problemList[j].isOpen = true
+					} else {
+						this.problemList[j].isOpen = false
+					}
+				
 				}
 				var map = {}
 				var nList = []

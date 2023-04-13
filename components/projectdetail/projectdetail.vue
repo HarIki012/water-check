@@ -11,12 +11,14 @@
 		<view v-if="projectData.projectName === '自定义'" class="text" style="flex-direction: row;">
 			<text style="width: 25%;">问题类型</text>
 			<text style="color: red;width: 25%;">*</text>
-			<view style="width: 40%;text-align: right">
+			<view style="width: 45%;text-align: right;">
 				<picker @change="typeSelect" :range="typeChoose">
-					<label>{{ typeName }}</label>
+					<label style="margin-right: 20rpx;">{{ typeName }}</label>
+					<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
 				</picker>
+				
 			</view>
-			<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
+			
 		</view>
 		<view class="text" v-if="projectData.projectName !== '自定义'" style="flex-direction: row;" @click="navigateToDetail()">
 			<text style="width: 95%;">条文规范</text>
@@ -27,15 +29,19 @@
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="newRule" placeholder="条文规范" @blur="projectChange"></textarea>
 			
 		</view>
+		<view class="choose-pic">
+			<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
+		</view>
 		<view class="text" style="flex-direction: row;">
 			<text style="width: 25%;">严重程度</text>
 			<text style="color: red;width: 25%;">*</text>
-			<view style="width: 40%;text-align: right">
+			<view style="width: 45%;text-align: right">
 				<picker @change="severitySelect" :range="severityChoose">
-					<label>{{ severityselectName }}</label>
+					<label style="margin-right: 20rpx;">{{ severityselectName }}</label>
+					<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
 				</picker>
 			</view>
-			<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
+			
 		</view>
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">详情描述</text>
