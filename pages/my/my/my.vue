@@ -19,7 +19,7 @@
 		</view>
 		<view class="name1" @click="redirectTo()">
 			<image class="logoStyle iconfont icon icon-qingjiashenqing"></image>
-			<view class="leftStyle">请假报备</view>
+			<view class="leftStyle">报备</view>
 			<view class="rightStyle" >></view>
 		</view>
 		<view class="quit" @click="redirectToLogin()">

@@ -3,7 +3,7 @@
 		<view class="content" style="-webkit-flex-wrap: wrap;flex-wrap: wrap; " v-for="(item,index) in list">
 			<view class="projectName" style="font-weight: 100; width: 200rpx">{{item.name}}</view>
 			<view class="projectName-info" style="-webkit-flex: 1;flex: 1; flex-wrap: wrap; ">{{item.info}}
-			<text class="location iconfont icon icon-dingwei" v-if="item.name === '项目地址'" style="color: #0099ff; " @click="addressGet()">校正定位</text>
+			<text class="location iconfont icon icon-dingwei" v-if="item.name === '项目地址'" style="color: #0CBCC2; " @click="addressGet()">校正定位</text>
 			</view>
 		</view>
 		
@@ -21,12 +21,13 @@
 	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate()">
 		<view style="padding: 25rpx;background-color: #F0F3F5;"></view>
 		<view class="contentDown">
+			
 			<view class="check" >{{item.check}}</view>
 			<view class="status" >
-				<text v-if="item.status === '待检查'" style="color: #eebb00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
-				<text v-if="item.status === '检查中'" style="color: #00BFFF;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
-				<text v-if="item.status === '已检查'" style="color: #00CD00;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
-				<text v-if="item.status === '已中止'" style="color: #EE2C2C;font-family: '阿里巴巴普惠体 2.0 65 Medium';">{{item.status}}</text>
+				<text v-if="item.status === '待检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+				<text v-if="item.status === '检查中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+				<text v-if="item.status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+				<text v-if="item.status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 			</view>
 		</view>
 		

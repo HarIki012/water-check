@@ -9,7 +9,7 @@
 			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange"></textarea>
 		</view>
 		<view v-if="projectData.projectName === '自定义'" class="text" style="flex-direction: row;">
-			<text style="width: 25%;">严重类型</text>
+			<text style="width: 25%;">问题类型</text>
 			<text style="color: red;width: 25%;">*</text>
 			<view style="width: 40%;text-align: right">
 				<picker @change="typeSelect" :range="typeChoose">
@@ -25,6 +25,7 @@
 		<view class="text" v-if="projectData.projectName === '自定义'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="newRule" placeholder="条文规范" @blur="projectChange"></textarea>
+			
 		</view>
 		<view class="text" style="flex-direction: row;">
 			<text style="width: 25%;">严重程度</text>
@@ -78,7 +79,7 @@
 				typeIndex:'0',
 				typeName:'质量',
 				newRule:'',
-				from:1,//跳转页面确定
+				from:0,//跳转页面确定
 			};
 		},
 		mounted() {

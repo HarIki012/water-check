@@ -22,7 +22,7 @@
 	export default {
 		data() {
 			return {
-				phone: 13277271520,
+				phone: 12345678910,
 				password: 123456,
 				showPassword:true,
 				

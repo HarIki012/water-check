@@ -34,10 +34,9 @@
 				<textarea class="detailInfo" placeholder="请输入反馈内容..."/>
 				<text class="Name">证明资料</text>
 				<view class="hs-choose-pic">
-					<uni-file-picker limit="3" title="最多选择3张照片"></uni-file-picker>
-					
+					<uni-file-picker limit="1" title="上传图片或视频"></uni-file-picker>
 				</view>
-				<button class="submit">提交</button>
+				<button class="submit" @click="seedFeedBack()">发送</button>
 			</view>
 		</uni-popup>
 	</view>
@@ -114,6 +113,12 @@
 		methods: {
 			feedBack(){
 				this.$refs['popup'].open();
+			},
+			seedFeedBack(){
+				uni.showToast({
+					title:'反馈成功',
+					duration:1500
+				})
 			}
 		}
 	}

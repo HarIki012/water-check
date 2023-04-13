@@ -17,6 +17,7 @@
 	-webkit-flex: 1;
 	flex: 1;
 	flex-wrap: wrap;
+	margin-right: 15rpx;
 }
 .remark{
 	display: inline-block;
@@ -69,13 +70,12 @@
 	display: flex;
 	justify-content: left;
 	letter-spacing: 2rpx;
+	
 }
 .hs-choose-pic{
-		display: flex;
-		margin-left: 20rpx;
-		margin-right: 30rpx;
-		padding-top: 20rpx;
-		padding-bottom: 40rpx;
-		padding-left: 30rpx;
-		font-size: 35rpx;
+	width: 500rpx;
+	height: 220rpx;
+	display: flex;
+	justify-content: left;
+	font-size: 60rpx;
 }
