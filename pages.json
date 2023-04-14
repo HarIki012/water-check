@@ -4,11 +4,11 @@
 		    "path" : "pages/login/login",
 		    "style" :                                                                                    
 		    {
-		        "navigationBarTitleText": "登录",
+		        "navigationBarTitleText": "",
 		        "enablePullDownRefresh": false,
 				
 				"mp-weixin": {
-					"scrollIndicator": "none"
+					
 				}
 		    }
 		    
@@ -77,7 +77,7 @@
 		        "navigationBarTitleText": "报备",
 		        "enablePullDownRefresh": false,
 				"mp-weixin": {
-					"scrollIndicator": "none"
+					
 				}
 		    }
 		    
@@ -89,7 +89,7 @@
 		        "navigationBarTitleText": "项目详情",
 		        "enablePullDownRefresh": false,
 				"mp-weixin": {
-					"scrollIndicator": "none"
+					
 				}
 		    }
 		    
@@ -101,7 +101,6 @@
 		        "navigationBarTitleText": "检查内容",
 		        "enablePullDownRefresh": false,
 				"mp-weixin": {
-					"scrollIndicator": "none",
 						  "titleNView": {
 							"buttons": [
 							  {
@@ -150,9 +149,9 @@
 		//"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
-		"scrollIndicator": "none",
+		
 		"mp-weixin":{
-				"scrollIndicator":"none" //全局 在小程序页面都不显示滚动条
+				
 			}
 	},
 	"uniIdRouter": {

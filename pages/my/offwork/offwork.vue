@@ -92,8 +92,8 @@
 				console.log(this.voiceResult)
 				console.log(this.begindate)
 				console.log(this.enddate)
-				uni.navigateTo({
-					url:'/pages/my/my'
+				uni.switchTab({
+					url:'/pages/my/my/my'
 				})
 			},
 			//语音识别功能
