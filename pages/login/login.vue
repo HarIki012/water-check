@@ -32,9 +32,8 @@
 			};
 		},
 		computed:{
+			// 禁用登录按钮
 			loginButtonState(){//当用户名和密码框都不为空时btnState==true,利用这个计算属性来动态控制按钮的禁用和颜色
-				console.log(this.userName)
-				console.log(this.userPwd)
 				return this.userName !== '' && this.userPwd !== ''
 			}
 		},
@@ -73,10 +72,9 @@
 					});
 				}
 			},
-			
+			// 密码框显示密码
 			changePassword: function() {
 			    this.showPassword = !this.showPassword;
-				console.log(this.showPassword)
 			}
 		}
 	}

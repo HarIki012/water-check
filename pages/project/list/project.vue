@@ -96,6 +96,7 @@
 
 <script>
 import { warn } from "vue"
+import { patrolAll } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -156,7 +157,20 @@ import { warn } from "vue"
 				return arr
 			}
 		},
+		onLoad() {
+			this.getpatrolAll()
+		},
 		methods: {
+			// 获取巡检活动
+			async getpatrolAll(){
+				patrolAll().then(res=>{
+						debugger
+					if(res.data.code == 200){
+						console.log(res)
+					}
+				})
+			},
+			
 			navigatortoinfo(){
 				uni.navigateTo({
 					url:'/pages/project/info/info'

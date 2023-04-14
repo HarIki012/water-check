@@ -13,6 +13,6 @@
 </script>
 
 <style lang="scss">
-	// @import './common/mico/iconfont.css';
+	@import './common/main.scss';
 	@import './common/icon/iconfont.css';
 </style>

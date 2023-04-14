@@ -6,22 +6,8 @@
 			</picker>
 		</view>
 		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="projectnameSearch" placeholder="项目名称" confirm-type="search">
+		<text class="select-text">搜索</text>
 	</view>
-<!-- 	<view class="sortBorder">
-		<view class="sort" v-for="(item,index) in sort">
-				<view v-if="item.delete">
-					<view class="delete iconfont icon icon-shanchu2" @click="deleteTag(index)"> </view>
-					<view v-if="item.flag" class="sortItem iconfont icon icon-xiangxia1" @click = "showTag(index)">{{item.name}}</view>
-					<view v-else class="sortItem iconfont icon icon-xiangyou" @click="showTag(index)">{{item.name}}</view>
-					<view :class="item.flag ? 'sortItemOpen iconfont icon icon-xiangxia1' : 'sortItem iconfont icon icon-xiangyou'" @click="showTag(index)">{{item.name}}</view>
-						<view :class="item.flag ? 'active':'border'">
-							<view class="info" v-for="(item,index) in item.info">
-								<view  class="detail" @click="redirectTodetail">{{item.detail}}</view>
-							</view>
-						</view>
-				</view>
-		</view>
-	</view> -->
 	<view class="sortBorder">
 			<view class="sort" v-for="(item,index) in data">
 				<view v-if="item.delete">

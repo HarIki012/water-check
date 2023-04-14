@@ -67,10 +67,18 @@
 		overflow: hidden;
 		white-space: nowrap;
 	}
-	
 	.delete{
 		font-size: 35rpx;
 		position: relative;
 		left: 630rpx;
 		top: 40rpx;
+	}
+	.select-text{
+		position: relative;
+		word-break:keep-all;
+		white-space:nowrap;
+		top: 15rpx;
+		margin-left: 10rpx;
+		margin-right: 10rpx;
+		color: #0D72BE;
 	}
