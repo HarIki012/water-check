@@ -8,3 +8,10 @@ export function patrolAll(){
 		method:'GET',
 	});
 }
+export function projectsAll(data) {
+	return uni.request({
+		url: `${baseUrl}/projects`,
+		data: data,
+		method:'GET',
+	})
+}

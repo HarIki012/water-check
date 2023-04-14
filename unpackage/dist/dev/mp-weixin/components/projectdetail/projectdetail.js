@@ -26,7 +26,9 @@ const _sfc_main = {
       typeChoose: ["质量", "安全", "文明施工"],
       typeIndex: "0",
       typeName: "质量",
-      newRule: ""
+      newRule: "",
+      from: 0
+      //跳转页面确定
     };
   },
   mounted() {
@@ -54,6 +56,11 @@ const _sfc_main = {
     },
     projectChange() {
       this.$emit("sendData", this.projectData);
+    },
+    navigateToDetail() {
+      common_vendor.index.navigateTo({
+        url: "/pages/project/detail/detail?from=" + this.from
+      });
     }
   }
 };
@@ -84,26 +91,32 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     j: $data.typeChoose
   } : {}, {
     k: $props.projectData.projectName !== "自定义"
-  }, $props.projectData.projectName !== "自定义" ? {} : {}, {
-    l: $props.projectData.projectName === "自定义"
-  }, $props.projectData.projectName === "自定义" ? {
-    m: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
-    n: $data.newRule,
-    o: common_vendor.o(($event) => $data.newRule = $event.detail.value)
+  }, $props.projectData.projectName !== "自定义" ? {
+    l: common_vendor.o(($event) => $options.navigateToDetail())
   } : {}, {
-    p: common_vendor.t($data.severityselectName),
-    q: common_vendor.o((...args) => $options.severitySelect && $options.severitySelect(...args)),
-    r: $data.severityChoose,
-    s: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
-    t: $props.projectData.detail,
-    v: common_vendor.o(($event) => $props.projectData.detail = $event.detail.value),
-    w: common_vendor.p({
+    m: $props.projectData.projectName === "自定义"
+  }, $props.projectData.projectName === "自定义" ? {
+    n: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
+    o: $data.newRule,
+    p: common_vendor.o(($event) => $data.newRule = $event.detail.value),
+    q: common_vendor.p({
+      limit: "9",
+      title: "最多选择9张图片"
+    })
+  } : {}, {
+    r: common_vendor.t($data.severityselectName),
+    s: common_vendor.o((...args) => $options.severitySelect && $options.severitySelect(...args)),
+    t: $data.severityChoose,
+    v: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
+    w: $props.projectData.detail,
+    x: common_vendor.o(($event) => $props.projectData.detail = $event.detail.value),
+    y: common_vendor.p({
       limit: "9",
       title: "最多选择9张图片"
     }),
-    x: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
-    y: $props.projectData.rectify,
-    z: common_vendor.o(($event) => $props.projectData.rectify = $event.detail.value)
+    z: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
+    A: $props.projectData.rectify,
+    B: common_vendor.o(($event) => $props.projectData.rectify = $event.detail.value)
   });
 }
 const Component = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "E:/water-check-project/components/projectdetail/projectdetail.vue"]]);

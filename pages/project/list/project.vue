@@ -3,8 +3,8 @@
 		<view style="position: sticky;top: 0;">
 			<view class="wx-top">
 				<!-- 搜索图标 -->
-				<view class="iconfont icon icon-new_document" style="font-size: 50rpx;width: 10%;padding-top: 50rpx;" @click="openPop"></view>
-				<view style="width: 90%;text-align: center;padding-right: 50rpx;font-size: 40rpx;padding-top: 50rpx;">项目列表</view>
+				<view class="iconfont icon icon-new_document" style="font-size: 50rpx;width: 10%;padding-top: 20rpx;" @click="openPop"></view>
+				<view style="width: 90%;text-align: center;padding-right: 50rpx;font-size: 40rpx;padding-top: 20rpx;">项目列表</view>
 			</view>
 			<view class="projectSearch">
 				<view class="projectStyle">
@@ -26,7 +26,7 @@
 		<view style="width: 100%;" @click="navigatortoinfo()">
 			<view class="tableStyle" v-for="(item,index) in filterList">
 				<view class="tableContent">
-					<view class="logoItem iconfont icon icon-wenjianguanli"></view>
+					<view class="logoItem iconfont icon icon-chazhao"></view>
 					<view style="width: 80%;">
 						{{item.name}}
 					</view>
@@ -97,6 +97,7 @@
 <script>
 import { warn } from "vue"
 import { patrolAll } from '../../../api/api.js'
+import { projectsAll } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -140,7 +141,7 @@ import { patrolAll } from '../../../api/api.js'
 				addressMessage: '',
 				addressData: '',
 				buttonUse: false,
-				upData: true
+				upData: true,
 			}
 		},
 		computed: {
@@ -159,18 +160,27 @@ import { patrolAll } from '../../../api/api.js'
 		},
 		onLoad() {
 			this.getpatrolAll()
+			this.getProjects()
 		},
 		methods: {
 			// 获取巡检活动
 			async getpatrolAll(){
 				patrolAll().then(res=>{
-						debugger
+					console.log(res)
 					if(res.data.code == 200){
 						console.log(res)
 					}
 				})
 			},
-			
+			async getProjects(){
+				var tranData = {
+					page:1,
+					size:10
+				}
+				projectsAll(tranData).then(res=>{
+					console.log(res)
+				})
+			},
 			navigatortoinfo(){
 				uni.navigateTo({
 					url:'/pages/project/info/info'
