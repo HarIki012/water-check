@@ -134,7 +134,14 @@ import { projectsAll } from '../../../api/api.js'
 					//则在zhiweilist里过滤掉filterText
 				}
 				if (this.projectselectName !== '区域选择') {
-					arr = arr.filter(item => item.patrolStatus[0].status.includes(this.projectselectName))
+					arr = arr.filter(item => {
+						if (item.patrolStatus !== null && item.patrolStatus.length !== 0){
+							if (item.patrolStatus[0].status === this.projectselectName) {
+								return true
+							}
+							// item.patrolStatus[0].status.includes(this.projectselectName)
+						}
+					})
 				}
 				return arr
 			}
@@ -145,6 +152,9 @@ import { projectsAll } from '../../../api/api.js'
 		methods: {
 			// 获取巡检活动
 			async getProjects(){
+				uni.showLoading({
+				                    title: '加载中'
+				                })
 				var tranData = {
 					page:1,
 					size:this.sumData
@@ -165,6 +175,7 @@ import { projectsAll } from '../../../api/api.js'
 				projectsAll(tranData).then(result=>{
 					console.log(result.data.data.data)
 					this.projectTable = result.data.data.data
+					uni.hideLoading();
 				})
 			},
 			navigatortoinfo(){
