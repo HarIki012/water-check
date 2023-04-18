@@ -24,20 +24,24 @@
 		
 		
 		<view style="width: 100%;" @click="navigatortoinfo()">
-			<view class="tableStyle" v-for="(item,index) in filterList">
-				<view class="tableContent">
-					<view class="logoItem iconfont icon icon-chazhao"></view>
-					<view style="width: 80%;">
+			<view class="tableStyle" v-for="(item,index) in filterList" :key="item.id">
+				<view class="tableContent" style="display: flex;align-items: center;">
+					<view class="logoItem iconfont icon icon-chazhao" style="display: flex;align-items: center;"></view>
+					<view style="width: 80%;display: flex;align-items: center;">
 						{{item.name}}
 					</view>
 				</view>
 				
 				<view class="statusStyle">
-					<text style="color: darkgray;">状态：</text>
-					<text v-if="item.status === '待检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
-					<text v-if="item.status === '检查中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
-					<text v-if="item.status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
-					<text v-if="item.status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+					<view style="display: flex;width: 100%;justify-content: flex-end;">
+						<text style="color: darkgray;">状态：</text>
+						<view v-if="item.patrolStatus !== null && item.patrolStatus.length !== 0">
+							<text v-if="item.patrolStatus[0].status === '待检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
+							<text v-if="item.patrolStatus[0].status === '检查中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
+							<text v-if="item.patrolStatus[0].status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
+							<text v-if="item.patrolStatus[0].status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
+						</view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -101,32 +105,7 @@ import { projectsAll } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
-				projectTable:[
-					{
-						name:'2017年江岸区沿江商务区现状道路雨污管涵完善工程',
-						status:'待检查',
-					},
-					{
-						name:'百步亭路（兴业路-幸福街）道排工程',
-						status:'已中止',
-					},
-					{
-						name:'建设渠（幸福二路明渠-黄孝河明渠）综合整治工程',
-						status:'已检查',
-					},
-					{
-						name:'2018年江岸区沿江商务区现状道路雨污管涵完善工程',
-						status:'待检查',
-					},
-					{
-						name:'1111百步亭路（兴业路-幸福街）道排工程',
-						status:'检查中',
-					},
-					{
-						name:'1111建设渠（幸福二路明渠-黄孝河明渠）综合整治工程',
-						status:'已检查',
-					},
-				],
+				projectTable: [],
 				newProjectname: '',
 				isNew: '',
 				blankSpace: '',
@@ -142,6 +121,8 @@ import { projectsAll } from '../../../api/api.js'
 				addressData: '',
 				buttonUse: false,
 				upData: true,
+				sumData:10,
+				testArr: ''
 			}
 		},
 		computed: {
@@ -153,32 +134,37 @@ import { projectsAll } from '../../../api/api.js'
 					//则在zhiweilist里过滤掉filterText
 				}
 				if (this.projectselectName !== '区域选择') {
-					arr = arr.filter(item => item.status.includes(this.projectselectName))
+					arr = arr.filter(item => item.patrolStatus[0].status.includes(this.projectselectName))
 				}
 				return arr
 			}
 		},
 		onLoad() {
-			this.getpatrolAll()
 			this.getProjects()
 		},
 		methods: {
 			// 获取巡检活动
-			async getpatrolAll(){
-				patrolAll().then(res=>{
-					console.log(res)
-					if(res.data.code == 200){
-						console.log(res)
-					}
-				})
-			},
 			async getProjects(){
 				var tranData = {
 					page:1,
-					size:10
+					size:this.sumData
 				}
 				projectsAll(tranData).then(res=>{
-					console.log(res)
+					// console.log(res)
+					this.sumData = res.data.data.count
+					console.log(res.data.data.data)
+					this.getallProjects()
+					
+				})
+			},
+			getallProjects(){
+				var tranData = {
+					page:1,
+					size:this.sumData
+				}
+				projectsAll(tranData).then(result=>{
+					console.log(result.data.data.data)
+					this.projectTable = result.data.data.data
 				})
 			},
 			navigatortoinfo(){
