@@ -48,7 +48,7 @@
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange"></textarea>
 		</view>
 		<view class="choose-pic">
-			<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
+			<uni-file-picker v-model="projectData.photoUrl" limit="9" title="最多选择9张图片" @select="picTest"></uni-file-picker>
 		</view>
 		<view class="text">
 			<view style="flex-direction: row; margin-bottom: 20rpx;">
@@ -78,6 +78,7 @@
 					rectify: '整改要求略',
 					}
 				],
+				testPicurl:[],
 				severityChoose:['无','一般','较严重','严重','非常严重'],
 				severityselectIndex:'0',
 				severityselectName:'无',
@@ -92,6 +93,14 @@
 			this.initData()
 		},
 		methods:{
+			picTest(e){
+				console.log(e)
+				this.projectData.photoUrl.push({
+					fileId: e.tempFilePaths,
+					url:e.tempFilePaths[0]
+				})
+				this.projectChange()
+			},
 			hello(){
 				console.log('hello')
 			},
@@ -112,6 +121,7 @@
 				this.$emit("sendData",this.projectData)
 			},
 			projectChange(){
+				console.log(this.testPicurl)
 				this.$emit("sendData",this.projectData)
 			},
 			navigateToDetail(){

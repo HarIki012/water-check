@@ -9,7 +9,7 @@
 			<view class="projectSearch">
 				<view class="projectStyle">
 					<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
-						<label style="color: #929293;">{{ projectselectName }}</label>
+						<label style="color: #929293;margin-right: 10rpx;">{{ projectselectName }}</label>
 						<text class="iconfont icon icon-xiangxia"></text>
 					</picker>
 				</view>
@@ -40,6 +40,9 @@
 							<text v-if="item.patrolStatus[0].status === '检查中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
+						</view>
+						<view v-else>
+							<text style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">待检查</text>
 						</view>
 					</view>
 				</view>
@@ -110,7 +113,7 @@ import { projectsAll } from '../../../api/api.js'
 				isNew: '',
 				blankSpace: '',
 				dateChoose: ['2023年第一次检查','2023年第二次检查','2023年第三次检查','2023年第四次检查','2023年第五次检查','2023年第六次检查'],
-				projectChoose: ['区域选择', '待检查', '检查中', '已检查', '已中止'],
+				projectChoose: ['区域选择',"洪山区","东湖风景区","汉阳区","江汉区","武昌区","江夏区","东西湖区","青山区","硚口区","东湖高新区","新洲区","蔡甸区","江岸区","经开区","黄陂区"],
 				projectselectIndex: 0,
 				dateIndex: 0,
 				projectselectName: '区域选择',
@@ -134,14 +137,13 @@ import { projectsAll } from '../../../api/api.js'
 					//则在zhiweilist里过滤掉filterText
 				}
 				if (this.projectselectName !== '区域选择') {
-					arr = arr.filter(item => {
-						if (item.patrolStatus !== null && item.patrolStatus.length !== 0){
-							if (item.patrolStatus[0].status === this.projectselectName) {
-								return true
-							}
-							// item.patrolStatus[0].status.includes(this.projectselectName)
-						}
-					})
+					arr = this.projectTable.filter(item => item.district.includes(this.projectselectName))
+						// if (item.patrolStatus !== null && item.patrolStatus.length !== 0){
+						// 	if (item.patrolStatus[0].status === this.projectselectName) {
+						// 		return true
+						// 	}
+						// 	// item.patrolStatus[0].status.includes(this.projectselectName)
+						// }
 				}
 				return arr
 			}
@@ -167,7 +169,7 @@ import { projectsAll } from '../../../api/api.js'
 					
 				})
 			},
-			getallProjects(){
+			async getallProjects(){
 				var tranData = {
 					page:1,
 					size:this.sumData
@@ -176,7 +178,21 @@ import { projectsAll } from '../../../api/api.js'
 					console.log(result.data.data.data)
 					this.projectTable = result.data.data.data
 					uni.hideLoading();
+					// 遍历获取所有区域
+					// var sumName = []
+					// for (var i = 0; i < this.projectTable.length;i++) {
+					// 	if(sumName.filter(item => {
+					// 		if (item === this.projectTable[i].district){
+					// 			return true
+					// 		}
+					// 		}).length === 0) {
+					// 			sumName.push(this.projectTable[i].district)
+					// 	}
+					// 	console.log(i)
+					// 	console.log(sumName)
+					// }
 				})
+			
 			},
 			navigatortoinfo(){
 				uni.navigateTo({

@@ -74,7 +74,7 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 						severity: '较严重',
 						description: '问题描述略1',
 						detail: '详细描述略',
-						photoUrl: '',   //放图片
+						photoUrl: [],   //放图片
 						rectify: '整改要求略',
 					},
 					{
@@ -84,7 +84,7 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 						severity: '较严重',
 						description: '问题描述略2',
 						detail: '详细描述略',
-						photoUrl: '',   //放图片
+						photoUrl: [],   //放图片
 						rectify: '整改要求略',
 					},
 					{
@@ -94,7 +94,7 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 						severity: '较严重',
 						description: '问题描述略3',
 						detail: '详细描述略',
-						photoUrl: '',   //放图片
+						photoUrl: [],   //放图片
 						rectify: '整改要求略',
 					},
 					{
@@ -104,7 +104,7 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 						severity: '较严重',
 						description: '问题描述略4',
 						detail: '详细描述略',
-						photoUrl: '',   //放图片
+						photoUrl: [],   //放图片
 						rectify: '整改要求略',
 					},
 					{
@@ -114,7 +114,7 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 						severity: '较严重',
 						description: '问题描述略5',
 						detail: '详细描述略',
-						photoUrl: '',   //放图片
+						photoUrl: [],   //放图片
 						rectify: '整改要求略',
 					}
 				],
