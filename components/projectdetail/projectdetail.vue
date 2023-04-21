@@ -95,10 +95,12 @@
 		methods:{
 			picTest(e){
 				console.log(e)
+				console.log(this.projectData.photoUrl)
 				this.projectData.photoUrl.push({
 					fileId: e.tempFilePaths,
 					url:e.tempFilePaths[0]
 				})
+				console.log(this.projectData.photoUrl)
 				this.projectChange()
 			},
 			hello(){
@@ -123,6 +125,9 @@
 			projectChange(){
 				console.log(this.testPicurl)
 				this.$emit("sendData",this.projectData)
+			},
+			uploadPic(){
+				
 			},
 			navigateToDetail(){
 				uni.navigateTo({

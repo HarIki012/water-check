@@ -228,10 +228,19 @@ import { createProject } from '../../../api/api.js'
 				console.log(newProject)
 				createProject(newProject).then(res=>{
 					console.log(res.data.data)
-					if (res.data.data === '添加成功') {
+					if (res.data.message === 'success') {
 						uni.hideLoading();
+						uni.showToast({
+							title: '添加成功!',
+							duration: 1000
+						});
 					} else {
 						uni.hideLoading();
+						uni.showToast({
+							icon:"error",
+							title: '添加失败!',
+							duration: 1000
+						});
 					}
 				})
 				this.$refs['popup'].close()
