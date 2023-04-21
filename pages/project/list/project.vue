@@ -105,6 +105,7 @@
 import { warn } from "vue"
 import { patrolAll } from '../../../api/api.js'
 import { projectsAll } from '../../../api/api.js'
+import { createProject } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -208,6 +209,31 @@ import { projectsAll } from '../../../api/api.js'
 				this.$refs['popup'].open();
 			},
 			closePop() {
+				uni.showLoading({
+				                    title: '新建项目中'
+				                })
+				var newProject = {
+				  "name": this.newProjectname,
+				  "type": "水务工程",
+				  "district": "青山区",
+				  "address": "青山区友谊大道XXXX",
+				  "employer": "XXX有限公司",
+				  "builder": "XXX建设有限公司",
+				  "supervisor": "XXX工程管理有限公司",
+				  "patrolStatus": [{"patrol_name":this.dateName,"status":"待检查"}],
+				  "regulator": "监管部门1",
+				  "contracts": "监理-XXX-18888888888",
+				  "visualProgress": "0%",
+				}
+				console.log(newProject)
+				createProject(newProject).then(res=>{
+					console.log(res.data.data)
+					if (res.data.data === '添加成功') {
+						uni.hideLoading();
+					} else {
+						uni.hideLoading();
+					}
+				})
 				this.$refs['popup'].close()
 			},
 			closeButton(){
