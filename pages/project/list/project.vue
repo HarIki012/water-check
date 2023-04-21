@@ -24,8 +24,8 @@
 		
 		
 		
-		<view @click="navigatortoinfo()">
-			<view class="tableStyle" v-for="(item,index) in filterList" :key="item.id">
+		<view >
+			<view class="tableStyle" v-for="(item,index) in filterList" :key="item.id" @click="navigatortoinfo(item.id)">
 				<view class="tableContent" style="display: flex;align-items: center;">
 					<view class="logoItem iconfont icon icon-chazhao" style="display: flex;align-items: center;"></view>
 					<view style="width: 80%;display: flex;align-items: center;">
@@ -196,9 +196,9 @@ import { createProject } from '../../../api/api.js'
 				})
 			
 			},
-			navigatortoinfo(){
+			navigatortoinfo(id){
 				uni.navigateTo({
-					url:'/pages/project/info/info'
+					url:'/pages/project/info/info?id=' + id
 				})
 			},
 			openPop(){

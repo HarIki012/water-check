@@ -18,17 +18,17 @@
 	</view>
 	
 	
-	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate()">
+	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate(item.patrolId)">
 		<view style="padding: 25rpx;background-color: #F0F3F5;"></view>
 		<view class="contentDown">
-			<text v-if="item.status === '待检查'" class="check-before" style="color: #f1a532;border-left: 5px solid #f1a532;"></text>
-			<text v-if="item.status === '检查中'" class="check-before" style="color: #02baf7;border-left: 5px solid #02baf7;"></text>
+			<text v-if="item.status === '未巡检'" class="check-before" style="color: #f1a532;border-left: 5px solid #f1a532;"></text>
+			<text v-if="item.status === '巡检中'" class="check-before" style="color: #02baf7;border-left: 5px solid #02baf7;"></text>
 			<text v-if="item.status === '已检查'" class="check-before" style="color: #00CD00;border-left: 5px solid #00CD00;"></text>
 			<text v-if="item.status === '已中止'" class="check-before" style="color: #EE2C2C;border-left: 5px solid #EE2C2C;"></text>
 			<view class="check" >{{item.check}}</view>
 			<view class="status" >
-				<text v-if="item.status === '待检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
-				<text v-if="item.status === '检查中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+				<text v-if="item.status === '未巡检'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+				<text v-if="item.status === '巡检中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 				<text v-if="item.status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 				<text v-if="item.status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 			</view>
@@ -46,31 +46,27 @@
 </template>
 
 <script>
+import { projectInfo } from '../../../api/api.js'
+import { patrolByProject } from '../../../api/api.js'
 	export default {
 		data() {
 			
 			return {
+				projectTable: [],
+				projectId:'', //项目ID
 				flag: false,
+				temp: {
+					patrolId:0,
+					check:"2023年第一次检查",
+					leader:"组长",
+					leaderName:"",
+					team:"组员",
+					teamName:"",
+					endTime:"结束时间",
+					endTimeInfo:"",
+					status:""
+				},
 				checks:[
-					{
-						check:"2023年第一次检查",
-						leader:"组长",
-						leaderName:"张三",
-						team:"组员",
-						teamName:"李四，王五",
-						endTime:"结束时间",
-						endTimeInfo:"2023年4月8日",
-						status:"待检查"
-					},{
-						check:"2022年年末检查",
-						leader:"组长",
-						leaderName:"赵六",
-						team:"组员",
-						teamName:"周八，郑十",
-						endTime:"结束时间",
-						endTimeInfo:"2022年12月20日",
-						status:"已检查"
-					}
 				],
 				list:[{
 					name:"项目名称",
@@ -117,13 +113,56 @@
 				addressData:'',
 			}
 		},
-		onLoad() {
-
+		onLoad(value) {
+			this.projectId = value.id
+			this.getprojectInfo()
+			this.getpatrolByProject()
 		},
 		methods: {
+			// 获取项目详情
+			async getprojectInfo(){
+				projectInfo(this.projectId).then(res=>{
+					// console.log(res)
+					this.projectTable = res.data.data
+					// console.log(this.projectTable)
+					this.list[0].info = this.projectTable.name
+					this.list[1].info = this.projectTable.district
+					this.list[2].info = this.projectTable.type
+					this.list[3].info = this.projectTable.address
+					this.list[4].info = this.projectTable.employer
+					this.list[5].info = this.projectTable.builder
+					this.list[6].info = this.projectTable.supervisor
+					this.list[7].info = this.projectTable.regulator
+					this.list[8].info = this.projectTable.contracts
+					this.list[9].info = this.projectTable.visualProgress
+				})
+			},
+			// 获取巡检信息
+			async getpatrolByProject(){
+				patrolByProject(this.projectId).then(res=>{
+					const checksTemp = []
+					for(var i = 0 ; i<res.data.data.length;i++ ){
+						this.temp.patrolId = res.data.data[i].id
+						this.temp.check = res.data.data[i].name //巡检活动名
+						this.temp.leaderName  = res.data.data[i].inspectionTeams.leader  //队长名字
+						for(var j = 0; j <res.data.data[i].inspectionTeams[0].expertList.length; j++){ //队员名字
+							this.temp.teamName = this.temp.teamName + res.data.data[i].inspectionTeams[0].expertList[j].name
+							if(j < res.data.data[i].inspectionTeams[0].expertList.length - 1){
+								this.temp.teamName = this.temp.teamName +'，'
+							}
+						}
+						this.temp.endTimeInfo  = res.data.data[i].patrolDate[res.data.data[i].patrolDate.length- 1] //结束时间
+						this.temp.status  = res.data.data[i].status //巡检状态
+						checksTemp.push(this.temp)
+					}
+					this.checks = checksTemp
+				})
+			},
+			// 展开或收起
 			showTag(){
 				this.flag = !this.flag;
 			}, 
+			// 获取定位
 			addressGet(){
 				const that = this;
 				wx.getLocation({
@@ -147,10 +186,11 @@
 					}
 				});
 			},
-			gonavigate(){
+			//跳转页面
+			gonavigate(id){
 				uni.navigateTo({
 					//保留当前页面，跳转到应用内的某个页面
-					url: '/pages/project/checks/checks'
+					url: '/pages/project/checks/checks?id=' + id
 				})
 			}
 		}
