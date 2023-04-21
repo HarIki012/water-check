@@ -52,3 +52,19 @@ export function createProject(data) {
 	})
 }
 
+// 按id获取单次巡检活动
+export function patrolID(id) {
+	return uni.request({
+		url:`${baseUrl}/patrol?id=${id}`,
+		method:'GET',
+	})
+}
+
+// 修改问题记录
+export function updataProblems(data) {
+	return uni.request({
+		url: `${baseUrl}/problem_update`,
+		data: data,
+		method:'PUT',
+	})
+}

@@ -48,7 +48,7 @@
 			
 	</view>
 	<view class="button-bottom">
-		<button class="submit-button">提交</button>
+		<button class="submit-button" @tap="submitChange()">提交</button>
 		<button class="self-add-button" @tap="addProject">自定义问题添加</button>
 	</view>
 	
@@ -57,6 +57,8 @@
 
 <script>
 import projectdetail from "/components/projectdetail/projectdetail.vue";
+import { patrolID } from '../../../api/api.js'
+import { updataProblems } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -122,20 +124,39 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 				deleteName:'',
 				deleteId:'',
 				newProject:'',
-				sumProjects:''
+				sumProjects:'',
+				checkId:1
 			}
 		},
 		components:{
 			projectdetail
 		},
-		mounted() {
-			this.changeData(),
-			this.getLength()
+		onLoad(value) {
+			if(value.id !== undefined) {
+				this.checkId = value.id
+			}
+			console.log(this.checkId)
+			this.getChecks()
 		},
-		computed: {
-			
+		mounted() {
+			// this.changeData(),
+			// this.getLength()
 		},
 		methods: {
+			async getChecks(){
+				uni.showLoading({
+				                    title: '加载中'
+				                })
+				patrolID(this.checkId).then(res=>{
+					console.log(res.data.data.inspectionTeams[0].problems)
+					this.initproblemList = res.data.data.inspectionTeams[0].problems
+					this.changeData(),
+					this.getLength()
+					console.log('hello')
+					uni.hideLoading();
+					
+				})
+			},
 			getLength(){
 				this.sumProjects = this.initproblemList.length
 			},
@@ -180,7 +201,6 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 					arr = this.problemList.filter(item => item.type.includes(this.selectPoint))
 					//则在zhiweilist里过滤掉filterText
 				}
-				console.log(arr)
 				this.problemList = arr
 			},
 			deleteProject(e) {
@@ -212,6 +232,31 @@ import projectdetail from "/components/projectdetail/projectdetail.vue";
 				// this.initproblemList[this.sumProjects] = this.newProject
 				this.initproblemList.push(this.newProject)
 				this.changeData()
+			},
+			submitChange(){
+				for(var i = 0;i<this.initproblemList.length;i++){
+					// var submitData = {
+					// 	"id": this.initproblemList.id,
+					// 	"projectName": this.initproblemList.projectName,
+					// 	"type": this.initproblemList.type,
+					// 	"severity": this.severity,
+					// 	"description": "问题描述略",
+					// 	"detail": "详细描述略",
+					// 	"photoUrl": [
+					// 		"xxxx.jpg"
+					// 	],
+					// 	"rectify": "整改要求略",
+					// 	"deadline": "2023-4-1",
+					// 	"supervisionUnit": "督办单位1",
+					// 	"finder": "专家2"
+					// }
+					updataProblems(this.initproblemList[i]).then(res=>{
+						console.log(res)
+					})
+				}
+				console.log(this.initproblemList[0])
+				
+				
 			},
 			changeData() {
 				this.problemList = this.initproblemList
