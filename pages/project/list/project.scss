@@ -1,6 +1,10 @@
 	page{
 		background: linear-gradient(to bottom, #F1F4F6, #F1F4F6);
 	}
+	.stick-bar{
+		position: sticky;
+		top: 0;
+	}
 	.wx-top{
 		display: flex;
 		padding: 0 40rpx;
@@ -10,19 +14,22 @@
 		align-items:center;
 		background-color: white;
 		}
-	.new-project{
-		display: flex;
-		width: 25%;
+	.create-button{
+		font-size: 50rpx;
+		width: 10%;
 		padding-top: 20rpx;
-		flex-direction: row;
-		font-size: 35rpx;
 	}
-	.list-title{
-		width: 70%;
+	.title-style,.create-word,.title-word{
 		text-align: center;
-		padding-right: 80rpx;
-		font-size: 40rpx;
 		padding-top: 20rpx;
+	}
+	.create-word{
+		width: 10%;
+	}
+	.title-word{
+		width: 60%;
+		padding-right: 100rpx;
+		font-size: 40rpx;
 	}
 	.backgroundStyle{
 		width: 100%;
@@ -62,7 +69,7 @@
 		justify-content: left;
 		letter-spacing: 2rpx;
 	}
-	.oldStyle,.project-time{
+	.input-style,.project-time{
 		border: 1rpx solid darkgray;
 		display: flex;
 		width: 100%;
@@ -73,7 +80,8 @@
 		align-items: center;
 	}
 	.projectSearch{
-		padding-top: 30rpx;
+		padding-top: 20rpx;
+		padding-bottom: 20rpx;
 		width: 100%;
 		height: 80rpx;
 		display: flex;
@@ -85,14 +93,12 @@
 	}
 	.projectStyle{
 		margin-left: 3%;
-		border-radius: 5px;
 		display: flex;
 		text-align: center;
 		align-items: center;
 		flex-direction: row;
 		margin-right: 1%;
 		width: 30%;
-		height: 70rpx;
 	}
 	.centerStyle{
 		display: flex;
@@ -107,14 +113,12 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		height: 70rpx;
 		position: sticky;
 		background-color: white;
 	}
 	.searchButton{
 		margin-left: 25rpx;
 		display: flex;
-		height: 70rpx;
 		justify-content: center;
 		align-items: center;
 		color: #0E73BF;

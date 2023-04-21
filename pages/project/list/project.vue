@@ -1,10 +1,11 @@
 <template>
 	<view class="backgroundStyle">
-		<view style="position: sticky;top: 0;">
+		<view class="stick-bar">
 			<view class="wx-top">
 				<!-- 搜索图标 -->
-				<view class="iconfont icon icon-new_document" style="font-size: 50rpx;width: 10%;padding-top: 20rpx;" @click="openPop"></view>
-				<view style="width: 90%;text-align: center;padding-right: 50rpx;font-size: 40rpx;padding-top: 20rpx;">项目列表</view>
+				<view class="create-button iconfont icon icon-new_document" @click="openPop"></view>
+				<view class="create-word" @click="openPop">新建</view>
+				<view class="title-word">项目列表</view>
 			</view>
 			<view class="projectSearch">
 				<view class="projectStyle">
@@ -23,7 +24,7 @@
 		
 		
 		
-		<view style="width: 100%;" @click="navigatortoinfo()">
+		<view @click="navigatortoinfo()">
 			<view class="tableStyle" v-for="(item,index) in filterList" :key="item.id">
 				<view class="tableContent" style="display: flex;align-items: center;">
 					<view class="logoItem iconfont icon icon-chazhao" style="display: flex;align-items: center;"></view>
@@ -62,7 +63,7 @@
 					<text style="color: red;">*</text>
 				</view>
 				<view class="popup-use1">
-					<input class="oldStyle" style="padding-left: 20rpx;" placeholder="请输入项目名称" type="text" v-model="newProjectname" confirm-type="done" @confirm="oldInput">
+					<input class="input-style" style="padding-left: 20rpx;" placeholder="请输入项目名称" type="text" v-model="newProjectname" confirm-type="done" @confirm="oldInput">
 				</view>
 				
 				<view class="popup-use">
@@ -90,7 +91,7 @@
 					</view>
 				</view>
 				<view class="popup-use1">
-					<input class="oldStyle" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done">
+					<input class="input-style" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done">
 				</view>
 				
 				<button v-if="this.newProjectname && this.dateName !== this.firstName" class="buttonStyle" type="primary" @tap="closePop('top')">确定</button>	
