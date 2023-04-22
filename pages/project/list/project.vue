@@ -180,6 +180,13 @@ import { createProject } from '../../../api/api.js'
 					console.log(result.data.data.data)
 					this.projectTable = result.data.data.data
 					uni.hideLoading();
+					uni.setStorage({
+						key:'project_key',
+						data:this.projectTable,
+						success: function() {
+							console.log('project save success!')
+						}
+					});
 					// 遍历获取所有区域
 					// var sumName = []
 					// for (var i = 0; i < this.projectTable.length;i++) {

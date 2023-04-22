@@ -23,8 +23,6 @@
 </template>
 
 <script>
-import { projectsAll } from '../../api/api.js'
-const img = '/static/maker_red.png';
 	export default {
 		data() {
 			return {
@@ -35,8 +33,8 @@ const img = '/static/maker_red.png';
 				latitude: 30.475187166742604,  // 纬度
 				longitude: 114.39870105601321, // 经度
 				scale:10,//缩放等级
-				sumData:100, //多少条数据
-				covers: [{
+				sumData:1000, //多少条数据
+				marikerTemp:{
 					id: 1,
 					latitude: 30.575187166742604,
 					longitude: 114.49870105601321,
@@ -44,35 +42,20 @@ const img = '/static/maker_red.png';
 					width:30,
 					height:30,
 					joinCluster:true,
-					title:'这是title1',
 					callout:{
-						content:'test1',
-						anchorY:37,
+						content:'test',
+						anchorY:43,
 						display:'ALWAYS',
 						textAlign:'center',
 						bgColor:'transparent',
+						fontSize:14,
 					}
-				}, {
-					id: 2,
-					latitude: 30.675187166742604,
-					longitude: 114.59870105601321,
-					iconPath: '/static/maker_red.png',
-					width:30,
-					height:30,
-					joinCluster:true,
-					title:'这是title1',
-					callout:{
-						content:'test2',
-						anchorY:37,
-						display:'ALWAYS',
-						textAlign:'center',
-						bgColor:'transparent',
-					}
-				}]
+				},
+				
 			}
 		},
 		onLoad: function() {
-
+			this.getProjectFromStorage()
 		},
 		onReady() {
 			this._mapContext = uni.createMapContext("map", this);
@@ -80,7 +63,7 @@ const img = '/static/maker_red.png';
 			this._mapContext.initMarkerCluster({
 				enableDefaultStyle: false,
 				zoomOnClick: true,
-				gridSize: 11,
+				gridSize: 20,
 				complete(res) {
 				  console.log('initMarkerCluster', res)
 				}
@@ -88,12 +71,45 @@ const img = '/static/maker_red.png';
 			
 			this._mapContext.on("markerClusterCreate", (e) => {
 				console.log("markerClusterCreate", e);
+				let clusterMarkers = []
+				const clusters = e.clusters // 产生新的聚合簇
+				clusters.forEach((cluster,index) => {
+					const {
+						center,
+						clusterId,
+						markerIds
+					} = cluster
+					let clusterObj = {
+						clusterId,
+						...center,
+						width: 0,
+						height: 0,
+						iconPath: '',
+						label: {// 定制聚合簇样式
+							content: markerIds.length + '',
+							fontSize: 16,
+							color: '#fff',
+							width: 30,
+							height: 30,
+							bgColor: '#419afcD9',
+							borderRadius: 25,
+							textAlign: 'center',
+							anchorX: -10,
+							anchorY: -35,
+						}
+					}
+					clusterMarkers.push(clusterObj)
+				})
+				this._mapContext.addMarkers({
+					markers:clusterMarkers,
+					clear: false,
+				})
 			});
 			
 			this.addMarkers();
 		},
 		methods: {
-			
+			// 添加标记点位
 			addMarkers() {
 				const positions = [
 				  {
@@ -122,13 +138,13 @@ const img = '/static/maker_red.png';
 					  width:30,
 					  height:30,
 					  joinCluster:true,
-					  title:'这是title',
 					  callout:{
 					  	content:'test'+ i,
-					  	anchorY:37,
+					  	anchorY:43,
 					  	display:'ALWAYS',
 					  	textAlign:'center',
 					  	bgColor:'transparent',
+						fontSize:14,
 					  }
 					},p)
 				  )
@@ -141,35 +157,26 @@ const img = '/static/maker_red.png';
 					}
 				})
 			  },
-			
-			async getProjects(){
-				uni.showLoading({
-					title: '加载中'
-				})
-				var tranData = {
-					page:1,
-					size:this.sumData
-				}
-				projectsAll(tranData).then(res=>{
-					// console.log(res)
-					this.sumData = res.data.data.count
-					console.log(res.data.data.data)
-					this.getallProjects()
+			getProjectFromStorage(){
+				uni.getStorage({
+					key:'project_key',
+					success: function(res){
+						this.projectTable = res.data
+						console.log("project get success!")
+						console.log(this.projectTable[0].longitude)
+						console.log(this.projectTable[0].latitude)
+					}
 				})
 			},
-			getallProjects(){
-				var tranData = {
-					page:1,
-					size:this.sumData
+			setMarkersData(){
+				const postionsTemp = [];
+				for(var i= 0; i < this.projectTable.length;i++){
+					this.marikerTemp.id = i
+					this.marikerTemp.latitude = this.projectTable[i].latitude
+					this.marikerTemp.longitude = this.projectTable[i].longitude
+					this.marikerTemp.callout.content = this.projectTable[i].name
 				}
-				projectsAll(tranData).then(result=>{
-					console.log(result.data.data.data)
-					this.projectTable = result.data.data.data
-					uni.hideLoading();
-				})
 			},
-			
-			
 		}
 	}
 </script>
