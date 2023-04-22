@@ -7,15 +7,10 @@
 					:latitude="latitude" 
 					:longitude="longitude" 
 					:scale="scale" 
-					:markers="covers"
 					subkey="EIZBZ-NQRWN-N2IFP-SLVKB-NAF65-SIBM4"
 					:show-location="true"
+					@markertap=""
 					>
-					<!-- <view slot="callout">
-						<view class="label" v-for="(item,index) in covers" :key="index">
-							<view style="box-shadow: 0px 0px 6px 2px #ffffff;"  :marker-id="item.id" >{{ item.title }}</view>
-						</view>
-					</view> -->
 				</map>
 			</view>
 		</view>
@@ -34,7 +29,7 @@
 				longitude: 114.39870105601321, // 经度
 				scale:10,//缩放等级
 				sumData:1000, //多少条数据
-				marikerTemp:{
+				markerTemp:{
 					id: 1,
 					latitude: 30.575187166742604,
 					longitude: 114.49870105601321,
@@ -43,8 +38,16 @@
 					height:30,
 					joinCluster:true,
 					callout:{
-						content:'test',
-						anchorY:43,
+						content:'',
+						anchorY:0,
+						display:'ALWAYS',
+						textAlign:'center',
+						bgColor:'#eee',
+						fontSize:14,
+					},
+					label:{
+						content:'',
+						anchorY:0,
 						display:'ALWAYS',
 						textAlign:'center',
 						bgColor:'transparent',
@@ -52,10 +55,11 @@
 					}
 				},
 				
+				
 			}
 		},
 		onLoad: function() {
-			this.getProjectFromStorage()
+			
 		},
 		onReady() {
 			this._mapContext = uni.createMapContext("map", this);
@@ -111,44 +115,25 @@
 		methods: {
 			// 添加标记点位
 			addMarkers() {
-				const positions = [
-				  {
-					latitude: 30.575187166742604,
-					longitude: 114.49870105601321,
-				  }, {
-					latitude: 30.565187166742604,
-					longitude: 114.46870105601321,
-				  }, {
-					latitude: 30.555187166742604,
-					longitude: 114.45870105601321,
-				  }, {
-					latitude: 30.545187166742604,
-					longitude: 114.44870105601321,
-				  }
-				]
-		
-				const markers = []
-		
-				positions.forEach((p, i) => {
-				  console.log(i)  
-				  markers.push(
-					Object.assign({},{
-					  id: i + 1,  
-					  iconPath: '/static/maker_red.png',
-					  width:30,
-					  height:30,
-					  joinCluster:true,
-					  callout:{
-					  	content:'test'+ i,
-					  	anchorY:43,
-					  	display:'ALWAYS',
-					  	textAlign:'center',
-					  	bgColor:'transparent',
-						fontSize:14,
-					  }
-					},p)
-				  )
-				})
+				this.getProjectFromStorage()
+				const markers = [];
+				for(var i = 0; i < this.projectTable.length;i++){
+					this.markerTemp.id = i
+					this.markerTemp.latitude = this.projectTable[i].latitude
+					this.markerTemp.longitude = this.projectTable[i].longitude
+					this.markerTemp.label = {
+					  content: this.projectTable[i].name.toString(),
+					  anchorY: 45,
+					  display: 'ALWAYS',
+					  textAlign: 'center',
+					  bgColor: 'transparent',
+					  fontSize: 14,
+					};
+					let newMarker = Object.assign({},this.markerTemp)
+					markers.push(newMarker)
+				}
+				
+				
 				this._mapContext.addMarkers({
 					markers,
 					clear: false,
@@ -158,25 +143,16 @@
 				})
 			  },
 			getProjectFromStorage(){
-				uni.getStorage({
-					key:'project_key',
-					success: function(res){
-						this.projectTable = res.data
+				try {
+					this.projectTable = uni.getStorageSync('project_key');
+					if (this.projectTable) {
 						console.log("project get success!")
-						console.log(this.projectTable[0].longitude)
-						console.log(this.projectTable[0].latitude)
 					}
-				})
-			},
-			setMarkersData(){
-				const postionsTemp = [];
-				for(var i= 0; i < this.projectTable.length;i++){
-					this.marikerTemp.id = i
-					this.marikerTemp.latitude = this.projectTable[i].latitude
-					this.marikerTemp.longitude = this.projectTable[i].longitude
-					this.marikerTemp.callout.content = this.projectTable[i].name
+				} catch (e) {
+					// error
 				}
 			},
+			
 		}
 	}
 </script>
