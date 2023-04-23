@@ -155,6 +155,13 @@ import { deleteFile } from '../../../api/api.js'
 				patrolID_API(this.checkId).then(res=>{
 					console.log(res.data.data.inspectionTeams[0].problems)
 					this.initproblemList = res.data.data.inspectionTeams[0].problems
+					uni.setStorage({
+						key:'problem_key',
+						data:this.initproblemList,
+						success: function() {
+							console.log('problem save success!')
+						}
+					});
 					this.changeData(),
 					this.getLength()
 					console.log('hello')
