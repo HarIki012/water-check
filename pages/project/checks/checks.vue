@@ -29,7 +29,7 @@
 						
 						<view v-if="newList[index].data[id].isOpen">
 							<view style="display: flex;flex-direction: column;border-bottom: 1rpx solid darkgray;">
-								<projectdetail :projectData="it" @sendData="getData"></projectdetail>
+								<projectdetail :projectData="it" @sendData="getData" @deleteId="getDeleteid"></projectdetail>
 								<view style="height: 60rpx;text-align: center;" @click="changeSmall(index,id)">
 									^
 								</view>
@@ -59,6 +59,8 @@
 import projectdetail from "/components/projectdetail/projectdetail.vue";
 import { patrolID_API } from '../../../api/api.js'
 import { updataProblems_API } from '../../../api/api.js'
+import { addProblem } from '../../../api/api.js'
+import { deleteFile } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -125,7 +127,10 @@ import { updataProblems_API } from '../../../api/api.js'
 				deleteId:'',
 				newProject:'',
 				sumProjects:'',
-				checkId:1
+				checkId:1,
+				ifpicDelete:'no',
+				deletepicMessage:''
+				
 			}
 		},
 		components:{
@@ -169,11 +174,20 @@ import { updataProblems_API } from '../../../api/api.js'
 					}
 				}
 			},
+			getDeleteid(e){
+				console.log(e)
+				var raw = JSON.stringify([
+				   e
+				])
+				console.log(raw)
+				this.ifpicDelete = 'yes'
+				this.deletepicMessage = raw
+				console.log(this.deletepicMessage)
+			},
 			search(e){
 				uni.navigateTo({
-					url:'/pages/project/search/search?searchText=' + e.detail.value
-					}) //由搜索页传递到搜索结果页
-				
+							 url:'/pages/project/search/search?searchText=' + e.detail.value
+								}) //由搜索页传递到搜索结果页
 			},
 			changeBig(e){
 				 this.newList[e].bigisOpen = !this.newList[e].bigisOpen
@@ -219,19 +233,28 @@ import { updataProblems_API } from '../../../api/api.js'
 				this.$refs['deletePop'].close()
 			},
 			addProject() {
-				this.sumProjects = this.sumProjects + 1
-				this.newProject = {
-						id: this.sumProjects,
-						projectName:'自定义',
-						type: '质量',
-						severity: '一般',
-						description: '自定义问题描述',
-						detail: '',
-						photoUrl: '',   //放图片
-						rectify: '',
+				this.newProject = 
+					{
+					  "projectName": "南湖水环境提升工程",
+					  "type": "质量",
+					  "severity": "一般",
+					  "description": "问题描述略",
+					  "detail": "详细描述略",
+					  "photoUrl": [],
+					  "rectify": "整改要求略",
+					  "deadline": "2023-4-1",
+					  "supervisionUnit": "督办单位1",
+					  "finder": "专家1",
+					  "readed": false
 					}
 				// this.initproblemList[this.sumProjects] = this.newProject
 				this.initproblemList.push(this.newProject)
+				
+				addProblem(this.newProject).then(res=>{
+					console.log(res)
+					
+				})
+				
 				this.changeData()
 			},
 			submitChange(){
@@ -251,10 +274,15 @@ import { updataProblems_API } from '../../../api/api.js'
 					// 	"supervisionUnit": "督办单位1",
 					// 	"finder": "专家2"
 					// }
+					console.log(this.initproblemList[i])
 					updataProblems_API(this.initproblemList[i]).then(res=>{
 						console.log(res)
 					})
 				}
+				// deleteFile(this.deletepicMessage).then(res=>{
+				// 	console.log(res)
+					
+				// })
 				console.log(this.initproblemList[0])
 				
 				

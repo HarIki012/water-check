@@ -48,7 +48,7 @@
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange"></textarea>
 		</view>
 		<view class="choose-pic">
-			<uni-file-picker v-model="projectData.photoUrl" limit="9" title="最多选择9张图片" @select="picTest"></uni-file-picker>
+			<uni-file-picker v-model="testPicurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
 		</view>
 		<view class="text">
 			<view style="flex-direction: row; margin-bottom: 20rpx;">
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import { uploadFiles } from '/api/api.js'
 	export default {
 		name:"projectdetail",
 		props:{
@@ -78,7 +79,7 @@
 					rectify: '整改要求略',
 					}
 				],
-				testPicurl:[],
+				testPicurl:[{}],
 				severityChoose:['无','一般','较严重','严重','非常严重'],
 				severityselectIndex:'0',
 				severityselectName:'无',
@@ -86,22 +87,55 @@
 				typeIndex:'0',
 				typeName:'质量',
 				newRule:'',
-				from:0,//跳转页面确定
+				uploadData:'',
+				from:0,//跳转页面确定,
+				samePic:'no',
+				deleteId:''
 			};
 		},
 		mounted() {
 			this.initData()
 		},
 		methods:{
+			
 			picTest(e){
 				console.log(e)
-				console.log(this.projectData.photoUrl)
-				this.projectData.photoUrl.push({
-					fileId: e.tempFilePaths,
-					url:e.tempFilePaths[0]
+				// console.log(this.projectData.photoUrl)
+				
+				// this.projectChange()
+				
+				// var formData = new FormData();
+				// formData.append("files", e.tempFilePaths);
+				// formData.append("dirName", "水务/");
+				// console.log(formData)
+				// uploadFiles(formData).then(res=>{
+				// 	console.log(res)
+				// 	console.log(url)
+				// })
+				
+				uni.uploadFile({
+					url: 'https://zsjs.huaskj.com/weps-api/upload_files', //仅为示例，非真实的接口地址
+					filePath: e.tempFilePaths[0],
+					name: 'files',
+					formData: {
+						'dirName': "水务/"
+					},
+					success: (uploadFileRes) => {
+						let json_data = JSON.parse(uploadFileRes.data)
+						console.log(json_data.data[0]);
+						this.uploadData = 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + json_data.data[0]
+						console.log(this.uploadData)
+						// this.testPicurl.push({
+						// 	fileId: json_data.data[0],
+						// 	url: this.uploadData
+						// })
+						this.projectData.photoUrl.push(
+							json_data.data[0]
+						)
+						console.log(this.projectData.photoUrl)
+						this.$emit("sendData",this.projectData)
+					}
 				})
-				console.log(this.projectData.photoUrl)
-				this.projectChange()
 			},
 			hello(){
 				console.log('hello')
@@ -109,6 +143,18 @@
 			initData(){
 				this.severityselectName = this.projectData.severity
 				this.typeName = this.projectData.type
+				for (var i = 0;i<this.projectData.photoUrl.length;i++){
+					console.log(i)
+					// this.testPicurl.push({
+					// 	fileId: this.projectData.photoUrl[i],
+					// 	url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
+					// })
+					this.testPicurl[i] = {
+						fileId: this.projectData.photoUrl[i],
+						url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
+					}
+				}
+				console.log(this.testPicurl)
 			},
 			severitySelect(e) {
 			    this.severityselectIndex = e.detail.value;
@@ -127,6 +173,26 @@
 				this.$emit("sendData",this.projectData)
 			},
 			uploadPic(){
+				
+			},
+			deleteFile(e){
+				var sameSum = 0
+				for (var i = 0;i<this.testPicurl.length;i++){
+					if(this.testPicurl[i].url === e.tempFilePath){
+						this.deleteId = i
+						sameSum = sameSum + 1
+					}
+				}
+				if(sameSum >= 2){
+					this.projectData.photoUrl.splice(this.deleteId,1)
+					console.log(this.projectData.photoUrl)
+				} else {
+					this.projectData.photoUrl.splice(this.deleteId,1)
+					console.log(this.projectData.photoUrl)
+					let result = e.tempFilePath.slice(57)
+					console.log(result)
+					this.$emit("deleteId",result)
+				}
 				
 			},
 			navigateToDetail(){

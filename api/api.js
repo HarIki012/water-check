@@ -68,3 +68,33 @@ export function updataProblems_API(data) {
 		method:'PUT',
 	})
 }
+
+// 新增问题记录
+export function addProblem(data) {
+	return uni.request({
+		url: `${baseUrl}/problem_create`,
+		data: data,
+		method:'POST',
+	})
+}
+
+// 上传文件
+export function uploadFiles(data) {
+	return uni.request({
+		url: `${baseUrl}/upload_files`,
+		data: data,
+		method:'POST',
+		header: {
+		    "Content-Type": "application/x-www-form-urlencoded"
+		},
+	})
+}
+
+// 删除存储文件
+export function deleteFile(data) {
+	return uni.request({
+		url: `${baseUrl}/delete_files`,
+		data: data,
+		method:'DELETE',
+	})
+}
