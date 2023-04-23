@@ -1,7 +1,7 @@
 import { baseUrl } from './config.js'
 
 // 获取所有的巡检活动
-export function patrolAll(){
+export function patrolAll_API(){
 	
 	return uni.request({
 		url: `${baseUrl}/patrols`,
@@ -11,7 +11,7 @@ export function patrolAll(){
 
 
 // 按ID获取单次巡检活动
-export function patrolById(id){
+export function patrolById_API(id){
 	
 	return uni.request({
 		url: `${baseUrl}/patrols?id=${id}`,
@@ -19,7 +19,7 @@ export function patrolById(id){
 	});
 }
 // 获取所有的项目详情
-export function projectsAll(data) {
+export function projectsAll_API(data) {
 	return uni.request({
 		url: `${baseUrl}/projects`,
 		data: data,
@@ -28,7 +28,7 @@ export function projectsAll(data) {
 }
 
 // 按ID获取项目详情
-export function projectInfo(id){
+export function projectInfo_API(id){
 	return uni.request({
 		url:`${baseUrl}/project?id=${id}`,
 		method:'GET',
@@ -36,7 +36,7 @@ export function projectInfo(id){
 }
 
 // 按照工程项目获取历史巡检活动
-export function patrolByProject(id){
+export function patrolByProject_API(id){
 	return uni.request({
 		url:`${baseUrl}/patrols_by_project?id=${id}`,
 		method:'GET',
@@ -44,7 +44,7 @@ export function patrolByProject(id){
 }
 
 // 新建项目
-export function createProject(data) {
+export function createProject_API(data) {
 	return uni.request({
 		url: `${baseUrl}/project_create`,
 		data: data,
@@ -53,7 +53,7 @@ export function createProject(data) {
 }
 
 // 按id获取单次巡检活动
-export function patrolID(id) {
+export function patrolID_API(id) {
 	return uni.request({
 		url:`${baseUrl}/patrol?id=${id}`,
 		method:'GET',
@@ -61,7 +61,7 @@ export function patrolID(id) {
 }
 
 // 修改问题记录
-export function updataProblems(data) {
+export function updataProblems_API(data) {
 	return uni.request({
 		url: `${baseUrl}/problem_update`,
 		data: data,

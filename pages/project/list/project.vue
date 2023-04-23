@@ -104,9 +104,9 @@
 
 <script>
 import { warn } from "vue"
-import { patrolAll } from '../../../api/api.js'
-import { projectsAll } from '../../../api/api.js'
-import { createProject } from '../../../api/api.js'
+import { patrolAll_API } from '../../../api/api.js'
+import { projectsAll_API } from '../../../api/api.js'
+import { createProject_API } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -163,7 +163,7 @@ import { createProject } from '../../../api/api.js'
 					page:1,
 					size:this.sumData
 				}
-				projectsAll(tranData).then(res=>{
+				projectsAll_API(tranData).then(res=>{
 					// console.log(res)
 					this.sumData = res.data.data.count
 					console.log(res.data.data.data)
@@ -176,7 +176,7 @@ import { createProject } from '../../../api/api.js'
 					page:1,
 					size:this.sumData
 				}
-				projectsAll(tranData).then(result=>{
+				projectsAll_API(tranData).then(result=>{
 					console.log(result.data.data.data)
 					this.projectTable = result.data.data.data
 					uni.hideLoading();
@@ -234,7 +234,7 @@ import { createProject } from '../../../api/api.js'
 				  "visualProgress": "0%",
 				}
 				console.log(newProject)
-				createProject(newProject).then(res=>{
+				createProject_API(newProject).then(res=>{
 					console.log(res.data.data)
 					if (res.data.message === 'success') {
 						uni.hideLoading();

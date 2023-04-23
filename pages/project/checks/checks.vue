@@ -57,8 +57,8 @@
 
 <script>
 import projectdetail from "/components/projectdetail/projectdetail.vue";
-import { patrolID } from '../../../api/api.js'
-import { updataProblems } from '../../../api/api.js'
+import { patrolID_API } from '../../../api/api.js'
+import { updataProblems_API } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -147,7 +147,7 @@ import { updataProblems } from '../../../api/api.js'
 				uni.showLoading({
 				                    title: '加载中'
 				                })
-				patrolID(this.checkId).then(res=>{
+				patrolID_API(this.checkId).then(res=>{
 					console.log(res.data.data.inspectionTeams[0].problems)
 					this.initproblemList = res.data.data.inspectionTeams[0].problems
 					this.changeData(),
@@ -171,8 +171,9 @@ import { updataProblems } from '../../../api/api.js'
 			},
 			search(e){
 				uni.navigateTo({
-							 url:'/pages/project/search/search?searchText=' + e.detail.value
-								}) //由搜索页传递到搜索结果页
+					url:'/pages/project/search/search?searchText=' + e.detail.value
+					}) //由搜索页传递到搜索结果页
+				
 			},
 			changeBig(e){
 				 this.newList[e].bigisOpen = !this.newList[e].bigisOpen
@@ -250,7 +251,7 @@ import { updataProblems } from '../../../api/api.js'
 					// 	"supervisionUnit": "督办单位1",
 					// 	"finder": "专家2"
 					// }
-					updataProblems(this.initproblemList[i]).then(res=>{
+					updataProblems_API(this.initproblemList[i]).then(res=>{
 						console.log(res)
 					})
 				}

@@ -46,8 +46,8 @@
 </template>
 
 <script>
-import { projectInfo } from '../../../api/api.js'
-import { patrolByProject } from '../../../api/api.js'
+import { projectInfo_API } from '../../../api/api.js'
+import { patrolByProject_API } from '../../../api/api.js'
 	export default {
 		data() {
 			
@@ -98,7 +98,7 @@ import { patrolByProject } from '../../../api/api.js'
 				},
 					{
 					name:"监管部门",
-					info:"江岸区水务和湖泊局",
+					info:"水务局,城建局",
 				},
 					{
 					name:"联系人",
@@ -121,7 +121,7 @@ import { patrolByProject } from '../../../api/api.js'
 		methods: {
 			// 获取项目详情
 			async getprojectInfo(){
-				projectInfo(this.projectId).then(res=>{
+				projectInfo_API(this.projectId).then(res=>{
 					// console.log(res)
 					this.projectTable = res.data.data
 					// console.log(this.projectTable)
@@ -132,14 +132,14 @@ import { patrolByProject } from '../../../api/api.js'
 					this.list[4].info = this.projectTable.employer
 					this.list[5].info = this.projectTable.builder
 					this.list[6].info = this.projectTable.supervisor
-					this.list[7].info = this.projectTable.regulator
+					//this.list[7].info = this.projectTable.regulator
 					this.list[8].info = this.projectTable.contracts
 					this.list[9].info = this.projectTable.visualProgress
 				})
 			},
 			// 获取巡检信息
 			async getpatrolByProject(){
-				patrolByProject(this.projectId).then(res=>{
+				patrolByProject_API(this.projectId).then(res=>{
 					const checksTemp = []
 					for(var i = 0 ; i<res.data.data.length;i++ ){
 						this.temp.patrolId = res.data.data[i].id
