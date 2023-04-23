@@ -61,6 +61,8 @@ import { patrolID_API } from '../../../api/api.js'
 import { updataProblems_API } from '../../../api/api.js'
 import { addProblem } from '../../../api/api.js'
 import { deleteFile } from '../../../api/api.js'
+import { allProblem_API } from '../../../api/api.js'
+import { bindTeam_API } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -129,7 +131,9 @@ import { deleteFile } from '../../../api/api.js'
 				sumProjects:'',
 				checkId:1,
 				ifpicDelete:'no',
-				deletepicMessage:''
+				deletepicMessage:'',
+				teamid:'',
+				problemId:''
 				
 			}
 		},
@@ -155,6 +159,7 @@ import { deleteFile } from '../../../api/api.js'
 				patrolID_API(this.checkId).then(res=>{
 					console.log(res.data.data.inspectionTeams[0].problems)
 					this.initproblemList = res.data.data.inspectionTeams[0].problems
+					this.teamid = res.data.data.inspectionTeams[0].id
 					uni.setStorage({
 						key:'problem_key',
 						data:this.initproblemList,
@@ -164,9 +169,12 @@ import { deleteFile } from '../../../api/api.js'
 					});
 					this.changeData(),
 					this.getLength()
-					console.log('hello')
 					uni.hideLoading();
-					
+				})
+				var sumProblems = "";
+				allProblem_API(sumProblems).then(res=>{
+					console.log(res.data.data)
+					this.problemId = res.data.data[res.data.data.length-1].id
 				})
 			},
 			getLength(){
@@ -240,9 +248,15 @@ import { deleteFile } from '../../../api/api.js'
 				this.$refs['deletePop'].close()
 			},
 			addProject() {
+				var sum = "";
+				allProblem_API(sum).then(res=>{
+					console.log(res.data.data)
+					this.problemId = res.data.data[res.data.data.length-1].id
+				})
 				this.newProject = 
 					{
-					  "projectName": "南湖水环境提升工程",
+					  "id": this.problemId,
+					  "projectName": "自定义",
 					  "type": "质量",
 					  "severity": "一般",
 					  "description": "问题描述略",
@@ -261,8 +275,17 @@ import { deleteFile } from '../../../api/api.js'
 					console.log(res)
 					
 				})
-				
+				var bindMessage = {
+					teamId: this.teamid,
+					problemId: this.problemId
+				}
+					
+				bindTeam_API(bindMessage).then(res=>{
+					console.log(res)
+					
+				})
 				this.changeData()
+				this.problemList[this.problemList.length-1].isOpen = true
 			},
 			submitChange(){
 				for(var i = 0;i<this.initproblemList.length;i++){
@@ -290,7 +313,7 @@ import { deleteFile } from '../../../api/api.js'
 				// 	console.log(res)
 					
 				// })
-				console.log(this.initproblemList[0])
+				console.log(this.initproblemList)
 				
 				
 			},
@@ -299,7 +322,7 @@ import { deleteFile } from '../../../api/api.js'
 				this.filterList()
 				for (var j = 0; j < this.problemList.length; j++){
 					if (this.problemList[j].projectName === '自定义'){
-						this.problemList[j].isOpen = true
+						this.problemList[j].isOpen = false
 					} else {
 						this.problemList[j].isOpen = false
 					}
@@ -327,6 +350,17 @@ import { deleteFile } from '../../../api/api.js'
 					}
 				}
 				console.log(nList)
+				var selfId = nList.length-1
+				for(var i =0;i<nList.length;i++){
+					if(nList[i].projectName === '自定义'){
+						selfId = i
+					}
+				}
+				if (selfId != nList.length-1){
+					var tran = nList[selfId]
+					nList[selfId] = nList[nList.length-1]
+					nList[nList.length-1] = tran
+				}
 				this.newList = nList
 			}
 		}

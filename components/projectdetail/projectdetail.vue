@@ -27,9 +27,9 @@
 		<view class="text" v-if="projectData.projectName === '自定义'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="newRule" placeholder="条文规范" @blur="projectChange"></textarea>
-			<view class="choose-pic">
+			<!-- <view class="choose-pic">
 				<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
-			</view>
+			</view> -->
 		</view>
 		
 		<view class="text" style="flex-direction: row;">
@@ -48,7 +48,8 @@
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange"></textarea>
 		</view>
 		<view class="choose-pic">
-			<uni-file-picker v-model="testPicurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
+			<uni-file-picker v-if="testPicurl !== null" v-model="testPicurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
+			<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
 		</view>
 		<view class="text">
 			<view style="flex-direction: row; margin-bottom: 20rpx;">
@@ -143,17 +144,24 @@ import { uploadFiles } from '/api/api.js'
 			initData(){
 				this.severityselectName = this.projectData.severity
 				this.typeName = this.projectData.type
-				for (var i = 0;i<this.projectData.photoUrl.length;i++){
-					console.log(i)
-					// this.testPicurl.push({
-					// 	fileId: this.projectData.photoUrl[i],
-					// 	url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
-					// })
-					this.testPicurl[i] = {
-						fileId: this.projectData.photoUrl[i],
-						url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
+				console.log(this.projectData.photoUrl.length)
+				if(this.projectData.photoUrl.length === 0){
+					this.testPicurl = null
+				}
+				if(this.projectData.photoUrl.length !== 0){
+					for (var i = 0;i<this.projectData.photoUrl.length;i++){
+						console.log(i)
+						this.testPicurl[i] = {
+							fileId: this.projectData.photoUrl[i],
+							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
+						}
+						// this.testPicurl.push({
+						// 	fileId: this.projectData.photoUrl[i],
+						// 	url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
+						// })
 					}
 				}
+				
 				console.log(this.testPicurl)
 			},
 			severitySelect(e) {

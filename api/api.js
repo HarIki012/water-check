@@ -98,3 +98,21 @@ export function deleteFile(data) {
 		method:'DELETE',
 	})
 }
+
+// 查找所有问题记录
+export function allProblem_API(data) {
+	return uni.request({
+		url: `${baseUrl}/problems`,
+		data: data,
+		method:'GET',
+	})
+}
+
+// 添加记录此问题的巡查组信息
+export function bindTeam_API(data) {
+	return uni.request({
+		url: `${baseUrl}/problem_team_bind?team_id=${data.teamId}&problem_id=${data.problemId}`,
+		
+		method:'PUT',
+	})
+}
