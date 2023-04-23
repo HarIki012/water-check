@@ -63,6 +63,7 @@ import { addProblem } from '../../../api/api.js'
 import { deleteFile } from '../../../api/api.js'
 import { allProblem_API } from '../../../api/api.js'
 import { bindTeam_API } from '../../../api/api.js'
+import { deleteProblem_API } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -234,7 +235,13 @@ import { bindTeam_API } from '../../../api/api.js'
 				this.problemList = arr
 			},
 			deleteProject(e) {
-				console.log(e)
+				console.log(e.id)
+				// var data = JSON.stringify([
+				//    e.id
+				// ]);
+				// deleteProblem_API(data).then(res=>{
+				// 	console.log(res)
+				// })
 				this.deleteName = e.description
 				this.deleteId = e.id
 				this.$refs['deletePop'].open()
@@ -242,6 +249,12 @@ import { bindTeam_API } from '../../../api/api.js'
 			dialogConfirm(e) {
 				console.log(this.deleteName)
 				this.initproblemList = this.initproblemList.filter(item => item.id != this.deleteId)
+				var data = JSON.stringify([
+				   this.deleteId
+				]);
+				deleteProblem_API(data).then(res=>{
+					console.log(res)
+				})
 				this.changeData()
 			},
 			dialogClose() {

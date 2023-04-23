@@ -116,3 +116,12 @@ export function bindTeam_API(data) {
 		method:'PUT',
 	})
 }
+
+// 删除问题记录
+export function deleteProblem_API(data) {
+	return uni.request({
+		url: `${baseUrl}/problem_delete`,
+		data: data,
+		method:'DELETE',
+	})
+}
