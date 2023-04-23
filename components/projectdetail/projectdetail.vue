@@ -16,7 +16,6 @@
 					<label style="margin-right: 20rpx;">{{ typeName }}</label>
 					<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
 				</picker>
-				
 			</view>
 			
 		</view>
@@ -26,7 +25,7 @@
 		</view>
 		<view class="text" v-if="projectData.projectName === '自定义'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="newRule" placeholder="条文规范" @blur="projectChange"></textarea>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.terms" placeholder="条文规范" @blur="projectChange"></textarea>
 			<!-- <view class="choose-pic">
 				<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
 			</view> -->
@@ -78,6 +77,7 @@ import { uploadFiles } from '/api/api.js'
 					detail: '详细描述略',
 					photoUrl: '',   //放图片
 					rectify: '整改要求略',
+					
 					}
 				],
 				testPicurl:[{}],
@@ -140,8 +140,10 @@ import { uploadFiles } from '/api/api.js'
 			},
 			hello(){
 				console.log('hello')
+				
 			},
 			initData(){
+				
 				this.severityselectName = this.projectData.severity
 				this.typeName = this.projectData.type
 				console.log(this.projectData.photoUrl.length)

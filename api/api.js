@@ -99,6 +99,14 @@ export function deleteFile(data) {
 	})
 }
 
+// 按ID查找单条问题记录
+export function problemById_API(id) {
+	return uni.request({
+		url:`${baseUrl}/problem?id=${id}`,
+		method:'GET',
+	})
+}
+
 // 查找所有问题记录
 export function allProblem_API(data) {
 	return uni.request({
@@ -117,11 +125,20 @@ export function bindTeam_API(data) {
 	})
 }
 
+
 // 删除问题记录
 export function deleteProblem_API(data) {
 	return uni.request({
 		url: `${baseUrl}/problem_delete`,
 		data: data,
 		method:'DELETE',
+	})
+}
+
+// 按ID查找单条问题记录
+export function basisById_API(id) {
+	return uni.request({
+		url:`${baseUrl}/basis?id=${id}`,
+		method:'GET',
 	})
 }

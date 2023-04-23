@@ -24,7 +24,7 @@
 			<view class="name">责任主体</view>
 			<view class="detail">{{data[0].responsibleParties}}</view>
 		</view>
-		<button v-if="this.cameFrom === '1'" class="hs-create">生成问题</button>
+		<button v-if="this.cameFrom === '1'" class="hs-create" @click="generateIssues">生成问题</button>
 		<view class="hs-feedback" @click="feedBack('top')">条款存在问题？点我反馈</view>
 		
 		<!-- 反馈弹窗 -->
@@ -43,6 +43,8 @@
 </template>
 
 <script>
+	import { problemById_API } from '../../../api/api.js'
+	import { basisById_API } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -101,16 +103,48 @@
 				            ]
 				        }
 				    ],
-				cameFrom:0
-				
+				cameFrom:0,
+				problemId:0,
+				basisTable:[],
 			}
 		},
 		onLoad(value) {
-			console.log(value.from)
 			this.cameFrom = value.from
-			console.log(this.cameFrom)
+			this.getStorageProblemId()
 		},
 		methods: {
+			getStorageProblemId(){
+				try {
+					this.problemId = uni.getStorageSync('problemId_key');
+					if (this.problemId) {
+						console.log("problemId get success!")
+						problemById_API(this.problemId).then(res =>{
+							//console.log(res.data.data)
+							this.basisTable = res.data.data.basis
+							console.log(this.basisTable)
+							if(this.basisTable)
+							{	
+								
+								console.log("basis is not null")
+								
+							}
+							else{
+								basisById_API(754).then(res =>{
+									this.basisTable = res.data.data
+									this.data[0].id = this.basisTable.id
+									this.data[0].description = this.basisTable.description
+									this.data[0].regulations = this.basisTable.regulations
+									this.data[0].terms = this.basisTable.terms
+									this.data[0].responsibleParties = this.basisTable.responsibleParties
+								})
+								console.log("basis null")
+							}
+						})
+					}
+				} catch (e) {
+					// error
+				}
+			},
 			feedBack(){
 				this.$refs['popup'].open();
 			},
@@ -119,7 +153,19 @@
 					title:'反馈成功',
 					duration:1500
 				})
-			}
+			},
+			generateIssues(){
+				uni.setStorage({
+					key:'terms_key',
+					data:this.data[0].terms,
+					success: function() {
+						console.log('terms save success!')
+					}
+				});
+				uni.navigateTo({
+					url:'/pages/project/checks/checks'
+				})
+			},
 		}
 	}
 </script>

@@ -15,7 +15,7 @@
 					<view :class="item.flag ? 'sortItemOpen iconfont icon icon-xiangxia1' : 'sortItem iconfont icon icon-xiangyou'" @click="showTagData(index)">{{item.projectName}}</view>
 					<view :class="item.flag ? 'active':'border'">
 						<view class="info" v-for="(item,index) in item.info">
-							<view v-if="item.show" class="detail" @click="navigateTodetail()">{{item.description}}</view>
+							<view v-if="item.show" class="detail" @click="navigateTodetail(item.id)">{{item.description}}</view>
 						</view>
 					</view>
 				</view>
@@ -65,7 +65,11 @@
 			if(value.searchText){
 				this.getSearch(value.searchText)
 			}
+			
+		},
+		onReady() {
 			this.getStorageProblem()
+			this.searchByName()
 		},
 		computed: {
 			
@@ -154,7 +158,22 @@
 				this.problemData[index].delete = !this.problemData[index].delete
 			},
 			//跳转
-			navigateTodetail(){
+			navigateTodetail(id){
+				
+				uni.setStorage({
+					key:'basis_key',
+					data:this.problemData.info,
+					success: function() {
+						console.log('basis save success!')
+					}
+				});
+				uni.setStorage({
+					key:'problemId_key',
+					data:id,
+					success: function() {
+						console.log('problemId save success!')
+					}
+				});
 				uni.navigateTo({
 					url:'/pages/project/detail/detail?from='+this.from
 				})
@@ -166,8 +185,12 @@
 					if (this.problemTable) {
 						console.log("problem get success!")
 						var index = 0;
+						this.projectNameTable = []
 						for(var i = 0; i < this.problemTable.length ; i++){
-							console.log(this.problemTable[i].projectName)
+							// console.log(this.problemTable[i].projectName)
+							// console.log(this.projectNameTable)
+							// console.log(this.projectNameTable.includes(this.problemTable[i].projectName))
+							
 							if(this.projectNameTable.includes(this.problemTable[i].projectName)){
 								//得到name相同的项目
 								const result = this.problemData.filter(item => item.projectName === this.problemTable[i].projectName).map(item => item.id);
@@ -182,19 +205,27 @@
 								this.problemData[index].info.push(this.infoTemp) //推入info
 								console.log("push info")
 							}else{
-								this.problemTemp.projectName = this.problemTable[i].projectName
-								this.projectNameTable.push(this.problemTemp.projectName)
+								this.projectNameTable.push(this.problemTable[i].projectName);
+								console.log(this.projectNameTable)
 								this.infoTemp = {
 									id:this.problemTable[i].id,
 									type:this.problemTable[i].type,
 									description: this.problemTable[i].description,
 									show:true,
 									basis:this.problemTable[i].basis,
-								} 
+								}
+								this.problemTemp = {
+									id:i,
+									projectName:this.problemTable[i].projectName,
+									info:[],
+									delete:false,
+									flag:true,
+								}
 								this.problemTemp.info.push(this.infoTemp)
 								this.problemData.push(this.problemTemp)
 								console.log("push problem")
 							}
+							
 						}
 						console.log(this.problemData)
 					}

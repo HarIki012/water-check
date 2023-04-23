@@ -134,7 +134,8 @@ import { deleteProblem_API } from '../../../api/api.js'
 				ifpicDelete:'no',
 				deletepicMessage:'',
 				teamid:'',
-				problemId:''
+				problemId:'',
+				terms:'',
 				
 			}
 		},
@@ -147,12 +148,26 @@ import { deleteProblem_API } from '../../../api/api.js'
 			}
 			console.log(this.checkId)
 			this.getChecks()
+			this.getTerms()
+			
 		},
 		mounted() {
 			// this.changeData(),
 			// this.getLength()
 		},
 		methods: {
+			getTerms(){
+				try {
+					this.terms = uni.getStorageSync('terms_key');
+					if (this.terms) {
+						console.log("terms get success!")
+						this.addProject()
+						this.problemList[this.problemList.length-1].isOpen = true
+					}
+				} catch (e) {
+					// error
+				}
+			},
 			async getChecks(){
 				uni.showLoading({
 				                    title: '加载中'
@@ -269,6 +284,7 @@ import { deleteProblem_API } from '../../../api/api.js'
 				this.newProject = 
 					{
 					  "id": this.problemId,
+					  "terms":this.terms,
 					  "projectName": "自定义",
 					  "type": "质量",
 					  "severity": "一般",
@@ -279,8 +295,10 @@ import { deleteProblem_API } from '../../../api/api.js'
 					  "deadline": "2023-4-1",
 					  "supervisionUnit": "督办单位1",
 					  "finder": "专家1",
-					  "readed": false
+					  "readed": false,
+					  
 					}
+					console.log(this.terms)
 				// this.initproblemList[this.sumProjects] = this.newProject
 				this.initproblemList.push(this.newProject)
 				
