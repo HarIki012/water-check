@@ -181,7 +181,23 @@ import { uploadFiles } from '/api/api.js'
 			},
 			projectChange(){
 				console.log(this.testPicurl)
-				this.$emit("sendData",this.projectData)
+				if(this.projectData.description === ''){
+					uni.showToast({
+					    title: '问题描述不能为空！',
+					    icon: 'none',
+					    duration: 2000
+					})
+				}
+				if(this.projectData.rectify === ''){
+					uni.showToast({
+					    title: '整改要求不能为空！',
+					    icon: 'none',
+					    duration: 2000
+					})
+				}
+				if(this.projectData.description !== '' && this.projectData.rectify !== ''){
+					this.$emit("sendData",this.projectData)
+				}
 			},
 			uploadPic(){
 				

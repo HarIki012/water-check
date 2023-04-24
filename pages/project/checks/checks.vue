@@ -20,7 +20,13 @@
 					<view v-for="(it, id) in item.data" :key="id">
 						<view style="display: flex;flex-direction: row;">
 							<view :class="newList[index].data[id].isOpen===false?'closeStyle':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">{{it.description}}</view>
-							<text v-if="newList[index].data[id].isOpen" class="deleteStyle" @click="deleteProject(newList[index].data[id])">
+							<text v-if="newList[index].data[id].isOpen && newList[index].data[id].projectName !== '自定义'" class="deleteStyle" @click="clearProblems(newList[index].data[id])">
+								<text style="text-align: center;">
+									清空
+								</text>
+							</text>
+							<text v-if="newList[index].data[id].isOpen && newList[index].data[id].projectName === '自定义'" class="deleteStyle" @click="deleteProject(newList[index].data[id])">
+
 								<text style="text-align: center;">
 									删除
 								</text>
@@ -249,6 +255,11 @@ import { deleteProblem_API } from '../../../api/api.js'
 				}
 				this.problemList = arr
 			},
+			clearProblems(e){
+				for(var i = 0;i<this.initproblemList.length;i++){
+					
+				}
+			},
 			deleteProject(e) {
 				console.log(e.id)
 				// var data = JSON.stringify([
@@ -319,6 +330,7 @@ import { deleteProblem_API } from '../../../api/api.js'
 				this.problemList[this.problemList.length-1].isOpen = true
 			},
 			submitChange(){
+				var isSubmit = 'yes'
 				for(var i = 0;i<this.initproblemList.length;i++){
 					// var submitData = {
 					// 	"id": this.initproblemList.id,
@@ -336,20 +348,41 @@ import { deleteProblem_API } from '../../../api/api.js'
 					// 	"finder": "专家2"
 					// }
 					console.log(this.initproblemList[i])
-					updataProblems_API(this.initproblemList[i]).then(res=>{
-						console.log(res)
-					})
+					if(this.initproblemList[i].description === '' || this.initproblemList[i].rectify === ''){
+						uni.showToast({
+						    title: '问题描述与整改要求不能为空！',
+						    icon: 'none',
+						    duration: 2000
+						})
+						isSubmit = 'no'
+						break
+					} else {
+						updataProblems_API(this.initproblemList[i]).then(res=>{
+							console.log(res)
+						})
+					}
+					
 				}
 				// deleteFile(this.deletepicMessage).then(res=>{
 				// 	console.log(res)
 					
 				// })
+				if (isSubmit === 'yes'){
+					uni.showToast({
+						title: '提交成功!',
+						duration: 1000
+					});
+					this.changeData()
+				} else {
+					uni.showToast({
+					    title: '问题描述与整改要求不能为空！',
+					    icon: 'none',
+					    duration: 2000
+					})
+				}
 				console.log(this.initproblemList)
-				this.changeData()
-				uni.showToast({
-					title: '提交成功!',
-					duration: 1000
-				});
+				
+				
 				
 			},
 			changeData() {
