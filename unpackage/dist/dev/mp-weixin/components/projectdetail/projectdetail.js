@@ -20,6 +20,7 @@ const _sfc_main = {
           rectify: "整改要求略"
         }
       ],
+      testPicurl: [{}],
       severityChoose: ["无", "一般", "较严重", "严重", "非常严重"],
       severityselectIndex: "0",
       severityselectName: "无",
@@ -27,20 +28,61 @@ const _sfc_main = {
       typeIndex: "0",
       typeName: "质量",
       newRule: "",
-      from: 0
-      //跳转页面确定
+      uploadData: "",
+      from: 0,
+      //跳转页面确定,
+      samePic: "no",
+      deleteId: ""
     };
   },
   mounted() {
     this.initData();
   },
   methods: {
+    picTest(e) {
+      console.log(e);
+      common_vendor.index.uploadFile({
+        url: "https://zsjs.huaskj.com/weps-api/upload_files",
+        //仅为示例，非真实的接口地址
+        filePath: e.tempFilePaths[0],
+        name: "files",
+        formData: {
+          "dirName": "水务/"
+        },
+        success: (uploadFileRes) => {
+          let json_data = JSON.parse(uploadFileRes.data);
+          console.log(json_data.data[0]);
+          this.uploadData = "https://server-1315831071.cos.ap-nanjing.myqcloud.com/" + json_data.data[0];
+          console.log(this.uploadData);
+          this.projectData.photoUrl.push(
+            json_data.data[0]
+          );
+          console.log(this.projectData.photoUrl);
+          this.$emit("sendData", this.projectData);
+        }
+      });
+    },
     hello() {
       console.log("hello");
     },
     initData() {
       this.severityselectName = this.projectData.severity;
       this.typeName = this.projectData.type;
+      console.log(this.projectData.photoUrl.length);
+      if (this.projectData.photoUrl.length === 0) {
+        this.testPicurl = null;
+      }
+      if (this.projectData.photoUrl.length !== 0) {
+        for (var i = 0; i < this.projectData.photoUrl.length; i++) {
+          console.log(i);
+          this.testPicurl[i] = {
+            name: this.projectData.photoUrl[i],
+            extname: this.filterImgType(this.projectData.photoUrl[i]),
+            url: "https://server-1315831071.cos.ap-nanjing.myqcloud.com/" + this.projectData.photoUrl[i]
+          };
+        }
+      }
+      console.log(this.testPicurl);
     },
     severitySelect(e) {
       this.severityselectIndex = e.detail.value;
@@ -55,7 +97,40 @@ const _sfc_main = {
       this.$emit("sendData", this.projectData);
     },
     projectChange() {
+      console.log(this.testPicurl);
       this.$emit("sendData", this.projectData);
+    },
+    uploadPic() {
+    },
+    deleteFile(e) {
+      var sameSum = 0;
+      for (var i = 0; i < this.testPicurl.length; i++) {
+        if (this.testPicurl[i].url === e.tempFilePath) {
+          this.deleteId = i;
+          sameSum = sameSum + 1;
+        }
+      }
+      if (sameSum >= 2) {
+        this.projectData.photoUrl.splice(this.deleteId, 1);
+        console.log(this.projectData.photoUrl);
+      } else {
+        this.projectData.photoUrl.splice(this.deleteId, 1);
+        console.log(this.projectData.photoUrl);
+        let result = e.tempFilePath.slice(57);
+        console.log(result);
+        this.$emit("deleteId", result);
+      }
+    },
+    filterImgType(img) {
+      if (/png/g.test(img)) {
+        return "png";
+      } else if (/jpg/g.test(img)) {
+        return "jpg";
+      } else if (/gif/g.test(img)) {
+        return "gif";
+      } else if (/jpeg/g.test(img)) {
+        return "jpeg";
+      }
     },
     navigateToDetail() {
       common_vendor.index.navigateTo({
@@ -97,26 +172,36 @@ function _sfc_render(_ctx, _cache, $props, $setup, $data, $options) {
     m: $props.projectData.projectName === "自定义"
   }, $props.projectData.projectName === "自定义" ? {
     n: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
-    o: $data.newRule,
-    p: common_vendor.o(($event) => $data.newRule = $event.detail.value),
-    q: common_vendor.p({
+    o: $props.projectData.terms,
+    p: common_vendor.o(($event) => $props.projectData.terms = $event.detail.value)
+  } : {}, {
+    q: common_vendor.t($data.severityselectName),
+    r: common_vendor.o((...args) => $options.severitySelect && $options.severitySelect(...args)),
+    s: $data.severityChoose,
+    t: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
+    v: $props.projectData.detail,
+    w: common_vendor.o(($event) => $props.projectData.detail = $event.detail.value),
+    x: $data.testPicurl !== null
+  }, $data.testPicurl !== null ? {
+    y: common_vendor.o($options.picTest),
+    z: common_vendor.o($options.deleteFile),
+    A: common_vendor.o(($event) => $data.testPicurl = $event),
+    B: common_vendor.p({
+      limit: "9",
+      title: "最多选择9张图片",
+      modelValue: $data.testPicurl
+    })
+  } : {
+    C: common_vendor.o($options.picTest),
+    D: common_vendor.o($options.deleteFile),
+    E: common_vendor.p({
       limit: "9",
       title: "最多选择9张图片"
     })
-  } : {}, {
-    r: common_vendor.t($data.severityselectName),
-    s: common_vendor.o((...args) => $options.severitySelect && $options.severitySelect(...args)),
-    t: $data.severityChoose,
-    v: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
-    w: $props.projectData.detail,
-    x: common_vendor.o(($event) => $props.projectData.detail = $event.detail.value),
-    y: common_vendor.p({
-      limit: "9",
-      title: "最多选择9张图片"
-    }),
-    z: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
-    A: $props.projectData.rectify,
-    B: common_vendor.o(($event) => $props.projectData.rectify = $event.detail.value)
+  }, {
+    F: common_vendor.o((...args) => $options.projectChange && $options.projectChange(...args)),
+    G: $props.projectData.rectify,
+    H: common_vendor.o(($event) => $props.projectData.rectify = $event.detail.value)
   });
 }
 const Component = /* @__PURE__ */ common_vendor._export_sfc(_sfc_main, [["render", _sfc_render], ["__file", "E:/water-check-project/components/projectdetail/projectdetail.vue"]]);

@@ -154,7 +154,8 @@ import { uploadFiles } from '/api/api.js'
 					for (var i = 0;i<this.projectData.photoUrl.length;i++){
 						console.log(i)
 						this.testPicurl[i] = {
-							fileId: this.projectData.photoUrl[i],
+							name: this.projectData.photoUrl[i],
+							extname: this.filterImgType(this.projectData.photoUrl[i]),
 							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
 						}
 						// this.testPicurl.push({
@@ -205,6 +206,17 @@ import { uploadFiles } from '/api/api.js'
 				}
 				
 			},
+			filterImgType(img) {
+				if (/png/g.test(img)) {
+					  return 'png'
+				  } else if (/jpg/g.test(img)) {
+					  return 'jpg'
+				  } else if (/gif/g.test(img)) {
+					  return 'gif'
+				  } else if (/jpeg/g.test(img)) {
+					  return 'jpeg'
+				  }
+			 },
 			navigateToDetail(){
 				uni.navigateTo({
 					url:'/pages/project/detail/detail?from='+this.from
