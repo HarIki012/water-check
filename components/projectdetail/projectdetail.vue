@@ -6,9 +6,11 @@
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">问题描述</text>
 			<text v-if="projectData.projectName !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
-			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange"></textarea>
+			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" @input="sumFontNumDescription"></textarea>
+		<view class="fontInput">
 			<button  v-if="projectData.projectName === '自定义'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
-			<text v-if="projectData.projectName === '自定义'" class="currentWordNumber">{{fontNum}}/200</text>
+			<text v-if="projectData.projectName === '自定义'" class="currentWordNumber">{{fontNumDescription}}/200</text>
+		</view>
 		</view>
 		<view v-if="projectData.projectName === '自定义'" class="text" style="flex-direction: row;">
 			<text style="width: 25%;">问题类型</text>
@@ -27,7 +29,7 @@
 		</view>
 		<view class="text" v-if="projectData.projectName === '自定义'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.terms" placeholder="条文规范" @blur="projectChange"></textarea>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.terms" placeholder="条文规范" @blur="projectChange" ></textarea>
 			<!-- <view class="choose-pic">
 				<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
 			</view> -->
@@ -46,22 +48,26 @@
 		</view>
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">详情描述</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange"></textarea>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange" @input="sumFontNumDetail"></textarea>
+		<view class="fontInput">
 			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
-			<text  class="currentWordNumber">{{fontNum}}/200</text>
+			<text  class="currentWordNumber">{{fontNumDetail}}/200</text>
+		</view>
 		</view>
 		<view class="choose-pic">
-			<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
-			<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :del-icon="false"></uni-file-picker>
+						<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
+						<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :del-icon="false"></uni-file-picker>
 			<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
 		</view>
 		<view class="text">
 			<view style="flex-direction: row; margin-bottom: 20rpx;">
 				<text style="margin-bottom: 20rpx;">整改要求</text>
 			</view>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.rectify" placeholder="整改要求" @blur="projectChange"></textarea>
-			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
-			<text  class="currentWordNumber">{{fontNum}}/200</text>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text"  v-model="projectData.rectify" placeholder="整改要求" @blur="projectChange" @input="sumFontNumRectify"></textarea>
+			<view class="fontInput">
+				<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+				<text  class="currentWordNumber">{{fontNumRectify}}/200</text>
+			</view>
 		</view>
 	</view>
 </template>
@@ -102,15 +108,34 @@ import { uploadFiles } from '/api/api.js'
 				from:0,//跳转页面确定,
 				samePic:'no',
 				deleteId:'',
+				fontNumDescription:0,
+				fontNumDetail:0,
+				fontNumRectify:0,
+				voiceResultDescription:"",
+				voiceResultDetail:"",
+				voiceResultRectify:"",
 				picLength:''
-				
 			};
 		},
 		mounted() {
 			this.initData()
 		},
 		methods:{
-			
+			sumFontNumDescription(e) {
+				this.fontNumDescription = e.detail.value.length
+				this.voiceResultDescription = e.detail.value
+				// console.log(this.fontNum)
+			},
+			sumFontNumDetail(e) {
+				this.fontNumDetail = e.detail.value.length
+				this.voiceResultDetail = e.detail.value
+				// console.log(this.fontNum)
+			},
+			sumFontNumRectify(e) {
+				this.fontNumRectify = e.detail.value.length
+				this.voiceResultRectify = e.detail.value
+				// console.log(this.fontNum)
+			},
 			picTest(e){
 				console.log(e)
 				// console.log(this.projectData.photoUrl)
@@ -217,8 +242,6 @@ import { uploadFiles } from '/api/api.js'
 				
 			},
 			deleteFile(e){
-				console.log(this.picLength)
-			
 				var sameSum = 0
 				for (var i = 0;i<this.testPicurl.length;i++){
 					if(this.testPicurl[i].url === e.tempFilePath){
@@ -237,25 +260,25 @@ import { uploadFiles } from '/api/api.js'
 					this.$emit("deleteId",result)
 				}
 				this.picLength = this.picLength - 1
-				if(this.picLength === 1){
-					var tran = []
-					this.realurl = tran
-					this.realurl = [{
-						name: this.projectData.photoUrl[0],
-						extname: this.filterImgType(this.projectData.photoUrl[0]),
-						url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[0]
-					}]
-					console.log(this.realurl)
-					this.picLength = this.realurl.length
-				}
-				console.log(this.picLength)
-			
-					// uni.showToast({
-					//     title: '至少保留一张图片！',
-					//     icon: 'none',
-					//     duration: 2000
-					// })
+					if(this.picLength === 1){
+						var tran = []
+						this.realurl = tran
+						this.realurl = [{
+							name: this.projectData.photoUrl[0],
+							extname: this.filterImgType(this.projectData.photoUrl[0]),
+							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[0]
+						}]
+						console.log(this.realurl)
+						this.picLength = this.realurl.length
+					}
+					console.log(this.picLength)
 				
+						// uni.showToast({
+						//     title: '至少保留一张图片！',
+						//     icon: 'none',
+						//     duration: 2000
+						// })
+	
 				
 			},
 			filterImgType(img) {
@@ -365,18 +388,23 @@ import { uploadFiles } from '/api/api.js'
 		left: 105rpx;
 		color: #707070;
 	}
-.voice-text{
+.fontInput{
 	position: relative;
-	top: -100rpx;
-	left: 200rpx;
+}
+.voice-text{
+	position: absolute;
+	right: 80rpx;
+	bottom:15upx;
+	width: 80rpx;
 	color: #0CBCC2;
-	z-index: 1;
+	z-index: 2;
 	font-size: 60;
 }
 .currentWordNumber{
-	position: relative;
-	top: -160rpx;
-	left: 60%;
+	position: absolute;
+	right: 170rpx;
+	bottom:30upx;
 	color: #707070;
+	z-index: 2;
 }
 </style>

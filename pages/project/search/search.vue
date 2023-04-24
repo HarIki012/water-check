@@ -55,7 +55,7 @@
 				dataList: [],
 				searchDetail: '',
 				from:1,
-				basisSize:1000,
+				basisSize:10,
 				termsTable:[],
 				termsTemp:{
 					id:1,
@@ -105,7 +105,7 @@
 				for(var i = 0;i<this.termsTable.length;i++){
 					this.termsTemp={
 						id:this.termsTable[i].id,
-						category:this.termsTable[i].category,
+						typeOne:this.termsTable[i].typeOne,
 						description:this.termsTable[i].description,
 					}
 					this.termsTable[i] = this.termsTemp
