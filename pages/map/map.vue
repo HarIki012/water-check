@@ -9,11 +9,14 @@
 					:scale="scale" 
 					subkey="EIZBZ-NQRWN-N2IFP-SLVKB-NAF65-SIBM4"
 					:show-location="true"
-					@markertap=""
+					@markertap="clickMarker()"
 					>
 				</map>
 			</view>
 		</view>
+		<uni-popup class="popup-detail" ref="popup" type="bottom">
+			底部弹出
+		</uni-popup>
 	</view>
 </template>
 
@@ -67,7 +70,7 @@
 			this._mapContext.initMarkerCluster({
 				enableDefaultStyle: false,
 				zoomOnClick: true,
-				gridSize: 20,
+				gridSize: 30,
 				complete(res) {
 				  console.log('initMarkerCluster', res)
 				}
@@ -122,8 +125,8 @@
 					this.markerTemp.latitude = this.projectTable[i].latitude
 					this.markerTemp.longitude = this.projectTable[i].longitude
 					this.markerTemp.label = {
-					  content: this.projectTable[i].name.toString(),
-					  anchorY: 45,
+					  content: this.projectTable[i].name.toString().substr(0, 10) + '...',
+					  anchorY: 0,
 					  display: 'ALWAYS',
 					  textAlign: 'center',
 					  bgColor: 'transparent',
@@ -152,6 +155,9 @@
 					// error
 				}
 			},
+			clickMarker(){
+				this.$refs.popup.open('top')
+			}
 			
 		}
 	}

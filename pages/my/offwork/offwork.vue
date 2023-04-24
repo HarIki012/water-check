@@ -97,7 +97,6 @@
 				})
 			},
 			//语音识别功能
-			
 			// touchStart: function() {   
 			// 	manager.start({  
 			// 		duration: 60000,  
@@ -108,10 +107,10 @@
 			// 	uni.showToast()  
 			// 	manager.stop();  
 			// },  
-			/**  
-			 * 初始化语音识别回调  
-			 * 绑定语音播放开始事件  
-			 */  
+			// /**  
+			//  * 初始化语音识别回调  
+			//  * 绑定语音播放开始事件  
+			//  */  
 			// initRecord: function() {  
 			// 	manager.onStart = function(res) {  
 			// 		this.voiceState ="onStart:"+ res.msg+"正在录音"  
@@ -119,6 +118,7 @@
 			// 	//有新的识别内容返回，则会调用此事件  
 			// 	manager.onRecognize = (res) => {  
 			// 		this.voiceResult = res.result;  
+			// 		console.log(this.voiceResult)
 			// 	}  
 
 			// 	// 识别结束事件  

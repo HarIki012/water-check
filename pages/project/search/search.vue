@@ -25,6 +25,7 @@
 </template>
 
 <script>
+	import { allBasis_API } from '../../../api/api.js'
 	export default {
 		
 		data() {
@@ -54,6 +55,13 @@
 				dataList: [],
 				searchDetail: '',
 				from:1,
+				basisSize:1000,
+				termsTable:[],
+				termsTemp:{
+					id:1,
+					category:'',
+					description:'',
+				}
 			};
 
 		},
@@ -68,13 +76,45 @@
 			
 		},
 		onReady() {
-			this.getStorageProblem()
-			this.searchByName()
+			//this.getStorageProblem()
+			//this.searchByName()
+			this.getAllBasis()
 		},
 		computed: {
 			
 		},
 		methods:{
+			//获取所有依据
+			getAllBasis(){
+				var apiData = {
+					page:1,
+					size:this.basisSize
+				}
+				uni.showLoading({
+					title:"加载中"
+				})
+				allBasis_API(apiData).then(res =>{
+					this.processBasisData(res.data.data.data)
+					console.log("get all basis success")
+				})
+				uni.hideLoading();
+				
+			},
+			processBasisData(data){
+				this.termsTable = data
+				for(var i = 0;i<this.termsTable.length;i++){
+					this.termsTemp={
+						id:this.termsTable[i].id,
+						category:this.termsTable[i].category,
+						description:this.termsTable[i].description,
+					}
+					this.termsTable[i] = this.termsTemp
+				}
+				console.log(this.termsTable)
+			},
+			
+			
+			
 			//按名称选择
 			searchByName(){
 				var arr = [] //定义一个空数组

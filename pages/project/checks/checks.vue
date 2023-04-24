@@ -168,13 +168,21 @@ import { deleteProblem_API } from '../../../api/api.js'
 					if (this.terms) {
 						console.log("terms get success!")
 						this.addProject()
-						this.problemList[this.problemList.length-1].isOpen = true
+						//this.terms = ''
+						uni.setStorage({
+							key:'terms_key',
+							data:'',
+							success: function() {
+								console.log('terms save null success!')
+							}
+						});
+						
 					}
 				} catch (e) {
 					// error
 				}
 			},
-			async getChecks(){
+			getChecks(){
 				uni.showLoading({
 				                    title: '加载中'
 				                })
@@ -310,6 +318,7 @@ import { deleteProblem_API } from '../../../api/api.js'
 					  
 					}
 					console.log(this.terms)
+					// this.terms = ''
 				// this.initproblemList[this.sumProjects] = this.newProject
 				this.initproblemList.push(this.newProject)
 				

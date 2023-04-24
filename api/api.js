@@ -142,3 +142,12 @@ export function basisById_API(id) {
 		method:'GET',
 	})
 }
+
+// 按页获取多个依据
+export function allBasis_API(data) {
+	return uni.request({
+		url: `${baseUrl}/bases`,
+		data: data,
+		method:'GET',
+	})
+}

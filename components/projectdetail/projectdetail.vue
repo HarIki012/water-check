@@ -7,6 +7,8 @@
 			<text style="margin-bottom: 20rpx;">问题描述</text>
 			<text v-if="projectData.projectName !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
 			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange"></textarea>
+			<button  v-if="projectData.projectName === '自定义'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+			<text v-if="projectData.projectName === '自定义'" class="currentWordNumber">{{fontNum}}/200</text>
 		</view>
 		<view v-if="projectData.projectName === '自定义'" class="text" style="flex-direction: row;">
 			<text style="width: 25%;">问题类型</text>
@@ -45,9 +47,11 @@
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">详情描述</text>
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange"></textarea>
+			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+			<text  class="currentWordNumber">{{fontNum}}/200</text>
 		</view>
 		<view class="choose-pic">
-			<uni-file-picker v-if="testPicurl !== null" v-model="testPicurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
+			<uni-file-picker v-if="testPicurl !== null" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
 			<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
 		</view>
 		<view class="text">
@@ -55,12 +59,16 @@
 				<text style="margin-bottom: 20rpx;">整改要求</text>
 			</view>
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.rectify" placeholder="整改要求" @blur="projectChange"></textarea>
+			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+			<text  class="currentWordNumber">{{fontNum}}/200</text>
 		</view>
 	</view>
 </template>
 
 <script>
 import { uploadFiles } from '/api/api.js'
+	// var plugin = requirePlugin("WechatSI")
+	// let manager = plugin.getRecordRecognitionManager()
 	export default {
 		name:"projectdetail",
 		props:{
@@ -80,7 +88,8 @@ import { uploadFiles } from '/api/api.js'
 					
 					}
 				],
-				testPicurl:[{}],
+				testPicurl:[],
+				realurl:[],
 				severityChoose:['无','一般','较严重','严重','非常严重'],
 				severityselectIndex:'0',
 				severityselectName:'无',
@@ -91,7 +100,8 @@ import { uploadFiles } from '/api/api.js'
 				uploadData:'',
 				from:0,//跳转页面确定,
 				samePic:'no',
-				deleteId:''
+				deleteId:'',
+				
 			};
 		},
 		mounted() {
@@ -147,9 +157,9 @@ import { uploadFiles } from '/api/api.js'
 				this.severityselectName = this.projectData.severity
 				this.typeName = this.projectData.type
 				console.log(this.projectData.photoUrl.length)
-				if(this.projectData.photoUrl.length === 0){
-					this.testPicurl = null
-				}
+				// if(this.projectData.photoUrl.length === 0){
+				// 	this.testPicurl = null
+				// }
 				if(this.projectData.photoUrl.length !== 0){
 					for (var i = 0;i<this.projectData.photoUrl.length;i++){
 						console.log(i)
@@ -166,6 +176,7 @@ import { uploadFiles } from '/api/api.js'
 				}
 				
 				console.log(this.testPicurl)
+				this.realurl = this.testPicurl
 			},
 			severitySelect(e) {
 			    this.severityselectIndex = e.detail.value;
@@ -237,21 +248,58 @@ import { uploadFiles } from '/api/api.js'
 				uni.navigateTo({
 					url:'/pages/project/detail/detail?from='+this.from
 				})
-			}
+			},
+			//语音识别功能
+			touchStart: function() {   
+				manager.start({  
+					duration: 60000,  
+					lang: "zh_CN"  
+				});  
+			},  
+			touchEnd: function() {  
+				uni.showToast()  
+				manager.stop();  
+			},  
+			/**  
+			 * 初始化语音识别回调  
+			 * 绑定语音播放开始事件  
+			 */  
+			initRecord: function() {  
+				manager.onStart = function(res) {  
+					this.voiceState ="onStart:"+ res.msg+"正在录音"  
+				};  
+				//有新的识别内容返回，则会调用此事件  
+				manager.onRecognize = (res) => {  
+					this.voiceResult = res.result;  
+				}  
+			
+				// 识别结束事件  
+				manager.onStop = (res) => {  
+			
+					this.voiceState = res.result;  
+				}  
+			
+				// 识别错误事件  
+				manager.onError = (res) => {  
+			
+					this.voiceState = res.msg;  
+			
+				}  
+			},
 		}
 	}
 </script>
 
 <style>
-	.choose-pic{
-		display: flex;
-		margin-left: 20rpx;
-		margin-right: 30rpx;
-		padding-top: 20rpx;
-		padding-bottom: 40rpx;
-		padding-left: 30rpx;
-		font-size: 35rpx;
-	}
+.choose-pic{
+	display: flex;
+	margin-left: 20rpx;
+	margin-right: 30rpx;
+	padding-top: 20rpx;
+	padding-bottom: 40rpx;
+	padding-left: 30rpx;
+	font-size: 35rpx;
+}
 .text{
 	display: flex;
 	flex-direction: column;
@@ -264,13 +312,13 @@ import { uploadFiles } from '/api/api.js'
 	border-top: 1rpx solid darkgray;
 }
 .detailStyle{
-		display: flex;
-		padding-top: 10rpx;
-		position: relative;
-		width: 90%;
-		height: 300rpx;
-		border: 1rpx solid darkgray;
-		border-radius: 10rpx;
+	display: flex;
+	padding-top: 10rpx;
+	position: relative;
+	width: 90%;
+	height: 300rpx;
+	border: 1rpx solid darkgray;
+	border-radius: 10rpx;
 }
 .detailPic{
 	position: relative;
@@ -292,4 +340,18 @@ import { uploadFiles } from '/api/api.js'
 		left: 105rpx;
 		color: #707070;
 	}
+.voice-text{
+	position: relative;
+	top: -100rpx;
+	left: 200rpx;
+	color: #0CBCC2;
+	z-index: 1;
+	font-size: 60;
+}
+.currentWordNumber{
+	position: relative;
+	top: -160rpx;
+	left: 60%;
+	color: #707070;
+}
 </style>

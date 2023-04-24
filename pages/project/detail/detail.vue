@@ -155,6 +155,7 @@
 				})
 			},
 			generateIssues(){
+				
 				uni.setStorage({
 					key:'terms_key',
 					data:this.data[0].terms,

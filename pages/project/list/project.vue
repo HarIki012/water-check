@@ -155,10 +155,10 @@ import { createProject_API } from '../../../api/api.js'
 		},
 		methods: {
 			// 获取巡检活动
-			async getProjects(){
+			getProjects(){
 				uni.showLoading({
-				                    title: '加载中'
-				                })
+				    title: '加载中',
+				})
 				var tranData = {
 					page:1,
 					size:this.sumData
@@ -171,7 +171,7 @@ import { createProject_API } from '../../../api/api.js'
 					
 				})
 			},
-			async getallProjects(){
+			getallProjects(){
 				var tranData = {
 					page:1,
 					size:this.sumData
@@ -179,7 +179,9 @@ import { createProject_API } from '../../../api/api.js'
 				projectsAll_API(tranData).then(result=>{
 					console.log(result.data.data.data)
 					this.projectTable = result.data.data.data
+					console.log("数据获取成功！")
 					uni.hideLoading();
+					console.log("隐藏加载！")
 					uni.setStorage({
 						key:'project_key',
 						data:this.projectTable,
@@ -187,19 +189,8 @@ import { createProject_API } from '../../../api/api.js'
 							console.log('project save success!')
 						}
 					});
-					// 遍历获取所有区域
-					// var sumName = []
-					// for (var i = 0; i < this.projectTable.length;i++) {
-					// 	if(sumName.filter(item => {
-					// 		if (item === this.projectTable[i].district){
-					// 			return true
-					// 		}
-					// 		}).length === 0) {
-					// 			sumName.push(this.projectTable[i].district)
-					// 	}
-					// 	console.log(i)
-					// 	console.log(sumName)
-					// }
+					console.log("存储数据！")
+					
 				})
 			
 			},
