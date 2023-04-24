@@ -51,7 +51,8 @@
 			<text  class="currentWordNumber">{{fontNum}}/200</text>
 		</view>
 		<view class="choose-pic">
-			<uni-file-picker v-if="testPicurl !== null" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
+			<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
+			<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :del-icon="false"></uni-file-picker>
 			<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
 		</view>
 		<view class="text">
@@ -101,6 +102,7 @@ import { uploadFiles } from '/api/api.js'
 				from:0,//跳转页面确定,
 				samePic:'no',
 				deleteId:'',
+				picLength:''
 				
 			};
 		},
@@ -177,6 +179,7 @@ import { uploadFiles } from '/api/api.js'
 				
 				console.log(this.testPicurl)
 				this.realurl = this.testPicurl
+				this.picLength = this.testPicurl.length
 			},
 			severitySelect(e) {
 			    this.severityselectIndex = e.detail.value;
@@ -214,6 +217,8 @@ import { uploadFiles } from '/api/api.js'
 				
 			},
 			deleteFile(e){
+				console.log(this.picLength)
+			
 				var sameSum = 0
 				for (var i = 0;i<this.testPicurl.length;i++){
 					if(this.testPicurl[i].url === e.tempFilePath){
@@ -231,6 +236,26 @@ import { uploadFiles } from '/api/api.js'
 					console.log(result)
 					this.$emit("deleteId",result)
 				}
+				this.picLength = this.picLength - 1
+				if(this.picLength === 1){
+					var tran = []
+					this.realurl = tran
+					this.realurl = [{
+						name: this.projectData.photoUrl[0],
+						extname: this.filterImgType(this.projectData.photoUrl[0]),
+						url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[0]
+					}]
+					console.log(this.realurl)
+					this.picLength = this.realurl.length
+				}
+				console.log(this.picLength)
+			
+					// uni.showToast({
+					//     title: '至少保留一张图片！',
+					//     icon: 'none',
+					//     duration: 2000
+					// })
+				
 				
 			},
 			filterImgType(img) {

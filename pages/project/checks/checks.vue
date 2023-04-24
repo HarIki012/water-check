@@ -265,7 +265,10 @@ import { deleteProblem_API } from '../../../api/api.js'
 			},
 			clearProblems(e){
 				for(var i = 0;i<this.initproblemList.length;i++){
-					
+					if(this.initproblemList[i].id === e.id){
+						this.initproblemList[i].detail = ''
+						this.initproblemList[i].rectify = ''
+					}
 				}
 			},
 			deleteProject(e) {
