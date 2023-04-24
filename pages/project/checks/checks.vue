@@ -345,7 +345,11 @@ import { deleteProblem_API } from '../../../api/api.js'
 					
 				// })
 				console.log(this.initproblemList)
-				
+				this.changeData()
+				uni.showToast({
+					title: '提交成功!',
+					duration: 1000
+				});
 				
 			},
 			changeData() {
