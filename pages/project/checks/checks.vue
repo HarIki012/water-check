@@ -19,7 +19,12 @@
 				<view v-if="newList[index].bigisOpen">
 					<view v-for="(it, id) in item.data" :key="id">
 						<view style="display: flex;flex-direction: row;">
-							<view :class="newList[index].data[id].isOpen===false?'closeStyle':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">{{it.description}}</view>
+							<view v-if="newList[index].data[id].readed===false" :class="newList[index].data[id].isOpen===false?'closeStyle':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">
+								<text class="text-title-style">{{it.description}}</text>
+							</view>
+							<view v-if="newList[index].data[id].readed===true" :class="newList[index].data[id].isOpen===false?'closeStyle-readed':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">
+								<text class="text-title-style">{{it.description}}</text>
+							</view>
 							<text v-if="newList[index].data[id].isOpen && newList[index].data[id].projectName !== '自定义'" class="deleteStyle" @click="clearProblems(newList[index].data[id])">
 								<text style="text-align: center;">
 									清空
@@ -35,7 +40,7 @@
 						
 						<view v-if="newList[index].data[id].isOpen">
 							<view style="display: flex;flex-direction: column;border-bottom: 1rpx solid darkgray;">
-								<projectdetail :projectData="it" @sendData="getData" @deleteId="getDeleteid"></projectdetail>
+								<projectdetail :projectData="it" :status="projectStatus" @sendData="getData" @deleteId="getDeleteid"></projectdetail>
 								<view style="height: 60rpx;text-align: center;" @click="changeSmall(index,id)">
 									^
 								</view>
@@ -187,7 +192,9 @@ import { deleteProblem_API } from '../../../api/api.js'
 				                    title: '加载中'
 				                })
 				patrolID_API(this.checkId).then(res=>{
-					console.log(res.data.data.inspectionTeams[0].problems)
+					console.log(res.data)
+					this.projectStatus = res.data.data.status
+					console.log(this.projectStatus)
 					this.initproblemList = res.data.data.inspectionTeams[0].problems
 					this.teamid = res.data.data.inspectionTeams[0].id
 					uni.setStorage({
@@ -241,6 +248,21 @@ import { deleteProblem_API } from '../../../api/api.js'
 			},
 			changeSmall(e,n){
 				this.newList[e].data[n].isOpen = !this.newList[e].data[n].isOpen
+				// console.log(this.newList[e].data[n].readed)
+				if(!this.newList[e].data[n].readed){
+					this.newList[e].data[n].readed = true
+					// console.log(this.newList[e].data[n].id)
+					// console.log(this.newList[e].data[n])
+					if(this.newList[e].data[n].description !== '' || this.newList[e].data[n].rectify !== ''){
+						updataProblems_API(this.newList[e].data[n]).then(res=>{
+							console.log(res)
+						})
+					}
+					// for(var i = 0;i<this.initproblemList.length;i++){
+						
+					// }
+				}
+				
 				this.$forceUpdate()
 			},
 			sequ(id) {

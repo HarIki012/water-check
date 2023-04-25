@@ -111,16 +111,45 @@
 		padding-top: 10rpx;
 		padding-bottom: 10rpx;
 		padding-left: 30rpx;
+		padding-right: 10rpx;
 		font-size: 35rpx;
+		font-weight: 600;
+		white-space:nowrap;
+		overflow:hidden;
+		text-overflow:ellipsis;  
+	}
+	.closeStyle-readed{
+		border-radius: 15rpx;
+		display: flex;
+		width: 100%;
+		margin-top: 30rpx;
+		margin-left: 30rpx;
+		margin-right: 30rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		padding-left: 30rpx;
+		font-size: 35rpx;
+		white-space:nowrap;
+		overflow:hidden;
+		text-overflow:ellipsis;  
+	}
+	.text-title-style{
+		width: 70%;
+		white-space:nowrap;
+		overflow:hidden;
+		text-overflow:ellipsis;
 	}
 	.openStyle{
 		display: flex;
-		width: 80%;
+		width: 100%;
 		margin-top: 30rpx;
 		padding-top: 10rpx;
 		padding-bottom: 10rpx;
 		padding-left: 30rpx;
 		font-size: 35rpx;
+		white-space:nowrap;
+		overflow:hidden;
+		text-overflow:ellipsis;   
 	}
 	.deleteStyle{
 		display: flex;

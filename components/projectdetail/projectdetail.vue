@@ -6,15 +6,15 @@
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">问题描述</text>
 			<text v-if="projectData.projectName !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
-			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange"></textarea>
-			<button  v-if="projectData.projectName === '自定义'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" :disabled="allow"></textarea>
+			<button  v-if="projectData.projectName === '自定义'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd" :disabled="allow"></button>
 			<text v-if="projectData.projectName === '自定义'" class="currentWordNumber">{{fontNum}}/200</text>
 		</view>
 		<view v-if="projectData.projectName === '自定义'" class="text" style="flex-direction: row;">
 			<text style="width: 25%;">问题类型</text>
 			<text style="color: red;width: 25%;">*</text>
 			<view style="width: 45%;text-align: right;">
-				<picker @change="typeSelect" :range="typeChoose">
+				<picker @change="typeSelect" :range="typeChoose" :disabled="allow">
 					<label style="margin-right: 20rpx;">{{ typeName }}</label>
 					<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
 				</picker>
@@ -27,7 +27,7 @@
 		</view>
 		<view class="text" v-if="projectData.projectName === '自定义'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.terms" placeholder="条文规范" @blur="projectChange"></textarea>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.terms" placeholder="条文规范" @blur="projectChange" :disabled="allow"></textarea>
 			<!-- <view class="choose-pic">
 				<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
 			</view> -->
@@ -37,7 +37,7 @@
 			<text style="width: 25%;">严重程度</text>
 			<text style="color: red;width: 25%;">*</text>
 			<view style="width: 45%;text-align: right">
-				<picker @change="severitySelect" :range="severityChoose">
+				<picker @change="severitySelect" :range="severityChoose" :disabled="allow">
 					<label style="margin-right: 20rpx;">{{ severityselectName }}</label>
 					<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
 				</picker>
@@ -46,21 +46,21 @@
 		</view>
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">详情描述</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange"></textarea>
-			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange" :disabled="allow"></textarea>
+			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd" :disabled="allow"></button>
 			<text  class="currentWordNumber">{{fontNum}}/200</text>
 		</view>
 		<view class="choose-pic">
-			<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
-			<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :del-icon="false"></uni-file-picker>
-			<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
+			<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
+			<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :del-icon="false" :readonly="allow"></uni-file-picker>
+			<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
 		</view>
 		<view class="text">
 			<view style="flex-direction: row; margin-bottom: 20rpx;">
 				<text style="margin-bottom: 20rpx;">整改要求</text>
 			</view>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.rectify" placeholder="整改要求" @blur="projectChange"></textarea>
-			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.rectify" placeholder="整改要求" @blur="projectChange" :disabled="allow"></textarea>
+			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd" :disabled="allow"></button>
 			<text  class="currentWordNumber">{{fontNum}}/200</text>
 		</view>
 	</view>
@@ -73,7 +73,8 @@ import { uploadFiles } from '/api/api.js'
 	export default {
 		name:"projectdetail",
 		props:{
-			projectData:Object
+			projectData:Object,
+			status:String
 			},
 		data() {
 			return {
@@ -102,7 +103,8 @@ import { uploadFiles } from '/api/api.js'
 				from:0,//跳转页面确定,
 				samePic:'no',
 				deleteId:'',
-				picLength:''
+				picLength:'',
+				allow:''
 				
 			};
 		},
@@ -155,7 +157,13 @@ import { uploadFiles } from '/api/api.js'
 				
 			},
 			initData(){
-				
+				console.log('状态:'+this.status)
+				if (this.status === '未检查' || this.status === '进行中'){
+					this.allow = false
+				} else {
+					this.allow = true
+				}
+				console.log(this.allow)
 				this.severityselectName = this.projectData.severity
 				this.typeName = this.projectData.type
 				console.log(this.projectData.photoUrl.length)
