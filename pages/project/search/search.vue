@@ -12,7 +12,7 @@
 			<view class="sort" v-for="(item,index) in termsData">
 				<view v-if="!item.delete">
 					<view class="delete iconfont icon icon-shanchu2" @click="deleteTagData(index)"> </view>
-					<view :class="item.flag ? 'sortItemOpen iconfont icon icon-xiangxia1' : 'sortItem iconfont icon icon-xiangyou'" @click="showTagData(index)">{{item.projectName}}</view>
+					<view :class="item.flag ? 'sortItemOpen iconfont icon icon-xiangxia1' : 'sortItem iconfont icon icon-xiangyou'" @click="showTagData(index)">{{item.typeOne}}</view>
 					<view :class="item.flag ? 'active':'border'">
 						<view class="info" v-for="(item,index) in item.info">
 							<view v-if="item.show" class="detail" @click="navigateTodetail(item.id)">{{item.description}}</view>
@@ -43,9 +43,10 @@
 				searchDetail: '',
 				from:1,
 				basisSize:10,
-				termsData:[]
+				termsData:[],
 				termsTable:[],
 				termsTemp:{
+					id:0,
 					typeOne:'',
 					info:[],
 					delete:false,
@@ -53,6 +54,7 @@
 				},
 				infoTemp:{
 					id:0,
+					category:"",
 					description: "",
 					show:true,
 				},
@@ -76,9 +78,13 @@
 		methods:{
 			//获取所有依据
 			getBasis(data){
+				uni.showLoading({
+					title:"搜索中..."
+				})
 				searchBasis_API(data).then(res =>{
 					this.processBasisData(res.data.data)
 					console.log("search basis success")
+					uni.hideLoading()
 				})
 			},
 			processBasisData(data){
@@ -88,26 +94,28 @@
 					this.typeOneTable = []
 					for(var i = 0; i < this.termsTable.length ; i++){
 						
-						if(this.typeOneTable.includes(this.termsTable[i].)){
+						if(this.typeOneTable.includes(this.termsTable[i].typeOne)){
 							//得到name相同的项目
-							const result = this.termsData.filter(item => item.typeOne === this.termsTable[i].typeOne).map(item => item.id);
-							const index = result[0]
+							//获取相同typeOne的index
+							const index = this.termsData.findIndex(item => item.typeOne === this.termsTable[i].typeOne);
 							this.infoTemp = {
 								id:this.termsTable[i].id,
+								category:this.termsTable[i].category,
 								description: this.termsTable[i].description,
 								show:true,
 							}
 							this.termsData[index].info.push(this.infoTemp) //推入info
-							console.log("push info")
+							//console.log("push info")
 						}else{
 							this.typeOneTable.push(this.termsTable[i].typeOne);
-							console.log(this.typeOneTable)
 							this.infoTemp = {
 								id:this.termsTable[i].id,
+								category:this.termsTable[i].category,
 								description: this.termsTable[i].description,
 								show:true,
 							}
 							this.termsTemp = {
+								id:i,
 								typeOne:this.termsTable[i].typeOne,
 								info:[],
 								delete:false,
@@ -115,52 +123,22 @@
 							}
 							this.termsTemp.info.push(this.infoTemp)
 							this.termsData.push(this.termsTemp)
-							console.log("push problem")
+							//console.log("push problem")
 						}
-						
 					}
-					console.log(this.termsData)
 				}
 			},
 			
-			
-			
 			//按名称选择
 			searchByName(){
-				var arr = [] //定义一个空数组
-				var arrInfo = []
-				this.termsTable.forEach((item) => {
-					item.delete = false
-					item.info.forEach((item) =>{
-						item.show = true
-					})
-					arr.push(item)
-					}) //将数据放入空数据
-				console.log(arr)
-				if(this.basisSearch){
-					for(var i = 0;i<arr.length;i++){
-						console.log(arr[i].info)
-						arrInfo = arr[i].info.filter(item => !item.description.includes(this.basisSearch)).map(item => item.id);
-						for(var j = 0;j<arrInfo.length;j++){
-							if(arrInfo.length === arr[i].info.length){
-								arr[i].delete = true
-							}
-							else{
-								for(var k = 0;k<arr[i].info.length;k++){
-									if (arr[i].info[k].id === arrInfo[j]){
-										arr[i].info[k].show = false
-									} 
-								}
-							}
-						}
-					}
-				}
+				this.getBasis(this.basisSearch)
+				this.processBasisData()
 			},
 			//按钮选择type
 			filterList() {
 				var arr = [] //定义一个空数组
 				var arrInfo = []
-				this.termsTable.forEach((item) => {
+				this.termsData.forEach((item) => {
 					item.delete = false
 					item.info.forEach((item) =>{
 						item.show = true
@@ -172,7 +150,7 @@
 					//获取到有该字段的数据
 					for(var i = 0;i<arr.length;i++){
 						console.log(arr[i].info)
-						arrInfo = arr[i].info.filter(item => !item.type.includes(this.projectselectName)).map(item => item.id);
+						arrInfo = arr[i].info.filter(item => !item.category.includes(this.projectselectName)).map(item => item.id);
 						for(var j = 0;j<arrInfo.length;j++){
 							if(arrInfo.length === arr[i].info.length){
 								arr[i].delete = true
@@ -201,30 +179,25 @@
 			//下拉
 			showTagData(index){
 				// console.log(index)
-				this.termsTable[index].flag = !this.termsTable[index].flag
+				this.termsData[index].flag = !this.termsData[index].flag
 				// console.log(this.sort[index].flag)
 			},
 			//删除
 			deleteTagData(index){
-				this.termsTable[index].delete = !this.termsTable[index].delete
+				this.termsData[index].delete = !this.termsData[index].delete
 			},
+			
 			//跳转
 			navigateTodetail(id){
 				
 				uni.setStorage({
-					key:'basis_key',
-					data:this.termsTable.info,
-					success: function() {
-						console.log('basis save success!')
-					}
-				});
-				uni.setStorage({
-					key:'problemId_key',
+					key:'basisID_key',
 					data:id,
 					success: function() {
-						console.log('problemId save success!')
+						console.log('basisID save success!')
 					}
 				});
+				
 				uni.navigateTo({
 					url:'/pages/project/detail/detail?from='+this.from
 				})

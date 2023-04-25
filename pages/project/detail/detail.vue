@@ -68,7 +68,7 @@
 				        }
 				    ],
 				cameFrom:0,
-				problemId:0,
+				basisId:0,
 				basisTable:[],
 				proofValue:'',
 				proofPictureUrl:[],
@@ -77,36 +77,22 @@
 		},
 		onLoad(value) {
 			this.cameFrom = value.from
-			this.getStorageProblemId()
+			this.getStorageBasisId()
 		},
 		methods: {
-			getStorageProblemId(){
+			getStorageBasisId(){
 				try {
-					this.problemId = uni.getStorageSync('problemId_key');
-					if (this.problemId) {
-						console.log("problemId get success!")
-						problemById_API(this.problemId).then(res =>{
-							//console.log(res.data.data)
-							this.basisTable = res.data.data.basis
-							console.log(this.basisTable)
-							if(this.basisTable)
-							{	
-								
-								console.log("basis is not null")
-								
-							}
-							else{
-								basisById_API(754).then(res =>{
-									this.basisTable = res.data.data
-									this.data[0].id = this.basisTable.id
-									this.data[0].typeOne = this.basisTable.typeOne
-									this.data[0].description = this.basisTable.description
-									this.data[0].regulations = this.basisTable.regulations
-									this.data[0].terms = this.basisTable.terms
-									this.data[0].responsibleParties = this.basisTable.responsibleParties
-								})
-								console.log("basis null")
-							}
+					this.basisId = uni.getStorageSync('basisID_key');
+					if (this.basisId) {
+						console.log("basisID get success!")
+						basisById_API(this.basisId).then(res => {
+							this.basisTable = res.data.data
+							this.data[0].id = this.basisTable.id
+							this.data[0].description = this.basisTable.description
+							this.data[0].regulations = this.basisTable.regulations
+							this.data[0].terms = this.basisTable.terms
+							this.data[0].responsibleParties = this.basisTable.responsibleParties
+							this.data[0].typeOne = this.basisTable.typeOne
 						})
 					}
 				} catch (e) {
@@ -158,6 +144,7 @@
 			},
 			generateIssues(){
 				var basisData = {
+					id:this.data[0].id,
 					typeOne:this.data[0].typeOne,
 					terms:this.data[0].terms
 				}

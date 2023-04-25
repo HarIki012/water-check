@@ -5,14 +5,16 @@
 		display: flex;
 		justify-content: left;
 		letter-spacing: 2rpx;
-		background-color: white;
+		background-color: #fff;
 		position: sticky;
-		top: 0%;
+		top: 5%;
+		z-index: 10;
 	}
 	.projectStyle{
 		margin-left: 3%;
 		border-radius: 5px;
 		border: 1rpx solid gray;
+		background-color: #fff;
 		text-align: center;
 		align-items: center;
 		flex-direction: row;
@@ -20,7 +22,8 @@
 		width: 25%;
 		height: 70rpx;
 		position: sticky;
-		top: 0;
+		top: 5%;
+		z-index: 10;
 	}
 	.centerStyle{
 		display: flex;
@@ -72,6 +75,7 @@
 		position: relative;
 		left: 630rpx;
 		top: 40rpx;
+		z-index: 4;
 	}
 	.select-text{
 		position: relative;
@@ -81,5 +85,6 @@
 		margin-left: 10rpx;
 		margin-right: 10rpx;
 		color: #0D72BE;
+		z-index: 10;
 	}
 	
