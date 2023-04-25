@@ -85,7 +85,7 @@ export function uploadFiles(data) {
 		data: data,
 		method:'POST',
 		header: {
-		    "Content-Type": "application/x-www-form-urlencoded"
+		    "Content-Type": "application/json"
 		},
 	})
 }
@@ -148,6 +148,26 @@ export function allBasis_API(data) {
 	return uni.request({
 		url: `${baseUrl}/bases`,
 		data: data,
+		method:'GET',
+	})
+}
+
+//条款反馈
+export function feedbackBasis_API(data) {
+	return uni.request({
+		url: `${baseUrl}/feedback_create`,
+		data: data,
+		method:'POST',
+		header: {
+		    "Content-Type": "application/json"
+		},
+	})
+}
+
+//查找条款
+export function searchBasis_API(data) {
+	return uni.request({
+		url: `${baseUrl}/basis_from_search?desc=${data}`,
 		method:'GET',
 	})
 }

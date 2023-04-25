@@ -6,7 +6,7 @@
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">问题描述</text>
 			<text v-if="projectData.projectName !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
-			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" @input="sumFontNumDescription"></textarea>
+			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" @input="sumFontNumDescription" :disabled="allow"></textarea>
 		<view class="fontInput">
 			<button  v-if="projectData.projectName === '自定义'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
 			<text v-if="projectData.projectName === '自定义'" class="currentWordNumber">{{fontNumDescription}}/200</text>
@@ -16,7 +16,7 @@
 			<text style="width: 25%;">问题类型</text>
 			<text style="color: red;width: 25%;">*</text>
 			<view style="width: 45%;text-align: right;">
-				<picker @change="typeSelect" :range="typeChoose">
+				<picker @change="typeSelect" :range="typeChoose" :disabled="allow">
 					<label style="margin-right: 20rpx;">{{ typeName }}</label>
 					<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
 				</picker>
@@ -29,7 +29,7 @@
 		</view>
 		<view class="text" v-if="projectData.projectName === '自定义'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.terms" placeholder="条文规范" @blur="projectChange" ></textarea>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.terms" placeholder="条文规范" @blur="projectChange" :disabled="allow"></textarea>
 			<!-- <view class="choose-pic">
 				<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
 			</view> -->
@@ -39,7 +39,7 @@
 			<text style="width: 25%;">严重程度</text>
 			<text style="color: red;width: 25%;">*</text>
 			<view style="width: 45%;text-align: right">
-				<picker @change="severitySelect" :range="severityChoose">
+				<picker @change="severitySelect" :range="severityChoose" :disabled="allow">
 					<label style="margin-right: 20rpx;">{{ severityselectName }}</label>
 					<text style="width: 10%;font-size: 20rpx;text-align: right;padding-top: 10rpx;">▼</text>
 				</picker>
@@ -48,24 +48,24 @@
 		</view>
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">详情描述</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange" @input="sumFontNumDetail"></textarea>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange" @input="sumFontNumDetail" :disabled="allow"></textarea>
 		<view class="fontInput">
-			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd" :disabled="allow"></button>
 			<text  class="currentWordNumber">{{fontNumDetail}}/200</text>
 		</view>
 		</view>
 		<view class="choose-pic">
-						<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
-						<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :del-icon="false"></uni-file-picker>
-			<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile"></uni-file-picker>
+						<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
+						<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :del-icon="false" :readonly="allow"></uni-file-picker>
+			<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
 		</view>
 		<view class="text">
 			<view style="flex-direction: row; margin-bottom: 20rpx;">
 				<text style="margin-bottom: 20rpx;">整改要求</text>
 			</view>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text"  v-model="projectData.rectify" placeholder="整改要求" @blur="projectChange" @input="sumFontNumRectify"></textarea>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text"  v-model="projectData.rectify" placeholder="整改要求" @blur="projectChange" @input="sumFontNumRectify" :disabled="allow"></textarea>
 			<view class="fontInput">
-				<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+				<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd" :disabled="allow"></button>
 				<text  class="currentWordNumber">{{fontNumRectify}}/200</text>
 			</view>
 		</view>
@@ -79,7 +79,8 @@ import { uploadFiles } from '/api/api.js'
 	export default {
 		name:"projectdetail",
 		props:{
-			projectData:Object
+			projectData:Object,
+			status:String
 			},
 		data() {
 			return {
@@ -114,7 +115,8 @@ import { uploadFiles } from '/api/api.js'
 				voiceResultDescription:"",
 				voiceResultDetail:"",
 				voiceResultRectify:"",
-				picLength:''
+				picLength:'',
+				allow:''
 			};
 		},
 		mounted() {
@@ -138,19 +140,6 @@ import { uploadFiles } from '/api/api.js'
 			},
 			picTest(e){
 				console.log(e)
-				// console.log(this.projectData.photoUrl)
-				
-				// this.projectChange()
-				
-				// var formData = new FormData();
-				// formData.append("files", e.tempFilePaths);
-				// formData.append("dirName", "水务/");
-				// console.log(formData)
-				// uploadFiles(formData).then(res=>{
-				// 	console.log(res)
-				// 	console.log(url)
-				// })
-				
 				uni.uploadFile({
 					url: 'https://zsjs.huaskj.com/weps-api/upload_files', //仅为示例，非真实的接口地址
 					filePath: e.tempFilePaths[0],
@@ -163,10 +152,6 @@ import { uploadFiles } from '/api/api.js'
 						console.log(json_data.data[0]);
 						this.uploadData = 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + json_data.data[0]
 						console.log(this.uploadData)
-						// this.testPicurl.push({
-						// 	fileId: json_data.data[0],
-						// 	url: this.uploadData
-						// })
 						this.projectData.photoUrl.push(
 							json_data.data[0]
 						)
@@ -180,7 +165,13 @@ import { uploadFiles } from '/api/api.js'
 				
 			},
 			initData(){
-				
+				console.log('状态:'+this.status)
+				if (this.status === '未检查' || this.status === '进行中'){
+					this.allow = false
+				} else {
+					this.allow = true
+				}
+				console.log(this.allow)
 				this.severityselectName = this.projectData.severity
 				this.typeName = this.projectData.type
 				console.log(this.projectData.photoUrl.length)
