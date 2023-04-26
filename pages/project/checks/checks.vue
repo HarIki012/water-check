@@ -15,7 +15,8 @@
 		</view>
 		<view style="margin-bottom: 150rpx;">
 			<view v-for="(item, index) in newList" :key="index">
-				<view :class="newList[index].bigisOpen ? 'titleStyle iconfont icon icon-xiangxia1' : 'titleStyle iconfont icon icon-xiangyou'" @click="changeBig(index)" style="margin-top: 30rpx;">{{item.projectName}}</view>
+				<view :class="newList[index].bigisOpen ? 'titleStyle iconfont icon icon-xiangxia1' : 'titleStyle iconfont icon icon-xiangyou'" @click="changeBig(index)" style="margin-top: 30rpx;">{{item.typeOne}}</view>
+				<!-- <view v-if="item.basis === null" :class="newList[index].bigisOpen ? 'titleStyle iconfont icon icon-xiangxia1' : 'titleStyle iconfont icon icon-xiangyou'" @click="changeBig(index)" style="margin-top: 30rpx;">自定义</view> -->
 				<view v-if="newList[index].bigisOpen">
 					<view v-for="(it, id) in item.data" :key="id">
 						<view style="display: flex;flex-direction: row;">
@@ -25,12 +26,12 @@
 							<view v-if="newList[index].data[id].readed===true" :class="newList[index].data[id].isOpen===false?'closeStyle-readed':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">
 								<text class="text-title-style">{{it.description}}</text>
 							</view>
-							<text v-if="newList[index].data[id].isOpen && newList[index].data[id].projectName !== '自定义'" class="deleteStyle" @click="clearProblems(newList[index].data[id])">
+							<text v-if="newList[index].data[id].isOpen && newList[index].data[id].basis.typeOne !== '自定义'" class="deleteStyle" @click="clearProblems(newList[index].data[id])">
 								<text style="text-align: center;">
 									清空
 								</text>
 							</text>
-							<text v-if="newList[index].data[id].isOpen && newList[index].data[id].projectName === '自定义'" class="deleteStyle" @click="deleteProject(newList[index].data[id])">
+							<text v-if="newList[index].data[id].isOpen && newList[index].data[id].basis.typeOne === '自定义'" class="deleteStyle" @click="deleteProject(newList[index].data[id])">
 
 								<text style="text-align: center;">
 									删除
@@ -141,12 +142,16 @@ import { deleteProblem_API } from '../../../api/api.js'
 				deleteId:'',
 				newProject:'',
 				sumProjects:'',
-				checkId:1,
+				checkId:2,
 				ifpicDelete:'no',
 				deletepicMessage:'',
 				teamid:'',
 				problemId:'',
-				terms:'',
+				terms:{
+					id: '1',
+					terms: '1',
+					typeOne: '1'
+				},
 				
 			}
 		},
@@ -167,27 +172,7 @@ import { deleteProblem_API } from '../../../api/api.js'
 			// this.getLength()
 		},
 		methods: {
-			getTerms(){
-				try {
-					this.terms = uni.getStorageSync('terms_key');
-					if (this.terms) {
-						console.log("terms get success!")
-						this.addProject()
-						//this.terms = ''
-						uni.setStorage({
-							key:'terms_key',
-							data:'',
-							success: function() {
-								console.log('terms save null success!')
-							}
-						});
-						
-					}
-				} catch (e) {
-					// error
-				}
-			},
-			getChecks(){
+			async getChecks(){
 				uni.showLoading({
 				                    title: '加载中'
 				                })
@@ -214,6 +199,43 @@ import { deleteProblem_API } from '../../../api/api.js'
 					this.problemId = res.data.data[res.data.data.length-1].id
 				})
 			},
+			async getTerms(){
+				console.log(this.terms)
+				patrolID_API(this.checkId).then(res=>{
+					console.log(res.data)
+					this.initproblemList = res.data.data.inspectionTeams[0].problems
+					this.teamid = res.data.data.inspectionTeams[0].id
+					uni.setStorage({
+						key:'problem_key',
+						data:this.initproblemList,
+						success: function() {
+							console.log('problem save success!')
+						}
+					});
+					try {
+						this.terms = uni.getStorageSync('terms_key');
+						console.log(this.terms.length)
+						console.log(this.terms.id)
+						if (this.terms.id !== undefined) {
+							console.log("terms get success!")
+							this.addProject()
+							//this.terms = ''
+							uni.setStorage({
+								key:'terms_key',
+								data:'',
+								success: function() {
+									console.log('terms save null success!')
+								}
+							});
+							
+						}
+					} catch (e) {
+						// error
+					}
+				})
+				this.changeData()
+			},
+			
 			getLength(){
 				this.sumProjects = this.initproblemList.length
 			},
@@ -325,11 +347,34 @@ import { deleteProblem_API } from '../../../api/api.js'
 					console.log(res.data.data)
 					this.problemId = res.data.data[res.data.data.length-1].id
 				})
-				this.newProject = 
+				if(this.terms.length === 0){
+					this.terms = {
+						id: '',
+						terms: '条款描述略',
+						typeOne: ''
+					}
+					this.newProject =
+						{
+						  "termsUrl": [],
+						  "terms":this.terms.terms,
+						  "projectName": "您好",
+						  "type": "质量",
+						  "severity": "一般",
+						  "description": "问题描述略",
+						  "detail": "详细描述略",
+						  "photoUrl": [],
+						  "rectify": "整改要求略",
+						  "deadline": "2023-4-1",
+						  "supervisionUnit": "督办单位1",
+						  "finder": "专家1",
+						  "readed": false,
+						}
+				} else {
+					this.newProject = 
 					{
-					  "id": this.problemId,
-					  "terms":this.terms,
-					  "projectName": "自定义",
+					  "termsUrl": [],
+					  "terms":this.terms.terms,
+					  "projectName": "您好",
 					  "type": "质量",
 					  "severity": "一般",
 					  "description": "问题描述略",
@@ -340,26 +385,38 @@ import { deleteProblem_API } from '../../../api/api.js'
 					  "supervisionUnit": "督办单位1",
 					  "finder": "专家1",
 					  "readed": false,
+						"basis": {
+						      "id": this.terms.id,
+						      "typeOne": this.terms.typeOne,
+						      "terms": this.terms.terms,
+						  }
 					  
 					}
-					console.log(this.terms)
-					// this.terms = ''
+				}
+				
+				
+				console.log('出来啊')
+				console.log(this.terms)
+				console.log(this.newProject)
+				// this.terms = ''
 				// this.initproblemList[this.sumProjects] = this.newProject
 				this.initproblemList.push(this.newProject)
-				
 				addProblem(this.newProject).then(res=>{
 					console.log(res)
-					
+					this.problemId = res.data.data.id
+					var bindMessage = {
+						teamId: this.teamid,
+						problemId: this.problemId
+					}
+					console.log(this.teamid)
+					console.log(this.problemId)
+					console.log('绑定信息'+bindMessage)
+					bindTeam_API(bindMessage).then(res=>{
+						console.log(res)
+						
+					})
 				})
-				var bindMessage = {
-					teamId: this.teamid,
-					problemId: this.problemId
-				}
-					
-				bindTeam_API(bindMessage).then(res=>{
-					console.log(res)
-					
-				})
+				
 				this.changeData()
 				this.problemList[this.problemList.length-1].isOpen = true
 			},
@@ -381,6 +438,9 @@ import { deleteProblem_API } from '../../../api/api.js'
 					// 	"supervisionUnit": "督办单位1",
 					// 	"finder": "专家2"
 					// }
+					if(this.initproblemList[i].basis.typeOne === '自定义'){
+						this.initproblemList[i].basis = null
+					}
 					console.log(this.initproblemList[i])
 					if(this.initproblemList[i].description === '' || this.initproblemList[i].rectify === ''){
 						uni.showToast({
@@ -430,21 +490,45 @@ import { deleteProblem_API } from '../../../api/api.js'
 					}
 				
 				}
+				for (var j = 0; j < this.problemList.length; j++){
+					if (this.problemList[j].basis === undefined || this.problemList[j].basis === null || this.problemList[j].basis.typeOne === ''){
+						this.problemList[j].basis = {
+						      "id": '',
+						      "codeOne": "",
+						      "codeTwo": "",
+						      "codeThree": "",
+						      "typeOne": "自定义",
+						      "typeTwo": "",
+						      "typeThree": "",
+						      "category": "",
+						      "description": "",
+						      "regulations": "",
+						      "terms": '',
+						      "responsibleParties": "",
+						      "labels": "",
+						      "remarks": null,
+						      "feedbacks": []
+						  }
+					}
+				
+				}
+				console.log('yes')
+				console.log(this.problemList[0].basis.typeOne)
 				var map = {}
 				var nList = []
 				for (var i = 0; i < this.problemList.length; i++) {
 					var item = this.problemList[i]
-					if (!map[item.projectName]) {
+					if (!map[item.basis.typeOne]) {
 						nList.push({
-							projectName: item.projectName,
+							typeOne: item.basis.typeOne,
 							data: [item],
 							bigisOpen: true,
 						})
-						map[item.projectName] = item
+						map[item.basis.typeOne] = item
 					} else {
 						for (var j = 0; j < nList.length; j++) {
 							var nItem = nList[j]
-							if (nItem.projectName == item.projectName) {
+							if (nItem.typeOne == item.basis.typeOne) {
 								nItem.data.push(item)
 								break
 							}
@@ -454,7 +538,7 @@ import { deleteProblem_API } from '../../../api/api.js'
 				console.log(nList)
 				var selfId = nList.length-1
 				for(var i =0;i<nList.length;i++){
-					if(nList[i].projectName === '自定义'){
+					if(nList[i].typeOne === '自定义'){
 						selfId = i
 					}
 				}

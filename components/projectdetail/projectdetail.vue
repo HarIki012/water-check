@@ -5,14 +5,14 @@
 		</view>
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">问题描述</text>
-			<text v-if="projectData.projectName !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
-			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" @input="sumFontNumDescription" :disabled="allow"></textarea>
+			<text v-if="projectData.basis.typeOne !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
+			<textarea v-if="projectData.basis.typeOne === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" @input="sumFontNumDescription" :disabled="allow"></textarea>
 		<view class="fontInput">
-			<button  v-if="projectData.projectName === '自定义'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
-			<text v-if="projectData.projectName === '自定义'" class="currentWordNumber">{{fontNumDescription}}/200</text>
+			<button  v-if="projectData.basis.typeOne === '自定义'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+			<text v-if="projectData.basis.typeOne === '自定义'" class="currentWordNumber">{{fontNumDescription}}/200</text>
 		</view>
 		</view>
-		<view v-if="projectData.projectName === '自定义'" class="text" style="flex-direction: row;">
+		<view v-if="projectData.basis.typeOne === '自定义'" class="text" style="flex-direction: row;">
 			<text style="width: 25%;">问题类型</text>
 			<text style="color: red;width: 25%;">*</text>
 			<view style="width: 45%;text-align: right;">
@@ -23,11 +23,11 @@
 			</view>
 			
 		</view>
-		<view class="text" v-if="projectData.projectName !== '自定义'" style="flex-direction: row;" @click="navigateToDetail()">
+		<view class="text" v-if="projectData.basis.typeOne !== '自定义'" style="flex-direction: row;" @click="navigateToDetail()">
 			<text style="width: 95%;">条文规范</text>
 			<text style="display: flex;text-align: right;">></text>
 		</view>
-		<view class="text" v-if="projectData.projectName === '自定义'" >
+		<view class="text" v-if="projectData.basis.typeOne === '自定义'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.terms" placeholder="条文规范" @blur="projectChange" :disabled="allow"></textarea>
 			<!-- <view class="choose-pic">
