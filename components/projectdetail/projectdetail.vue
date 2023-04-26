@@ -8,7 +8,7 @@
 			<text v-if="projectData.projectName !== '自定义'" style="font-size: 33rpx;">{{projectData.description}}</text>
 			<textarea v-if="projectData.projectName === '自定义'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" @input="sumFontNumDescription" :disabled="allow"></textarea>
 		<view class="fontInput">
-			<button  v-if="projectData.projectName === '自定义'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd"></button>
+			<button  v-if="projectData.projectName === '自定义'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartQuestion" @touchend="touchEndQuestion"></button>
 			<text v-if="projectData.projectName === '自定义'" class="currentWordNumber">{{fontNumDescription}}/200</text>
 		</view>
 		</view>
@@ -50,7 +50,7 @@
 			<text style="margin-bottom: 20rpx;">详情描述</text>
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange" @input="sumFontNumDetail" :disabled="allow"></textarea>
 		<view class="fontInput">
-			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd" :disabled="allow"></button>
+			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartDetail" @touchend="touchEndDetail" :disabled="allow"></button>
 			<text  class="currentWordNumber">{{fontNumDetail}}/200</text>
 		</view>
 		</view>
@@ -65,7 +65,7 @@
 			</view>
 			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text"  v-model="projectData.rectify" placeholder="整改要求" @blur="projectChange" @input="sumFontNumRectify" :disabled="allow"></textarea>
 			<view class="fontInput">
-				<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStart" @touchend="touchEnd" :disabled="allow"></button>
+				<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartRectify" @touchend="touchEndRectify" :disabled="allow"></button>
 				<text  class="currentWordNumber">{{fontNumRectify}}/200</text>
 			</view>
 		</view>
@@ -74,8 +74,8 @@
 
 <script>
 import { uploadFiles } from '/api/api.js'
-	// var plugin = requirePlugin("WechatSI")
-	// let manager = plugin.getRecordRecognitionManager()
+	//var plugin = requirePlugin("WechatSI")
+	//let manager = plugin.getRecordRecognitionManager()
 	export default {
 		name:"projectdetail",
 		props:{
@@ -116,11 +116,13 @@ import { uploadFiles } from '/api/api.js'
 				voiceResultDetail:"",
 				voiceResultRectify:"",
 				picLength:'',
-				allow:''
+				allow:'',
+				mico:[0,0,0]
 			};
 		},
 		mounted() {
 			this.initData()
+			//this.initRecord()
 		},
 		methods:{
 			sumFontNumDescription(e) {
@@ -288,43 +290,79 @@ import { uploadFiles } from '/api/api.js'
 					url:'/pages/project/detail/detail?from='+this.from
 				})
 			},
-			//语音识别功能
-			touchStart: function() {   
-				manager.start({  
-					duration: 60000,  
-					lang: "zh_CN"  
-				});  
-			},  
-			touchEnd: function() {  
-				uni.showToast()  
-				manager.stop();  
-			},  
-			/**  
-			 * 初始化语音识别回调  
-			 * 绑定语音播放开始事件  
-			 */  
-			initRecord: function() {  
-				manager.onStart = function(res) {  
-					this.voiceState ="onStart:"+ res.msg+"正在录音"  
-				};  
-				//有新的识别内容返回，则会调用此事件  
-				manager.onRecognize = (res) => {  
-					this.voiceResult = res.result;  
-				}  
+			// //语音识别功能
+			// touchStartQuestion: function() {   
+			// 	manager.start({  
+			// 		duration: 60000,  
+			// 		lang: "zh_CN"  
+			// 	});
+			// 	this.mico[0] = 1
+			// },  
+			// touchEndQuestion: function() {  
+			// 	uni.showToast()  
+			// 	manager.stop();
+			// 	this.mico[0] = 1
+			// },
+			//   //语音识别功能
+			//   touchStartDetail: function() {   
+			//   	manager.start({  
+			//   		duration: 60000,  
+			//   		lang: "zh_CN"  
+			//   	});  
+			// 	this.mico[1] = 1
+			//   },  
+			//   touchEndDetail: function() {  
+			//   	uni.showToast()  
+			//   	manager.stop();  
+			// 	this.mico[1] = 1
+			//   },
+			//   //语音识别功能
+			//   touchStartRectify: function() {   
+			//   	manager.start({  
+			//   		duration: 60000,  
+			//   		lang: "zh_CN"  
+			//   	});  
+			// 	this.mico[2] = 1
+			//   },  
+			//   touchEndRectify: function() {  
+			//   	uni.showToast()  
+			//   	manager.stop();  
+			// 	this.mico[2] = 1
+			//   },
+			// /**  
+			//  * 初始化语音识别回调  
+			//  * 绑定语音播放开始事件  
+			//  */  
+			// initRecord: function() {  
+			// 	manager.onStart = function(res) {  
+			// 		this.voiceState ="onStart:"+ res.msg+"正在录音"  
+			// 	};  
+			// 	//有新的识别内容返回，则会调用此事件  
+			// 	manager.onRecognize = (res) => {  
+			// 		for(var i = 0; i<3;i++){
+			// 			if(i == 0 && this.mico[i] == 1){
+			// 				this.projectData.description = res.result
+			// 			}else if(i == 1 && this.mico[i] == 1){
+			// 				this.projectData.detail = res.result
+			// 			}else if(i == 2 && this.mico[i] == 1){
+			// 				this.projectData.rectify = res.result
+			// 			}
+			// 		}
+			// 	}  
 			
-				// 识别结束事件  
-				manager.onStop = (res) => {  
+			// 	// 识别结束事件  
+			// 	manager.onStop = (res) => {  
 			
-					this.voiceState = res.result;  
-				}  
+			// 		this.voiceState = res.result;  
+			// 	}  
 			
-				// 识别错误事件  
-				manager.onError = (res) => {  
+			// 	// 识别错误事件  
+			// 	manager.onError = (res) => {  
 			
-					this.voiceState = res.msg;  
+			// 		this.voiceState = res.msg;  
 			
-				}  
-			},
+			// 	}  
+			// },
 		}
 	}
 </script>

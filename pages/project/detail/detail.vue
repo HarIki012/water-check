@@ -5,9 +5,10 @@
 			<view class="name">描述</view>
 			<view class="detail">{{data[0].description}}
 				<view class="remarkContent">
-					<view class="remark" v-for="(item,index) in data[0].remarks">
+					<view v-if="this.data[0].remarks[0].detail !== 0" class="remark" v-for="(item,index) in data[0].remarks">
 						<text v-if="item.detail === '强条'" class="remarkDetail" style="background-color: #bf1f00;">{{item.detail}}</text>
-						<text v-if="item.detail === '重点'" class="remarkDetail" style="background-color: #ffd606;">{{item.detail}}</text>
+						<text v-if="item.detail === '专家重点'" class="remarkDetail" style="background-color: #ffd606;">{{item.detail}}</text>
+						<text v-if="item.detail === '政府重点'" class="remarkDetail" style="background-color: #ffd606;">{{item.detail}}</text>
 					</view>
 				</view>
 			</view>
@@ -46,6 +47,7 @@
 	import { problemById_API } from '../../../api/api.js'
 	import { basisById_API } from '../../../api/api.js'
 	import { feedbackBasis_API } from '../../../api/api.js'
+	import { feedbackBindBasis_API } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -59,11 +61,8 @@
 				            terms: "第七条水利工程项目法人（建设单位）、监理、设计、施工等单位的负责人，对本单位的质量工作负领导责任。各单位在工程现场的项目负责人对本单位在工程现场的质量工作负直接领导责任。各单位的工程技术负责人对质量工作负技术责任。具体工作人员为直接责任人。\n第十六条2.组建建设单位由项目主管部门或投资各方负责；建设单位需具备下列条件：\n（1）具有相对独立的组织形式。内部机构设置，人员配备能满足工程建设的需要；\n（3）主要行政和技术、经济负责人是专职人员，并保持相对稳定。\n第四条（十一）水利工程建设项目法人应具备以下基本条件:3.总人数应满足工程建设管理需要，大、中、小型工程人数一般按照不少于30、12、6人配备，其中工程专业技术人员原则上不少于总人数的50%。\n4.项目法人的主要负责人、技术负责人和财务负责人应具备相应的管理能力和工程建设管理经验。其中，技术负责人应为专职人员，有从事类似水利工程建设管理的工作经历和经验，能够独立处理工程建设中的专业问题，并具备与工程建设相适应的专业技术职称。大型水利工程和坝高大于70米的水库工程项目法人技术负责人应具备水利或相关专业高级职称或执业资格，其他水利工程项目法人技术负责人应具备水利或相关专业中级以上职称或执业资格",
 				            responsibleParties: "建设单位",
 				            remarks: [{
-								detail:"强条"
+								detail:""
 							},
-							{
-								detail:"重点"
-							}
 							],
 				        }
 				    ],
@@ -72,6 +71,7 @@
 				basisTable:[],
 				proofValue:'',
 				proofPictureUrl:[],
+				feedBackId:0,
 				
 			}
 		},
@@ -93,6 +93,18 @@
 							this.data[0].terms = this.basisTable.terms
 							this.data[0].responsibleParties = this.basisTable.responsibleParties
 							this.data[0].typeOne = this.basisTable.typeOne
+							console.log(this.basisTable.remarks)
+							console.log(Number(this.basisTable.remarks))
+							if(Number(this.basisTable.remarks) === 3) {
+								this.data[0].remarks[0].detail = "专家重点" 
+							}else if(Number(this.basisTable.remarks) === 2){
+								this.data[0].remarks[0].detail = "政府重点" 
+							}else if(Number(this.basisTable.remarks) === 1){
+								this.data[0].remarks[0].detail = "强条" 
+							}else{
+								this.data[0].remarks[0].detail = null 
+							}
+							
 						})
 					}
 				} catch (e) {
@@ -134,6 +146,14 @@
 					proofUrl: this.proofPictureUrl
 				}
 				feedbackBasis_API(feedBackData).then(res =>{
+					this.feedBackId = res.data.data.id
+					var bindData = {
+						basisId:this.basisTable.id,
+						feedbackId:this.feedBackId,
+					}
+					feedbackBindBasis_API(bindData).then(res =>{
+						console.log("binding feedback to basis success!")
+					})
 					console.log("upload feedback success!")
 				})
 				uni.showToast({

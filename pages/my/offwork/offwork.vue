@@ -55,7 +55,7 @@
 			}
 		},
 		onLoad() {  
-			this.initRecord();  
+			//this.initRecord();  
 		},
 		methods: {
 			sumfontnum(e) {

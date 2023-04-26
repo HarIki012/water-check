@@ -21,14 +21,16 @@
 	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate(item.patrolId)">
 		<view style="padding: 25rpx;background-color: #F0F3F5;"></view>
 		<view class="contentDown">
-			<text v-if="item.status === '未巡检'" class="check-before" style="color: #f1a532;border-left: 5px solid #f1a532;"></text>
-			<text v-if="item.status === '巡检中'" class="check-before" style="color: #02baf7;border-left: 5px solid #02baf7;"></text>
+			<text v-if="item.status === '未检查'" class="check-before" style="color: #f1a532;border-left: 5px solid #f1a532;"></text>
+			<text v-if="item.status === '进行中'" class="check-before" style="color: #02baf7;border-left: 5px solid #02baf7;"></text>
+			<text v-if="item.status === '已提交'" class="check-before" style="color: #00CD00;border-left: 5px solid #00CD00;"></text>
 			<text v-if="item.status === '已检查'" class="check-before" style="color: #00CD00;border-left: 5px solid #00CD00;"></text>
 			<text v-if="item.status === '已中止'" class="check-before" style="color: #EE2C2C;border-left: 5px solid #EE2C2C;"></text>
 			<view class="check" >{{item.check}}</view>
 			<view class="status" >
-				<text v-if="item.status === '未巡检'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
-				<text v-if="item.status === '巡检中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+				<text v-if="item.status === '未检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+				<text v-if="item.status === '进行中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+				<text v-if="item.status === '已提交'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 				<text v-if="item.status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 				<text v-if="item.status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 			</view>
@@ -140,20 +142,39 @@ import { patrolByProject_API } from '../../../api/api.js'
 			// 获取巡检信息
 			async getpatrolByProject(){
 				patrolByProject_API(this.projectId).then(res=>{
+					console.log(res.data.data)
 					const checksTemp = []
-					for(var i = 0 ; i<res.data.data.length;i++ ){
-						this.temp.patrolId = res.data.data[i].id
-						this.temp.check = res.data.data[i].name //巡检活动名
-						this.temp.leaderName  = res.data.data[i].inspectionTeams.leader  //队长名字
+					for(var i = 0 ; i< res.data.data.length;i++ ){
+						var teamName = ''
 						for(var j = 0; j <res.data.data[i].inspectionTeams[0].expertList.length; j++){ //队员名字
-							this.temp.teamName = this.temp.teamName + res.data.data[i].inspectionTeams[0].expertList[j].name
+							teamName = teamName + res.data.data[i].inspectionTeams[0].expertList[j].name
 							if(j < res.data.data[i].inspectionTeams[0].expertList.length - 1){
-								this.temp.teamName = this.temp.teamName +'，'
+								teamName = teamName +'，'
 							}
 						}
-						this.temp.endTimeInfo  = res.data.data[i].patrolDate[res.data.data[i].patrolDate.length- 1] //结束时间
-						this.temp.status  = res.data.data[i].status //巡检状态
+						this.temp = {
+							patrolId:res.data.data[i].id,
+							check: res.data.data[i].name, //巡检活动名,
+							leader:"组长",
+							leaderName:res.data.data[i].inspectionTeams.leader,
+							team:"组员",
+							teamName:teamName,
+							endTime:"结束时间",
+							endTimeInfo:res.data.data[i].patrolDate[res.data.data[i].patrolDate.length- 1],
+							status:""
+						}
+						for(var k = 0 ;k<this.projectTable.patrolStatus.length;k++){
+							if(this.projectTable.patrolStatus[k].patrol_name === this.temp.check){
+								if(this.projectTable.patrolStatus[k].status === "待检查"){
+									this.temp.status = "未检查"
+								}else{
+									this.temp.status = this.projectTable.patrolStatus[k].status
+								}
+								
+							}
+						}
 						checksTemp.push(this.temp)
+						console.log(this.temp)
 					}
 					this.checks = checksTemp
 				})
@@ -169,7 +190,6 @@ import { patrolByProject_API } from '../../../api/api.js'
 					type: 'wgs84',
 					geocode:true,//设置该参数为true可直接获取经纬度及城市信息
 					success: function (res) {
-						console.log(res)
 						that.addressMessage = res;
 						that.addressData = res.latitude + ', ' + res.longitude
 						console.log(that.addressData)
