@@ -1,12 +1,12 @@
 
 .choose-pic{
-		display: flex;
-		margin-left: 20rpx;
-		margin-right: 30rpx;
-		padding-top: 20rpx;
-		padding-bottom: 40rpx;
-		padding-left: 30rpx;
-		font-size: 35rpx;
+	display: flex;
+	margin-left: 20rpx;
+	margin-right: 30rpx;
+	padding-top: 20rpx;
+	padding-bottom: 40rpx;
+	padding-left: 30rpx;
+	font-size: 35rpx;
 }
 .text{
 	display: flex;
@@ -20,13 +20,13 @@
 	border-top: 1rpx solid darkgray;
 }
 .detailStyle{
-		display: flex;
-		padding-top: 10rpx;
-		position: relative;
-		width: 90%;
-		height: 300rpx;
-		border: 1rpx solid darkgray;
-		border-radius: 10rpx;
+	display: flex;
+	padding-top: 10rpx;
+	position: relative;
+	width: 90%;
+	height: 300rpx;
+	border: 1rpx solid darkgray;
+	border-radius: 10rpx;
 }
 .detailPic{
 	position: relative;
@@ -47,4 +47,23 @@
 		top: -120rpx;
 		left: 105rpx;
 		color: #707070;
+}
+.fontInput{
+	position: relative;
+}
+.voice-text{
+	position: absolute;
+	right: 80rpx;
+	bottom:15rpx;
+	width: 80rpx;
+	color: #0CBCC2;
+	z-index: 2;
+	font-size: 60;
+}
+.currentWordNumber{
+	position: absolute;
+	right: 170rpx;
+	bottom:30rpx;
+	color: #707070;
+	z-index: 2;
 }

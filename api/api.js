@@ -179,3 +179,12 @@ export function feedbackBindBasis_API(data) {
 		method:'PUT',
 	})
 }
+
+// 按活动与项目查找所有问题
+export function problemsbyId_API(data) {
+	return uni.request({
+		url: `${baseUrl}/problems_by_project`,
+		data: data,
+		method:'GET',
+	})
+}
