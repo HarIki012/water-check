@@ -171,3 +171,11 @@ export function searchBasis_API(data) {
 		method:'GET',
 	})
 }
+
+//依据反馈绑定依据
+export function feedbackBindBasis_API(data) {
+	return uni.request({
+		url: `${baseUrl}//feedback_basis_bind?basis_id=${data.basisId}&feedback_id=${data.feedbackId}`,
+		method:'PUT',
+	})
+}

@@ -163,8 +163,10 @@
 				this.$refs['popup'].close();
 			},
 			generateIssues(){
+				
 				var basisData = {
 					id:this.data[0].id,
+					description:this.data[0].description,
 					typeOne:this.data[0].typeOne,
 					terms:this.data[0].terms
 				}
