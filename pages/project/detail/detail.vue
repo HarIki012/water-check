@@ -93,16 +93,19 @@
 							this.data[0].terms = this.basisTable.terms
 							this.data[0].responsibleParties = this.basisTable.responsibleParties
 							this.data[0].typeOne = this.basisTable.typeOne
+							this.data[0].type = this.basisTable.category
 							console.log(this.basisTable.remarks)
 							console.log(Number(this.basisTable.remarks))
-							if(Number(this.basisTable.remarks) === 3) {
+							if(this.basisTable.labels === 3) {
 								this.data[0].remarks[0].detail = "专家重点" 
-							}else if(Number(this.basisTable.remarks) === 2){
+							}else if(this.basisTable.labels === 2){
 								this.data[0].remarks[0].detail = "政府重点" 
-							}else if(Number(this.basisTable.remarks) === 1){
+							}else if(this.basisTable.labels === 1){
 								this.data[0].remarks[0].detail = "强条" 
-							}else{
-								this.data[0].remarks[0].detail = null 
+							}else if(this.basisTable.labels === 4){
+								this.data[0].remarks[0].detail = "过时" 
+							}else if(this.basisTable.labels === 5){
+								this.data[0].remarks[0].detail = "错误" 
 							}
 							
 						})
@@ -145,6 +148,7 @@
 					status: "未审核",
 					proofUrl: this.proofPictureUrl
 				}
+
 				feedbackBasis_API(feedBackData).then(res =>{
 					this.feedBackId = res.data.data.id
 					var bindData = {
@@ -168,7 +172,8 @@
 					id:this.data[0].id,
 					description:this.data[0].description,
 					typeOne:this.data[0].typeOne,
-					terms:this.data[0].terms
+					terms:this.data[0].terms,
+					category:this.data[0].category
 				}
 				uni.setStorage({
 					key:'terms_key',

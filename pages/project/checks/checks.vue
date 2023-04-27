@@ -32,7 +32,7 @@
 										清空
 									</text>
 								</text>
-								<text v-if="newList[index].data[id].basis !== null && newList[index].data[id].basis.typeOne === '自定义'" style="width: 100%;" @click="deleteProject(newList[index].data[id])">
+								<text v-else style="width: 100%;" @click="deleteProject(newList[index].data[id])">
 									<text style="text-align: center;">
 										删除
 									</text>
@@ -79,6 +79,9 @@ import { allProblem_API } from '../../../api/api.js'
 import { bindTeam_API } from '../../../api/api.js'
 import { deleteProblem_API } from '../../../api/api.js'
 import { problemsbyId_API } from '../../../api/api.js'
+import { projectInfo_API } from '../../../api/api.js'
+import { projectUpdate_API } from '../../../api/api.js'
+
 	export default {
 		data() {
 			return {
@@ -153,7 +156,10 @@ import { problemsbyId_API } from '../../../api/api.js'
 				terms:{
 					id: '1',
 					terms: '1',
-					typeOne: '1'
+					typeOne: '1',
+					category:'',
+					length:1,
+					description:'',
 				},
 				checkIdTemp:0,
 				patrolId:'1',
@@ -161,6 +167,11 @@ import { problemsbyId_API } from '../../../api/api.js'
 				projectStatus:'进行中',
 				tranprojectName:'',
 				templateDate:[],
+				userName:'',
+				patrolName:'',
+				patrolTemp:'',
+				projectstatusChange:''
+				
 			}
 		},
 		components:{
@@ -170,9 +181,14 @@ import { problemsbyId_API } from '../../../api/api.js'
 			if(value.id !== undefined) {
 				this.checkId = value.id
 			}
-			console.log(this.checkId)
 			try{
 				this.checkIdTemp = uni.getStorageSync('patrolId_key')
+				this.patrolTemp = uni.getStorageSync('patrolStutas_key')
+				this.patrolName = this.patrolTemp.patrolname
+				this.projectId = this.patrolTemp.projectId
+				this.projectStatus = this.patrolTemp.patrolstatus
+				this.userName = uni.getStorageSync('user_key')
+				this.userName = this.userName.name
 				if(Number(this.checkIdTemp) !== 0){
 					this.checkId = this.checkIdTemp
 				}
@@ -183,6 +199,7 @@ import { problemsbyId_API } from '../../../api/api.js'
 			this.getTerms()
 			this.savePatrolId()
 			this.getTemplate()
+			this.sequ(0)
 		},
 		mounted() {
 			// this.changeData(),
@@ -192,9 +209,36 @@ import { problemsbyId_API } from '../../../api/api.js'
 			//获取模板问题
 			getTemplate(){
 				try{
-					this.templateDate = uni.getStorageSync('template_key')
-					console.log("get template success!")
-					console.log(this.templateDate)
+					var idBoxthree = {
+						id: this.projectId,
+						patrol_id: this.patrolId
+					}
+					problemsbyId_API(idBoxthree).then(res => {
+						this.initproblemList = res.data.data
+						this.teamid = res.data.data[0].inspectionTeam.id
+						this.templateDate = uni.getStorageSync('template_key')
+						console.log("get template success!")
+						console.log("生成模板问题")
+						for(var i=0; i<this.templateDate.length;i++){
+							this.terms.id = this.templateDate[i].id
+							this.terms.terms = this.templateDate[i].terms
+							this.terms.typeOne = this.templateDate[i].typeOne
+							this.terms.description = this.templateDate[i].description
+							for(var j = 0; j<this.typeList.length;j++){
+								if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
+									this.terms.category = this.typeList[j]
+								}
+							}
+							this.terms.length = 1
+							var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
+							if(isExist.length == 0){
+								this.addProject()
+								this.changeData()
+							}
+							this.terms = []
+						}
+						
+					})
 				}catch(e){
 
 				}
@@ -213,17 +257,14 @@ import { problemsbyId_API } from '../../../api/api.js'
 			
 			async getChecks(){
 				uni.showLoading({
-				                    title: '加载中'
+				    title: '加载中'
 				})
 				var idBox = {
 					id: this.projectId,
 					patrol_id: this.patrolId
 				}
-				console.log(idBox)
 				problemsbyId_API(idBox).then(res=>{
-					console.log(res.data.data)
 					this.tranprojectName = res.data.data[0].projectName
-					console.log(this.projectStatus)
 					this.initproblemList = res.data.data
 					this.teamid = res.data.data[0].inspectionTeam.id
 					uni.setStorage({
@@ -238,20 +279,13 @@ import { problemsbyId_API } from '../../../api/api.js'
 					uni.hideLoading();
 				})
 				var sumProblems = "";
-				// allProblem_API(sumProblems).then(res=>{
-				// 	console.log(res.data.data)
-				// 	this.problemId = res.data.data[res.data.data.length-1].id
-				// })
 			},
 			async getTerms(){
-				console.log(this.terms)
 				var idBoxtwo = {
 					id: this.projectId,
 					patrol_id: this.patrolId
 				}
-				console.log(idBoxtwo)
 				problemsbyId_API(idBoxtwo).then(res=>{
-					console.log(res.data)
 					this.initproblemList = res.data.data
 					this.teamid = res.data.data[0].inspectionTeam.id
 					uni.setStorage({
@@ -263,8 +297,6 @@ import { problemsbyId_API } from '../../../api/api.js'
 					});
 					try {
 						this.terms = uni.getStorageSync('terms_key');
-						console.log(this.terms)
-						console.log(this.terms.id)
 						if (this.terms.id !== undefined) {
 							console.log("terms get success!")
 							console.log("即将新增问题")
@@ -292,23 +324,18 @@ import { problemsbyId_API } from '../../../api/api.js'
 				this.sumProjects = this.initproblemList.length
 			},
 			getData(res){
-				console.log(this.initproblemList)
 				for (var i = 0; i < this.initproblemList.length;i++){
 					if (this.initproblemList[i].id === res.id) {
 						this.initproblemList[i] = res
-						console.log(this.initproblemList)
 					}
 				}
 			},
 			getDeleteid(e){
-				console.log(e)
 				var raw = JSON.stringify([
 				   e
 				])
-				console.log(raw)
 				this.ifpicDelete = 'yes'
 				this.deletepicMessage = raw
-				console.log(this.deletepicMessage)
 			},
 			search(e){
 				uni.navigateTo({
@@ -322,11 +349,9 @@ import { problemsbyId_API } from '../../../api/api.js'
 			},
 			changeSmall(e,n){
 				console.log("看看")
-				console.log(this.newList)
-				console.log(this.newList[e].data[n])
+				
 				this.newList[e].data[n].isOpen = !this.newList[e].data[n].isOpen
 				// await uni.nextTick()
-				console.log(this.newList[e].data[n].readed)
 				if(!this.newList[e].data[n].readed){
 					this.newList[e].data[n].readed = true
 					// console.log(this.newList[e].data[n].id)
@@ -338,7 +363,6 @@ import { problemsbyId_API } from '../../../api/api.js'
 							var tranData = this.newList[e].data[n]
 							tranData.basis = null
 							// await uni.nextTick()
-							console.log(tranData)
 							updataProblems_API(tranData).then(res=>{
 								console.log(res)
 							})
@@ -347,12 +371,7 @@ import { problemsbyId_API } from '../../../api/api.js'
 								console.log(res)
 							})
 						}
-						//console.log(this.newList[e].data[n])
-						// this.changeData()
 					}
-					// for(var i = 0;i<this.initproblemList.length;i++){
-						
-					// }
 				}
 				
 				this.$forceUpdate()
@@ -388,7 +407,6 @@ import { problemsbyId_API } from '../../../api/api.js'
 				this.$refs['deletePop'].open()
 			},
 			dialogConfirm(e) {
-				console.log(this.deleteName)
 				this.initproblemList = this.initproblemList.filter(item => item.id != this.deleteId)
 				var data = JSON.stringify([
 				   this.deleteId
@@ -400,8 +418,9 @@ import { problemsbyId_API } from '../../../api/api.js'
 			dialogClose() {
 				this.$refs['deletePop'].close()
 			},
-			addProject() {
+			 addProject() {
 				var sum = "";
+				// 获取问题ID
 				allProblem_API(sum).then(res=>{
 					this.problemId = res.data.data[res.data.data.length-1].id
 				})
@@ -414,13 +433,13 @@ import { problemsbyId_API } from '../../../api/api.js'
 						  "projectName": this.tranprojectName,
 						  "type": "质量",
 						  "severity": "一般",
-						  "description": "问题描述略",
-						  "detail": "详细描述略",
+						  "description": "请填写问题描述",
+						  "detail": "请填写详细描述",
 						  "photoUrl": [],
-						  "rectify": "整改要求略",
+						  "rectify": "请填写整改要求",
 						  "deadline": "2023-4-1",
 						  "supervisionUnit": "督办单位1",
-						  "finder": "专家1",
+						  "finder": this.userName,
 						  "readed": false,
 						  "basis": null
 						}
@@ -431,7 +450,7 @@ import { problemsbyId_API } from '../../../api/api.js'
 					  "termsUrl": [],
 					  "terms":this.terms.terms,
 					  "projectName": this.tranprojectName,
-					  "type": "质量", 
+					  "type": this.terms.category, 
 					  "severity": "一般",
 					  "description": this.terms.description,
 					  "detail": "详细描述略",
@@ -439,7 +458,7 @@ import { problemsbyId_API } from '../../../api/api.js'
 					  "rectify": "整改要求略",
 					  "deadline": "2023-4-1",
 					  "supervisionUnit": "督办单位1",
-					  "finder": "专家1",
+					  "finder": this.userName,
 					  "readed": false,
 						"basis": {
 						      "id": this.terms.id,
@@ -461,6 +480,7 @@ import { problemsbyId_API } from '../../../api/api.js'
 					}
 				}
 				this.initproblemList.push(this.newProject)
+				console.log("创建新问题")
 				addProblem(this.newProject).then(res=>{
 					console.log(res)
 					this.problemId = res.data.data.id
@@ -468,7 +488,6 @@ import { problemsbyId_API } from '../../../api/api.js'
 						teamId: this.teamid,
 						problemId: this.problemId
 					}
-					console.log(bindMessage)
 					bindTeam_API(bindMessage).then(res=>{
 						console.log(res)
 					})
@@ -502,8 +521,6 @@ import { problemsbyId_API } from '../../../api/api.js'
 							break
 						}
 					}
-					
-					//console.log(this.initproblemList[i])
 					if(this.initproblemList[i].detail === '' || this.initproblemList[i].rectify === ''){
 						uni.showToast({
 						    title: '详情描述与整改要求不能为空！',
@@ -520,12 +537,26 @@ import { problemsbyId_API } from '../../../api/api.js'
 					}
 					
 				}
-				console.log(isSubmit)
 				if (isSubmit === 'yes'){
 					uni.showToast({
 						title: '提交成功!',
 						duration: 1000
 					});
+					
+					this.projectStatus = '已提交'
+					projectInfo_API(this.projectId).then(res=>{
+						this.projectstatusChange = res.data.data
+						for (var i=0;i<this.projectstatusChange.patrolStatus.length;i++){
+							if(this.projectstatusChange.patrolStatus[i].patrol_name === this.patrolName){
+								this.projectstatusChange.patrolStatus[i].status = '已提交'
+								projectUpdate_API(this.projectstatusChange).then(res=>{
+									console.log(res)
+								})
+							}
+						}
+						
+					})
+					
 					this.changeData()
 				} else {
 					uni.showToast({
@@ -534,7 +565,6 @@ import { problemsbyId_API } from '../../../api/api.js'
 					    duration: 2000
 					})
 				}
-				console.log(this.initproblemList)
 			},
 			changeData() {
 				this.problemList = this.initproblemList
@@ -570,7 +600,6 @@ import { problemsbyId_API } from '../../../api/api.js'
 				
 				}
 				console.log('yes')
-				//console.log(this.problemList[0].basis.typeOne)
 				var map = {}
 				var nList = []
 				for (var i = 0; i < this.problemList.length; i++) {
@@ -592,7 +621,6 @@ import { problemsbyId_API } from '../../../api/api.js'
 						}
 					}
 				}
-				//console.log(nList)
 				var selfId = nList.length-1
 				for(var i =0;i<nList.length;i++){
 					if(nList[i].typeOne === '自定义'){
@@ -605,7 +633,6 @@ import { problemsbyId_API } from '../../../api/api.js'
 					nList[nList.length-1] = tran
 				}
 				this.newList = nList
-				console.log(this.newList)
 			}
 		}
 	}

@@ -233,3 +233,21 @@ export function accounts_API(){
 		method:'GET',
 	})
 }
+
+//获得该活动下巡查该项目的专家组
+export function teamByProject_API(data){
+	return uni.request({
+		url: `${baseUrl}/team_by_project?id=${data.id}&patrol_id=${data.patrolId}`,
+		method:'GET',
+	})
+}
+
+
+//修改工程项目
+export function projectUpdate_API(data){
+	return uni.request({
+		url: `${baseUrl}/project_update`,
+		data: data,
+		method:'PUT',
+	})
+}

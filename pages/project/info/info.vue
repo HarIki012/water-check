@@ -18,7 +18,7 @@
 	</view>
 	
 	
-	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate(item.patrolId,item.status)">
+	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate(item.patrolId,item.status,item.check)">
 		<view style="padding: 25rpx;background-color: #F0F3F5;"></view>
 		<view class="contentDown">
 			<text v-if="item.status === '未检查'" class="check-before" style="color: #f1a532;border-left: 5px solid #f1a532;"></text>
@@ -52,6 +52,7 @@ import { projectInfo_API } from '../../../api/api.js'
 import { patrolByProject_API } from '../../../api/api.js'
 import { basisByProject_API } from '../../../api/api.js'
 import { updataProject_API } from '../../../api/api.js'
+import { teamByProject_API } from '../../../api/api.js'
 	export default {
 		data() {
 			
@@ -116,6 +117,9 @@ import { updataProject_API } from '../../../api/api.js'
 				addressMessage:'',
 				addressData:'',
 				basisData:'',
+				leaderName:[],
+				projectTemp:'',
+				patrolIdList:[],
 			}
 		},
 		onLoad(value) {
@@ -123,6 +127,7 @@ import { updataProject_API } from '../../../api/api.js'
 			this.getprojectInfo()
 			this.getpatrolByProject()
 			this.setBasisByProject()
+			this.getLeaderName()
 		},
 		methods: {
 			// 获取项目详情
@@ -147,26 +152,29 @@ import { updataProject_API } from '../../../api/api.js'
 			async getpatrolByProject(){
 				patrolByProject_API(this.projectId).then(res=>{
 					console.log(res.data.data)
+					this.projectTemp = res.data.data
 					const checksTemp = []
-					for(var i = 0 ; i< res.data.data.length;i++ ){
+					for(var i = 0 ; i< this.projectTemp.length;i++ ){
 						var teamName = ''
-						for(var j = 0; j <res.data.data[i].inspectionTeams[0].expertList.length; j++){ //队员名字
-							teamName = teamName + res.data.data[i].inspectionTeams[0].expertList[j].name
-							if(j < res.data.data[i].inspectionTeams[0].expertList.length - 1){
+						for(var j = 0; j <this.projectTemp[i].inspectionTeams[0].expertList.length; j++){ //队员名字
+							teamName = teamName + this.projectTemp[i].inspectionTeams[0].expertList[j].name
+							if(j < this.projectTemp[i].inspectionTeams[0].expertList.length - 1){
 								teamName = teamName +'，'
 							}
 						}
 						this.temp = {
-							patrolId:res.data.data[i].id,
-							check: res.data.data[i].name, //巡检活动名,
+							patrolId:this.projectTemp[i].id,
+							check: this.projectTemp[i].name, //巡检活动名,
 							leader:"组长",
-							leaderName:res.data.data[i].inspectionTeams.leader,
+							leaderName:this.leaderName,
 							team:"组员",
 							teamName:teamName,
 							endTime:"结束时间",
-							endTimeInfo:res.data.data[i].patrolDate[res.data.data[i].patrolDate.length- 1],
+							endTimeInfo:this.projectTemp[i].patrolDate[this.projectTemp[i].patrolDate.length- 1],
 							status:""
 						}
+						this.patrolIdList.push(this.projectTemp[i].id)
+						
 						for(var k = 0 ;k<this.projectTable.patrolStatus.length;k++){
 							if(this.projectTable.patrolStatus[k].patrol_name === this.temp.check){
 								if(this.projectTable.patrolStatus[k].status === "待检查"){
@@ -174,14 +182,41 @@ import { updataProject_API } from '../../../api/api.js'
 								}else{
 									this.temp.status = this.projectTable.patrolStatus[k].status
 								}
-								
 							}
 						}
 						checksTemp.push(this.temp)
 						//console.log(this.temp)
 					}
 					this.checks = checksTemp
+					
 				})
+			},
+			getLeaderName(){
+				var idTemp = [{
+					id:this.projectId,
+					patrolId:2,
+				},
+				 {
+					id:this.projectId,
+					patrolId:1,
+				},
+				{
+					id:this.projectId,
+					patrolId:2,
+				},
+				{
+					id:this.projectId,
+					patrolId:1,
+				}
+				]
+				// 返回的值，按id从大到小排序
+				for(var i=0;i<idTemp.length;i++){
+					console.log(idTemp[i])
+					teamByProject_API(idTemp[i]).then(res =>{
+						console.log(res.data.data)
+					})
+				}
+				
 			},
 			// 展开或收起
 			showTag(){
@@ -232,10 +267,11 @@ import { updataProject_API } from '../../../api/api.js'
 				});
 			},
 			//跳转页面
-			gonavigate(id,status){
+			gonavigate(id,status,name){
 				var data = {
 					projectId:this.projectId,
 					patrolstatus:status,
+					patrolname:name,
 				}
 				uni.setStorage({
 					key:'patrolStutas_key',
@@ -244,7 +280,7 @@ import { updataProject_API } from '../../../api/api.js'
 						console.log("patrolStutas save success")
 					}
 				})
-				uni.redirectTo({
+				uni.navigateTo({
 					//保留当前页面，跳转到应用内的某个页面
 					url: '/pages/project/checks/checks?id=' + id
 				})

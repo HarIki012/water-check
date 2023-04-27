@@ -98,7 +98,7 @@ import { uploadFiles } from '/api/api.js'
 				],
 				testPicurl:[],
 				realurl:[],
-				severityChoose:['无','一般','较严重','严重','非常严重'],
+				severityChoose:['无此项','一般','较严重','严重','非常严重'],
 				severityselectIndex:'0',
 				severityselectName:'无',
 				typeChoose:['质量','安全','文明施工'],
