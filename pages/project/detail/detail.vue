@@ -32,7 +32,7 @@
 		<uni-popup ref="popup">
 			<view class="pop">
 				<text class="Name">反馈内容</text>
-				<textarea class="detailInfo" :value="proofValue" placeholder="请输入反馈内容..."/>
+				<textarea class="detailInfo" v-model="proofValue"  placeholder="请输入反馈内容..."/>
 				<text class="Name">证明资料</text>
 				<view class="hs-choose-pic">
 					<uni-file-picker limit="1" title="上传图片或视频" @select="pictureSelect"></uni-file-picker>
@@ -141,7 +141,7 @@
 			seedFeedBack(){
 				var feedBackData = {
 					name: "专家1",
-					content: this.feedBackData,
+					content: this.proofValue,
 					status: "未审核",
 					proofUrl: this.proofPictureUrl
 				}
@@ -177,7 +177,7 @@
 						console.log('terms save success!')
 					}
 				});
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/project/checks/checks'
 				})
 			},

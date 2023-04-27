@@ -28,6 +28,7 @@
 </template>
 
 <script>
+	import { reporting_API } from '../../../api/api.js'
 	// var plugin = requirePlugin("WechatSI")
 	// let manager = plugin.getRecordRecognitionManager()
 	export default {
@@ -43,7 +44,14 @@
 				enddate:currentDate,
 				voiceState:"",
 				voiceResult:"",
-				submitState:false,
+				reportingData:{
+				  name: "专家1",
+				  content: "RNG输了，没心情工作了",
+				  start: "2018-10-20",
+				  end: "2019-10-20"
+				},
+				userData:{}
+				
 			}
 		},
 		computed: {
@@ -58,6 +66,14 @@
 			//this.initRecord();  
 		},
 		methods: {
+			getUserName(){
+				try{
+					this.userData = uni.getStorageSync('user_key')
+					this.reportingData.name = this.userData.name
+				}catch(e){
+
+				}
+			},
 			sumfontnum(e) {
 				this.fontNum = e.detail.value.length
 				this.voiceResult = e.detail.value
@@ -92,6 +108,15 @@
 				console.log(this.voiceResult)
 				console.log(this.begindate)
 				console.log(this.enddate)
+				this.reportingData.content = this.voiceResult
+				this.reportingData.start = this.begindate
+				this.reportingData.end = this.enddate
+				reporting_API(this.reportingData).then(res => {
+					uni.showToast({
+						title:'报备成功',
+						duration:1000,
+					})
+				})
 				uni.switchTab({
 					url:'/pages/my/my/my'
 				})

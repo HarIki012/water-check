@@ -159,7 +159,8 @@ import { problemsbyId_API } from '../../../api/api.js'
 				patrolId:'1',
 				projectId:'1',
 				projectStatus:'进行中',
-				tranprojectName:''
+				tranprojectName:'',
+				templateDate:[],
 			}
 		},
 		components:{
@@ -181,14 +182,25 @@ import { problemsbyId_API } from '../../../api/api.js'
 			this.getChecks()
 			this.getTerms()
 			this.savePatrolId()
-			
+			this.getTemplate()
 		},
 		mounted() {
 			// this.changeData(),
 			// this.getLength()
 		},
 		methods: {
+			//获取模板问题
+			getTemplate(){
+				try{
+					this.templateDate = uni.getStorageSync('template_key')
+					console.log("get template success!")
+					console.log(this.templateDate)
+				}catch(e){
+
+				}
+			},
 			
+			// 存储巡检ID
 			savePatrolId(){
 				uni.setStorage({
 					key:'patrolId_key',
@@ -258,9 +270,10 @@ import { problemsbyId_API } from '../../../api/api.js'
 							console.log("即将新增问题")
 							this.addProject()
 							//this.terms = ''
+							var tempData = []
 							uni.setStorage({
 								key:'terms_key',
-								data:'',
+								data:tempData,
 								success: function() {
 									console.log('terms save null success!')
 								}
@@ -272,6 +285,7 @@ import { problemsbyId_API } from '../../../api/api.js'
 					}
 				})
 				this.changeData()
+				
 			},
 			
 			getLength(){
@@ -299,7 +313,7 @@ import { problemsbyId_API } from '../../../api/api.js'
 			search(e){
 				uni.navigateTo({
 							 url:'/pages/project/search/search?searchText=' + e.detail.value
-								}) //由搜索页传递到搜索结果页
+				}) //由搜索页传递到搜索结果页
 			},
 			changeBig(e){
 				 this.newList[e].bigisOpen = !this.newList[e].bigisOpen
@@ -461,6 +475,7 @@ import { problemsbyId_API } from '../../../api/api.js'
 				})
 				
 				this.changeData()
+				this.terms = ''
 			},
 			submitChange(){
 				var isSubmit = 'yes'
@@ -473,14 +488,30 @@ import { problemsbyId_API } from '../../../api/api.js'
 						//TODO handle the exception
 					}
 					
+					if(this.initproblemList[i].basis === null){
+						console.log("该问题是自定义问题")
+					}else{
+						if(!this.initproblemList[i].readed){
+							uni.showToast({
+							    title: '模板问题尚看完！',
+							    icon: 'none',
+							    duration: 2000
+							})
+							isSubmit = 'no'
+							console.log("有模板问题未读")
+							break
+						}
+					}
+					
 					//console.log(this.initproblemList[i])
-					if(this.initproblemList[i].description === '' || this.initproblemList[i].rectify === ''){
+					if(this.initproblemList[i].detail === '' || this.initproblemList[i].rectify === ''){
 						uni.showToast({
-						    title: '问题描述与整改要求不能为空！',
+						    title: '详情描述与整改要求不能为空！',
 						    icon: 'none',
 						    duration: 2000
 						})
 						isSubmit = 'no'
+						console.log("详情描述与整改要求没写")
 						break
 					} else {
 						updataProblems_API(this.initproblemList[i]).then(res=>{
@@ -489,10 +520,7 @@ import { problemsbyId_API } from '../../../api/api.js'
 					}
 					
 				}
-				// deleteFile(this.deletepicMessage).then(res=>{
-				// 	console.log(res)
-					
-				// })
+				console.log(isSubmit)
 				if (isSubmit === 'yes'){
 					uni.showToast({
 						title: '提交成功!',
@@ -501,15 +529,12 @@ import { problemsbyId_API } from '../../../api/api.js'
 					this.changeData()
 				} else {
 					uni.showToast({
-					    title: '问题描述与整改要求不能为空！',
+					    title: '模板问题尚未完成或问题描述与整改要求为空！',
 					    icon: 'none',
 					    duration: 2000
 					})
 				}
 				console.log(this.initproblemList)
-				
-				
-				
 			},
 			changeData() {
 				this.problemList = this.initproblemList

@@ -129,7 +129,8 @@ import { createProject_API } from '../../../api/api.js'
 				buttonUse: false,
 				upData: true,
 				sumData:10,
-				testArr: ''
+				testArr: '',
+				loginData:{},
 			}
 		},
 		computed: {
@@ -154,8 +155,26 @@ import { createProject_API } from '../../../api/api.js'
 		},
 		onLoad() {
 			this.getProjects()
+			this.checkLogin()
 		},
 		methods: {
+			//检测登录状态
+			checkLogin(){
+				try{
+					this.loginData = uni.getStorageSync('user_key')
+					console.log(this.loginData)
+					if(!this.loginData.isLogin){
+						uni.redirectTo({
+							url:'/pages/login/login'
+						})
+						console.log(this.loginData.isLogin)
+					}else{
+						console.log(this.loginData.isLogin)
+					}
+				}catch(e){
+
+				}
+			},
 			// 获取巡检活动
 			getProjects(){
 				uni.showLoading({
@@ -168,7 +187,7 @@ import { createProject_API } from '../../../api/api.js'
 				projectsAll_API(tranData).then(res=>{
 					// console.log(res)
 					this.sumData = res.data.data.count
-					console.log(res.data.data.data)
+					//console.log(res.data.data.data)
 					this.getallProjects()
 					
 				})
@@ -179,7 +198,7 @@ import { createProject_API } from '../../../api/api.js'
 					size:this.sumData
 				}
 				projectsAll_API(tranData).then(result=>{
-					console.log(result.data.data.data)
+					//console.log(result.data.data.data)
 					this.projectTable = result.data.data.data
 					console.log("数据获取成功！")
 					uni.hideLoading();
@@ -197,7 +216,7 @@ import { createProject_API } from '../../../api/api.js'
 			
 			},
 			navigatortoinfo(id){
-				uni.navigateTo({
+				uni.redirectTo({
 					url:'/pages/project/info/info?id=' + id
 				})
 			},
@@ -211,8 +230,8 @@ import { createProject_API } from '../../../api/api.js'
 			},
 			closePop() {
 				uni.showLoading({
-				                    title: '新建项目中'
-				                })
+					title: '新建项目中'
+				})
 				var newProject = {
 				  "name": this.newProjectname,
 				  "type": "水务工程",
@@ -226,9 +245,9 @@ import { createProject_API } from '../../../api/api.js'
 				  "contracts": "监理-XXX-18888888888",
 				  "visualProgress": "0%",
 				}
-				console.log(newProject)
+				//console.log(newProject)
 				createProject_API(newProject).then(res=>{
-					console.log(res.data.data)
+					//console.log(res.data.data)
 					if (res.data.message === 'success') {
 						uni.hideLoading();
 						uni.showToast({
@@ -275,10 +294,10 @@ import { createProject_API } from '../../../api/api.js'
 					type: 'wgs84',
 					geocode:true,//设置该参数为true可直接获取经纬度及城市信息
 					success: function (res) {
-						console.log(res)
+						//console.log(res)
 						that.addressMessage = res;
 						that.addressData = res.latitude + ', ' + res.longitude
-						console.log(that.addressData)
+						//console.log(that.addressData)
 						uni.showToast({
 							title: '地址获取成功',
 							duration: 1500

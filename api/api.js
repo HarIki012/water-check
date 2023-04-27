@@ -175,7 +175,24 @@ export function searchBasis_API(data) {
 //依据反馈绑定依据
 export function feedbackBindBasis_API(data) {
 	return uni.request({
-		url: `${baseUrl}//feedback_basis_bind?basis_id=${data.basisId}&feedback_id=${data.feedbackId}`,
+		url: `${baseUrl}/feedback_basis_bind?basis_id=${data.basisId}&feedback_id=${data.feedbackId}`,
+		method:'PUT',
+	})
+}
+
+//获取该项目使用的固定检查项模板下的固定检查项
+export function basisByProject_API(id) {
+	return uni.request({
+		url: `${baseUrl}/bases_by_project?id=${id}`,
+		method:'GET',
+	})
+}
+
+// 修改工程项目
+export function updataProject_API(data) {
+	return uni.request({
+		url: `${baseUrl}/project_update`,
+		data: data,
 		method:'PUT',
 	})
 }
@@ -185,6 +202,34 @@ export function problemsbyId_API(data) {
 	return uni.request({
 		url: `${baseUrl}/problems_by_project`,
 		data: data,
+		method:'GET',
+	})
+}
+
+// 依据专家手机号查找账户实现伪登录
+export function expertByPhone_API(phone) {
+	return uni.request({
+		url: `${baseUrl}/expert_by_phone?phone=${phone}`,
+		method:'GET',
+	})
+}
+
+//请假报备
+export function reporting_API(data) {
+	return uni.request({
+		url: `${baseUrl}/reporting_create`,
+		data: data,
+		method:'POST',
+		header: {
+		    "Content-Type": "application/json"
+		},
+	})
+}
+
+//获取所有的账号信息
+export function accounts_API(){
+	return uni.request({
+		url: `${baseUrl}/accounts`,
 		method:'GET',
 	})
 }

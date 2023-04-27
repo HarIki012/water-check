@@ -18,7 +18,7 @@
 	</view>
 	
 	
-	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate(item.patrolId)">
+	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate(item.patrolId,item.status)">
 		<view style="padding: 25rpx;background-color: #F0F3F5;"></view>
 		<view class="contentDown">
 			<text v-if="item.status === '未检查'" class="check-before" style="color: #f1a532;border-left: 5px solid #f1a532;"></text>
@@ -50,6 +50,8 @@
 <script>
 import { projectInfo_API } from '../../../api/api.js'
 import { patrolByProject_API } from '../../../api/api.js'
+import { basisByProject_API } from '../../../api/api.js'
+import { updataProject_API } from '../../../api/api.js'
 	export default {
 		data() {
 			
@@ -113,12 +115,14 @@ import { patrolByProject_API } from '../../../api/api.js'
 				],
 				addressMessage:'',
 				addressData:'',
+				basisData:'',
 			}
 		},
 		onLoad(value) {
 			this.projectId = value.id
 			this.getprojectInfo()
 			this.getpatrolByProject()
+			this.setBasisByProject()
 		},
 		methods: {
 			// 获取项目详情
@@ -174,7 +178,7 @@ import { patrolByProject_API } from '../../../api/api.js'
 							}
 						}
 						checksTemp.push(this.temp)
-						console.log(this.temp)
+						//console.log(this.temp)
 					}
 					this.checks = checksTemp
 				})
@@ -193,6 +197,27 @@ import { patrolByProject_API } from '../../../api/api.js'
 						that.addressMessage = res;
 						that.addressData = res.latitude + ', ' + res.longitude
 						console.log(that.addressData)
+						
+						uni.chooseLocation({
+							latitude:res.latitude,
+							longitude:res.longitude,
+							success:function(result){
+								that.projectTable.address = result.name
+								that.projectTable.latitude = result.latitude
+								that.projectTable.longitude = result.longitude
+								that.list[3].info = result.name
+								console.log('位置名称：' + result.name);
+								console.log('详细地址：' + result.address);
+								console.log('纬度：' + result.latitude);
+								console.log('经度：' + result.longitude);
+								console.log(that.projectTable)
+								updataProject_API(that.projectTable).then(res =>{
+									console.log(res.data.message)
+								})
+								
+							}
+						})
+						
 						uni.showToast({
 							title: '地址更新成功',
 							duration: 1500
@@ -207,12 +232,37 @@ import { patrolByProject_API } from '../../../api/api.js'
 				});
 			},
 			//跳转页面
-			gonavigate(id){
-				uni.navigateTo({
+			gonavigate(id,status){
+				var data = {
+					projectId:this.projectId,
+					patrolstatus:status,
+				}
+				uni.setStorage({
+					key:'patrolStutas_key',
+					data:data,
+					success:function(){
+						console.log("patrolStutas save success")
+					}
+				})
+				uni.redirectTo({
 					//保留当前页面，跳转到应用内的某个页面
 					url: '/pages/project/checks/checks?id=' + id
 				})
-			}
+			},
+			//存储从项目获取的basis模板
+			setBasisByProject(){
+				basisByProject_API(this.projectId).then(res =>{
+					this.basisData = res.data.data
+					console.log(this.basisData)
+					uni.setStorage({
+						key:'template_key',
+						data:this.basisData,
+						success:function(){
+							console.log("template save success")
+						}
+					})
+				})
+			},
 		}
 	}
 </script>

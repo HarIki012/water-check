@@ -21,14 +21,24 @@
 </template>
 
 <script>
+	import { expertByPhone_API } from '../../api/api.js'
+	import { accounts_API } from'../../api/api.js'
 	export default {
 		data() {
 			return {
-				phone: 12345678910,
-				password: 123456,
+				phone: 13013013130,
+				password: "123456",
 				showPassword:true,
 				userName:'',
-				userPwd:''
+				userPwd:'',
+				allowLogin:false,
+				expertData:{
+					id:0,
+					name:"",
+					phone:"",
+					isLogin:false,
+				},
+				allUserData:[],
 			};
 		},
 		computed:{
@@ -37,9 +47,18 @@
 				return this.userName !== '' && this.userPwd !== ''
 			}
 		},
+		onLoad() {
+			this.getAccounts()
+		},
 		methods:{
+			//获取所有的账号
+			getAccounts(){
+				accounts_API().then(res => {
+					this.allUserData = res.data.data
+				})
+			},
 			// 验证账号密码
-			formSubmit(e) {
+			async formSubmit(e) {
 				var rule = [
 					{name:"error",  errorMsg:"账号或密码输入错误"},
 					{name:"null",   errorMsg:"请输入账号或密码"}
@@ -47,30 +66,70 @@
 				
 				var formData = e.detail.value;
 				var reg = /^1[0-9]{10,10}$/;
-				if (!formData.tel | !formData.psd){
-					// 输入账号或者密码不全
+				
+				console.log(this.allUserData)
+				const  userData = this.allUserData.filter(item => item.phone == formData.tel)
+				console.log(userData.length)
+				if(userData.length){
+					console.log("存在")
+					this.phone = userData[0].phone
+					this.password = userData[0].password
+					console.log(userData[0].phone)
+					console.log(userData[0].password)
+					if (!formData.tel | !formData.psd){
+						// 输入账号或者密码不全
+						console.log("输入账号或者密码不全")
+						uni.showToast({
+							title: rule[1].errorMsg,
+							icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
+							duration: 1500    //持续时间为 2秒
+						})  
+						console.log(rule[1].errorMsg);
+					}
+					else if (!reg.test(formData.tel)) {
+						// 账号或密码输入错误
+						uni.showToast({
+							title: rule[0].errorMsg,
+							icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
+							duration: 1500    //持续时间为 2秒
+						})  
+						console.log(rule[0].errorMsg);
+						
+					}
+					else if (formData.tel == this.phone & formData.psd == this.password){
+						
+						await expertByPhone_API(formData.tel).then(res => {
+							
+							this.expertData = {
+								id:res.data.data.id,
+								name:res.data.data.name,
+								phone:res.data.data.phone,
+								isLogin:true,
+							}
+							console.log(this.expertData)
+						})
+						
+						uni.setStorage({
+							key:'user_key',
+							data:this.expertData,
+							success:function(){
+								console.log("login success!")
+							}
+						});
+						console.log(this.expertData)
+						//跳转到项目页面
+						uni.switchTab({
+							url: '/pages/project/list/project'
+						});
+					}
+				}else{
+					console.log("不存在")
 					uni.showToast({
-						title: rule[1].errorMsg,
-						icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
-						duration: 1500    //持续时间为 2秒
-					})  
-					console.log(rule[1].errorMsg);
+						title:'账户不存在！',
+						duration:1500
+					})
 				}
-				else if (!reg.test(formData.tel)) {
-					// 账号或密码输入错误
-					uni.showToast({
-						title: rule[0].errorMsg,
-						icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
-						duration: 1500    //持续时间为 2秒
-					})  
-					console.log(rule[0].errorMsg);
-				}
-				else if (formData.tel == this.phone & formData.psd == this.password){
-					// 跳转到项目页面
-					uni.switchTab({
-						url: '/pages/project/list/project'
-					});
-				}
+				
 			},
 			// 密码框显示密码
 			changePassword: function() {

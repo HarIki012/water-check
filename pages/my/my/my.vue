@@ -92,9 +92,27 @@
 				errorTips2: '',
 				errorTips3: '',
 				blankSpace: '',
+				userQuit:0,
+				userData:{},
+				userId:1,
 			}
 		},
+		onLoad() {
+			this.getUser()
+		},
 		methods: {
+			//获取用户信息
+			getUser(){
+				try{
+					this.userData = uni.getStorageSync('user_key')
+					this.adminname = this.userData.name
+					this.phonenumber = this.userData.phone
+					this.userId = this.userData.id
+				}catch(e){
+
+				}
+			},
+			
 			// 初始化修改密码弹窗
 			initPop() {
 				this.oldPassword = this.blankSpace
@@ -162,7 +180,17 @@
 					url:'/pages/my/offwork/offwork'
 				});
 			},
-			redirectToLogin(){
+			async redirectToLogin(){
+				
+				uni.setStorage({
+					key:'user_key',
+					data:this.userQuit,
+					success:function(){
+						console.log("user quit!")
+					}
+				})
+				
+				
 				uni.redirectTo({
 					url:'/pages/login/login'
 				})
