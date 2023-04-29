@@ -9,6 +9,8 @@
 						<text v-if="item.detail === '强条'" class="remarkDetail" style="background-color: #bf1f00;">{{item.detail}}</text>
 						<text v-if="item.detail === '专家重点'" class="remarkDetail" style="background-color: #ffd606;">{{item.detail}}</text>
 						<text v-if="item.detail === '政府重点'" class="remarkDetail" style="background-color: #ffd606;">{{item.detail}}</text>
+						<text v-if="item.detail === '过时'" class="remarkDetail" style="background-color: #ff6207;">{{item.detail}}</text>
+						<text v-if="item.detail === '错误'" class="remarkDetail" style="background-color: #bf1f00;">{{item.detail}}</text>
 					</view>
 				</view>
 			</view>
@@ -35,7 +37,7 @@
 				<textarea class="detailInfo" v-model="proofValue"  placeholder="请输入反馈内容..."/>
 				<text class="Name">证明资料</text>
 				<view class="hs-choose-pic">
-					<uni-file-picker limit="1" title="上传图片或视频" @select="pictureSelect"></uni-file-picker>
+					<uni-file-picker limit="2" title="上传图片" @select="pictureSelect"></uni-file-picker>
 				</view>
 				<button class="submit" @click="seedFeedBack()">发送</button>
 			</view>
@@ -72,6 +74,9 @@
 				proofValue:'',
 				proofPictureUrl:[],
 				feedBackId:0,
+				patrolTemp:'',
+				projectId:'',
+				patrolStatus:'',
 				
 			}
 		},
@@ -94,20 +99,22 @@
 							this.data[0].responsibleParties = this.basisTable.responsibleParties
 							this.data[0].typeOne = this.basisTable.typeOne
 							this.data[0].type = this.basisTable.category
-							console.log(this.basisTable.remarks)
-							console.log(Number(this.basisTable.remarks))
-							if(this.basisTable.labels === 3) {
+							console.log(this.basisTable.labels)
+							if(this.basisTable.labels == 3) {
 								this.data[0].remarks[0].detail = "专家重点" 
-							}else if(this.basisTable.labels === 2){
+							}else if(this.basisTable.labels == 2){
 								this.data[0].remarks[0].detail = "政府重点" 
-							}else if(this.basisTable.labels === 1){
+							}else if(this.basisTable.labels == 1){
 								this.data[0].remarks[0].detail = "强条" 
-							}else if(this.basisTable.labels === 4){
+							}else if(this.basisTable.labels == 4){
 								this.data[0].remarks[0].detail = "过时" 
-							}else if(this.basisTable.labels === 5){
+							}else if(this.basisTable.labels == 5){
 								this.data[0].remarks[0].detail = "错误" 
 							}
-							
+							this.patrolTemp = uni.getStorageSync('patrolStutas_key')
+							this.projectId = this.patrolTemp.projectId
+							this.patrolStatus = this.patrolTemp.patrolstatus
+							//console.log(this.patrolStatus)
 						})
 					}
 				} catch (e) {
@@ -127,26 +134,26 @@
 					},
 					success: (uploadFileRes) => {
 						let json_data = JSON.parse(uploadFileRes.data)
-						console.log(json_data.data[0]);
+						//console.log(json_data.data[0]);
 						this.uploadData = 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + json_data.data[0]
-						console.log(this.uploadData)
-						// this.testPicurl.push({
-						// 	fileId: json_data.data[0],
-						// 	url: this.uploadData
-						// })
+						//console.log(this.uploadData)
 						this.proofPictureUrl.push(
 							json_data.data[0]
 						)
-						console.log(this.proofPictureUrl)
+						//console.log(this.proofPictureUrl)
 					}
 				})
 			},
 			seedFeedBack(){
+				var proofpic = []
+				for(var i = 0;i<this.proofPictureUrl.length;i++){
+					proofpic.push(this.proofPictureUrl[i])
+				}
 				var feedBackData = {
 					name: "专家1",
 					content: this.proofValue,
 					status: "未审核",
-					proofUrl: this.proofPictureUrl
+					proofUrl: proofpic
 				}
 				try{
 					var expert = uni.getStorageSync('user_key')
@@ -190,9 +197,33 @@
 						console.log('terms save success!')
 					}
 				});
+				// // 判断巡检结束 是否能够新增问题。
+				// if(this.patrolStatus == '未检查'|| this.patrolStatus == '检查中'){
+				// 	let temp = {
+				// 		url:Date.now(),
+				// 		projectId:this.projectId,
+				// 		patrolstatus:this.patrolStatus
+				// 	}
+				// 	//console.log(temp)
+				// 	uni.redirectTo({
+				// 		url:'/pages/project/checks/checks?id='+JSON.stringify(temp)
+				// 	})
+				// }else{
+				// 	uni.showToast({
+				// 		title:"该项目已巡检结束！",
+				// 		duration:1500
+				// 	})
+				// }
+				let temp = {
+					url:Date.now(),
+					projectId:this.projectId,
+					patrolstatus:this.patrolStatus
+				}
+				//console.log(temp)
 				uni.redirectTo({
-					url:'/pages/project/checks/checks'
+					url:'/pages/project/checks/checks?id='+JSON.stringify(temp)
 				})
+				
 			},
 		}
 	}

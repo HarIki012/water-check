@@ -134,7 +134,7 @@ import { team_API } from '../../../api/api.js'
 		},
 		methods: {
 			// 获取项目详情
-			async getprojectInfo(){
+			getprojectInfo(){
 				projectInfo_API(this.projectId).then(res=>{
 					// console.log(res)
 					this.projectTable = res.data.data
@@ -152,7 +152,7 @@ import { team_API } from '../../../api/api.js'
 				})
 			},
 			// 获取巡检信息
-			async getpatrolByProject(){
+			getpatrolByProject(){
 				patrolByProject_API(this.projectId).then(res=>{
 					console.log(res.data.data)
 					this.projectTemp = res.data.data
@@ -324,6 +324,8 @@ import { team_API } from '../../../api/api.js'
 					id:id,
 					url:Date.now(),
 					projectId:this.projectId,
+					patrolstatus:status,
+					teamid:teamid,
 				}
 				uni.navigateTo({
 					//保留当前页面，跳转到应用内的某个页面

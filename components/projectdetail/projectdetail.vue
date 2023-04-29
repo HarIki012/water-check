@@ -8,7 +8,7 @@
 			<text v-if="isSelf !== 'yes'" style="font-size: 33rpx;">{{projectData.description}}</text>
 			<textarea v-if="isSelf === 'yes'" class="detailStyle" style="padding-left: 20rpx;" type="text" :value="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" @input="sumFontNumDescription" :disabled="allow"></textarea>
 		<view class="fontInput">
-			<button  v-if="isSelf === 'yes'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartQuestion" @touchend="touchEndQuestion"></button>
+			<button  v-if="isSelf === 'yes'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartQuestion" @touchend="touchEndQuestion" :disabled="allow"></button>
 			<text v-if="isSelf === 'yes'" class="currentWordNumber">{{fontNumDescription}}/200</text>
 		</view>
 		</view>
@@ -29,7 +29,11 @@
 		</view>
 		<view class="text" v-if="isSelf === 'yes'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" :value="projectData.terms" placeholder="条文规范" @blur="projectChange" :disabled="allow"></textarea>
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" :value="projectData.terms" placeholder="条文规范" @blur="projectChange" @input="sumFontNumTerms" :disabled="allow"></textarea>
+			<view class="fontInput">
+				<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartTerms" @touchend="touchEndTerms" :disabled="allow"></button>
+				<text  class="currentWordNumber">{{fontNumTerms}}/200</text>
+			</view>
 			<view class="choose-pic">
 				<uni-file-picker v-if="picLengthTerms >= 2" v-model="realTermsurl" limit="9" title="最多选择9张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow"></uni-file-picker>
 				<uni-file-picker v-else-if="picLengthTerms === 1" v-model="realTermsurl" limit="9" title="最多选择9张图片" @select="picTerms" @delete="deleteFileTerms" :del-icon="false" :readonly="allow"></uni-file-picker>
@@ -53,10 +57,10 @@
 			<view class="text">
 				<text style="margin-bottom: 20rpx;">详情描述</text>
 				<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" :value="projectData.detail" placeholder="详情描述" @blur="projectChange" @input="sumFontNumDetail" :disabled="allow"></textarea>
-			<view class="fontInput">
-				<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartDetail" @touchend="touchEndDetail" :disabled="allow"></button>
-				<text  class="currentWordNumber">{{fontNumDetail}}/200</text>
-			</view>
+				<view class="fontInput">
+					<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartDetail" @touchend="touchEndDetail" :disabled="allow"></button>
+					<text  class="currentWordNumber">{{fontNumDetail}}/200</text>
+				</view>
 			</view>
 			<view class="choose-pic">
 				<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
@@ -122,6 +126,7 @@ import { uploadFiles } from '/api/api.js'
 				fontNumDescription:0,
 				fontNumDetail:0,
 				fontNumRectify:0,
+				fontNumTerms:0,
 				//voiceResultDescription:"",
 				//voiceResultDetail:"",
 				//voiceResultRectify:"",
@@ -151,6 +156,11 @@ import { uploadFiles } from '/api/api.js'
 			sumFontNumRectify(e) {
 				this.fontNumRectify = e.detail.value.length
 				this.projectData.rectify = e.detail.value
+				// console.log(this.fontNum)
+			},
+			sumFontNumTerms(e) {
+				this.fontNumTerms = e.detail.value.length
+				this.projectData.terms = e.detail.value
 				// console.log(this.fontNum)
 			},
 			picTerms(e){
@@ -279,7 +289,7 @@ import { uploadFiles } from '/api/api.js'
 					console.log(this.projectData)
 					var temp = uni.getStorageSync('patrolStutas_key')
 					this.modify = temp.modify
-					console.log("能否修改？+"+this.modify)
+					console.log("专家是否为该小组成员+"+this.modify)
 				}catch(e){
 
 				}
@@ -351,6 +361,9 @@ import { uploadFiles } from '/api/api.js'
 			},
 			severitySelect(e) {
 			    this.severityselectIndex = e.detail.value;
+				if(this.severityselectIndex < 2){
+					this.projectData.rectify = "专家认为无问题或者无此项！"
+				}
 			    this.severityselectName=this.severityChoose[this.severityselectIndex]
 				this.projectData.severity = this.severityselectName
 				this.$emit("sendData",this.projectData)
