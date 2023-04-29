@@ -82,191 +82,248 @@ import { problemsbyId_API } from '../../../api/api.js'
 import { projectInfo_API } from '../../../api/api.js'
 import { projectUpdate_API } from '../../../api/api.js'
 
-	export default {
-		data() {
-			return {
-				id: 0,
-				active:'',
-				typeList: ['质量', '安全', '文明施工'],
-				selectPoint: '',
-				problemList:'',
-				msgType: 'type',
-				initproblemList: [
-					{
-						id: 1,
-						projectName:'南湖水环境提升工程',
-						type: '安全',
-						severity: '较严重',
-						description: '问题描述略1',
-						detail: '详细描述略',
-						photoUrl: [],   //放图片
-						rectify: '整改要求略',
-					},
-					{
-						id: 2,
-						projectName:'南湖水环境提升工程',
-						type: '质量',
-						severity: '较严重',
-						description: '问题描述略2',
-						detail: '详细描述略',
-						photoUrl: [],   //放图片
-						rectify: '整改要求略',
-					},
-					{
-						id: 3,
-						projectName:'南湖水环境提升工程',
-						type: '安全',
-						severity: '较严重',
-						description: '问题描述略3',
-						detail: '详细描述略',
-						photoUrl: [],   //放图片
-						rectify: '整改要求略',
-					},
-					{
-						id: 4,
-						projectName:'土石方工程',
-						type: '质量',
-						severity: '较严重',
-						description: '问题描述略4',
-						detail: '详细描述略',
-						photoUrl: [],   //放图片
-						rectify: '整改要求略',
-					},
-					{
-						id: 5,
-						projectName:'土石方工程',
-						type: '文明施工',
-						severity: '较严重',
-						description: '问题描述略5',
-						detail: '详细描述略',
-						photoUrl: [],   //放图片
-						rectify: '整改要求略',
-					}
-				],
-				newList:'',
-				deleteName:'',
-				deleteId:'',
-				newProject:'',
-				sumProjects:'',
-				checkId:2,
-				ifpicDelete:'no',
-				deletepicMessage:'',
-				teamid:'',
-				problemId:'',
-				terms:{
-					id: '1',
-					terms: '1',
-					typeOne: '1',
-					category:'',
-					length:1,
-					description:'',
+export default {
+	data() {
+		return {
+			id: 0,
+			active:'',
+			typeList: ['质量', '安全', '文明施工'],
+			selectPoint: '',
+			problemList:'',
+			msgType: 'type',
+			initproblemList: [
+				{
+					id: 1,
+					projectName:'南湖水环境提升工程',
+					type: '安全',
+					severity: '较严重',
+					description: '问题描述略1',
+					detail: '详细描述略',
+					photoUrl: [],   //放图片
+					rectify: '整改要求略',
 				},
-				checkIdTemp:0,
-				patrolId:'1',
-				projectId:'1',
-				projectStatus:'进行中',
-				tranprojectName:'',
-				templateDate:[],
-				userName:'',
-				patrolName:'',
-				patrolTemp:'',
-				projectstatusChange:''
-				
-			}
-		},
-		components:{
-			projectdetail
-		},
-		onLoad(value) {
-			if(value.id !== undefined) {
-				this.checkId = value.id
-			}
+				{
+					id: 2,
+					projectName:'南湖水环境提升工程',
+					type: '质量',
+					severity: '较严重',
+					description: '问题描述略2',
+					detail: '详细描述略',
+					photoUrl: [],   //放图片
+					rectify: '整改要求略',
+				},
+				{
+					id: 3,
+					projectName:'南湖水环境提升工程',
+					type: '安全',
+					severity: '较严重',
+					description: '问题描述略3',
+					detail: '详细描述略',
+					photoUrl: [],   //放图片
+					rectify: '整改要求略',
+				},
+				{
+					id: 4,
+					projectName:'土石方工程',
+					type: '质量',
+					severity: '较严重',
+					description: '问题描述略4',
+					detail: '详细描述略',
+					photoUrl: [],   //放图片
+					rectify: '整改要求略',
+				},
+				{
+					id: 5,
+					projectName:'土石方工程',
+					type: '文明施工',
+					severity: '较严重',
+					description: '问题描述略5',
+					detail: '详细描述略',
+					photoUrl: [],   //放图片
+					rectify: '整改要求略',
+				}
+			],
+			newList:'',
+			deleteName:'',
+			deleteId:'',
+			newProject:'',
+			sumProjects:'',
+			checkId:2,
+			ifpicDelete:'no',
+			deletepicMessage:'',
+			teamid:'',
+			problemId:'',
+			terms:{
+				id: '1',
+				terms: '1',
+				typeOne: '1',
+				category:'',
+				length:1,
+				description:'',
+			},
+			checkIdTemp:0,
+			patrolId:'1',
+			projectId:'1',
+			projectStatus:'进行中',
+			tranprojectName:'',
+			templateDate:[],
+			userName:'',
+			patrolName:'',
+			patrolTemp:'',
+			projectstatusChange:''
+			
+		}
+	},
+	components:{
+		projectdetail
+	},
+	onLoad(value) {
+		console.log(value.id)
+		value.id = JSON.parse(value.id)
+		let idtemp = value.id
+		// this.checkId = value.id.id
+		// this.patrolId = this.checkId
+		if(idtemp.id !== undefined) {
+			this.checkId = idtemp.id
+			this.patrolId = this.checkId
+		}
+		this.projectId = idtemp.projectId
+		console.log(idtemp.id)
+		try{
+			//this.checkIdTemp = uni.getStorageSync('patrolId_key')
+			this.userName = uni.getStorageSync('user_key')
+			this.userName = this.userName.name
+			// if(Number(this.checkIdTemp) !== 0){
+			// 	this.checkId = this.checkIdTemp
+			// }
+		}catch(e){
+
+		}
+		this.getChecks()
+		this.getTerms()
+		this.savePatrolId()
+		this.getTemplate()
+		this.getPatrol()
+		//this.getTerms()
+		//this.savePatrolId()
+		//this.getTemplate()
+		this.sequ(0)
+	},
+	onShow() {
+		//this.refresh(this.checkId)
+		//this.sequ(0)
+	},
+	mounted() {
+		// this.changeData(),
+		// this.getLength()
+	},
+	methods: {
+		//刷新页面
+		// refresh(id){
+			
+		// 	uni.redirectTo({
+		// 		url:'/pages/project/checks/checks?id='+ id
+		// 	})
+		// },
+		// 获取活动名，项目ID，项目状态，巡检组id
+		getPatrol(){
 			try{
-				this.checkIdTemp = uni.getStorageSync('patrolId_key')
 				this.patrolTemp = uni.getStorageSync('patrolStutas_key')
 				this.patrolName = this.patrolTemp.patrolname
 				this.projectId = this.patrolTemp.projectId
 				this.projectStatus = this.patrolTemp.patrolstatus
-				this.userName = uni.getStorageSync('user_key')
-				this.userName = this.userName.name
-				if(Number(this.checkIdTemp) !== 0){
-					this.checkId = this.checkIdTemp
-				}
+				this.teamid = this.patrolTemp.teamId
+				this.tranprojectName = this.patrolTemp.projectName
+				//console.log(this.patrolTemp.projectName)
 			}catch(e){
-				//TODO handle the exception
-			}
-			this.getChecks()
-			this.getTerms()
-			this.savePatrolId()
-			this.getTemplate()
-			this.sequ(0)
-		},
-		mounted() {
-			// this.changeData(),
-			// this.getLength()
-		},
-		methods: {
-			//获取模板问题
-			getTemplate(){
-				try{
-					var idBoxthree = {
-						id: this.projectId,
-						patrol_id: this.patrolId
-					}
-					problemsbyId_API(idBoxthree).then(res => {
-						this.initproblemList = res.data.data
-						this.teamid = res.data.data[0].inspectionTeam.id
-						this.templateDate = uni.getStorageSync('template_key')
-						console.log("get template success!")
-						console.log("生成模板问题")
-						for(var i=0; i<this.templateDate.length;i++){
-							this.terms.id = this.templateDate[i].id
-							this.terms.terms = this.templateDate[i].terms
-							this.terms.typeOne = this.templateDate[i].typeOne
-							this.terms.description = this.templateDate[i].description
-							for(var j = 0; j<this.typeList.length;j++){
-								if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
-									this.terms.category = this.typeList[j]
-								}
-							}
-							this.terms.length = 1
-							var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
-							if(isExist.length == 0){
-								this.addProject()
-								this.changeData()
-							}
-							this.terms = []
-						}
-						
-					})
-				}catch(e){
 
-				}
-			},
-			
-			// 存储巡检ID
-			savePatrolId(){
-				uni.setStorage({
-					key:'patrolId_key',
-					data:this.checkId,
-					success:function(){
-						console.log('patrolId save success!')
-					}
-				})
-			},
-			
-			async getChecks(){
-				uni.showLoading({
-				    title: '加载中'
-				})
-				var idBox = {
+			}
+		},
+		//获取模板问题
+		getTemplate(){
+			try{
+				//this.getPatrol()
+				var idBoxthree = {
 					id: this.projectId,
 					patrol_id: this.patrolId
 				}
-				problemsbyId_API(idBox).then(res=>{
+				problemsbyId_API(idBoxthree).then(res => {
+					console.log(res.data.data)
+					if(Number(res.data.data) == 0){
+						this.initproblemList = []
+					}else{
+						this.initproblemList = res.data.data
+					}
+					this.templateDate = uni.getStorageSync('template_key')
+					console.log("get template success!")
+					console.log("生成模板问题")
+					console.log(this.templateDate)
+					for(var i=0; i<this.templateDate.length;i++){
+						//console.log("第"+i+"个")
+						this.terms ={
+							id: '1',
+							terms: '1',
+							typeOne: '1',
+							category:'',
+							length:1,
+							description:'',
+						}
+						this.terms.id = this.templateDate[i].id
+						this.terms.terms = this.templateDate[i].terms
+						this.terms.typeOne = this.templateDate[i].typeOne
+						this.terms.description = this.templateDate[i].description
+						for(var j = 0; j<this.typeList.length;j++){
+							if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
+								this.terms.category = this.typeList[j]
+							}
+						}
+						this.terms.length = 1
+						var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
+						console.log(isExist)
+						if(isExist.length == 0){
+							this.userName = "管理员"
+							this.addProject()
+							this.changeData()
+						}
+						this.terms = []
+					}
+					//this.getPatrol()
+				})
+			}catch(e){
+
+			}
+		},
+		
+		// 存储巡检ID
+		savePatrolId(){
+			uni.setStorage({
+				key:'patrolId_key',
+				data:this.checkId,
+				success:function(){
+					console.log('patrolId save success!')
+				}
+			})
+		},
+		
+		getChecks(){
+			uni.showLoading({
+				title: '加载中'
+			})
+			//this.getPatrol()
+			var idBox = {
+				id: this.projectId,
+				patrol_id: this.patrolId
+			}
+			console.log(idBox)
+			problemsbyId_API(idBox).then(res=>{
+				console.log(res.data.data)
+				if(Number(res.data.data) === 0){
+					//console.log(Number(res.data.data))
+					console.log("调用模板")
+					//this.getTemplate()
+				}else{
 					this.tranprojectName = res.data.data[0].projectName
 					this.initproblemList = res.data.data
-					this.teamid = res.data.data[0].inspectionTeam.id
 					uni.setStorage({
 						key:'problem_key',
 						data:this.initproblemList,
@@ -276,18 +333,24 @@ import { projectUpdate_API } from '../../../api/api.js'
 					});
 					this.changeData(),
 					this.getLength()
-					uni.hideLoading();
-				})
-				var sumProblems = "";
-			},
-			async getTerms(){
-				var idBoxtwo = {
-					id: this.projectId,
-					patrol_id: this.patrolId
 				}
-				problemsbyId_API(idBoxtwo).then(res=>{
+				uni.hideLoading();
+			})
+			var sumProblems = "";
+		},
+		getTerms(){
+			//this.getPatrol()
+			var idBoxtwo = {
+				id: this.projectId,
+				patrol_id: this.patrolId
+			}
+			console.log(idBoxtwo)
+			problemsbyId_API(idBoxtwo).then(res=>{
+				console.log(res.data.data)
+				if(Number(res.data.data) === 0){
+					//this.getTemplate()
+				}else{
 					this.initproblemList = res.data.data
-					this.teamid = res.data.data[0].inspectionTeam.id
 					uni.setStorage({
 						key:'problem_key',
 						data:this.initproblemList,
@@ -297,9 +360,16 @@ import { projectUpdate_API } from '../../../api/api.js'
 					});
 					try {
 						this.terms = uni.getStorageSync('terms_key');
+						//this.getPatrol()
+						for(var j = 0; j<this.typeList.length;j++){
+							if (this.terms.category.indexOf(this.typeList[j]) !== -1) {
+								this.terms.category = this.typeList[j]
+							}
+						}
 						if (this.terms.id !== undefined) {
 							console.log("terms get success!")
 							console.log("即将新增问题")
+							
 							this.addProject()
 							//this.terms = ''
 							var tempData = []
@@ -315,327 +385,353 @@ import { projectUpdate_API } from '../../../api/api.js'
 					} catch (e) {
 						// error
 					}
-				})
-				this.changeData()
+				}
 				
-			},
+			})
+			this.changeData()
 			
-			getLength(){
-				this.sumProjects = this.initproblemList.length
-			},
-			getData(res){
-				for (var i = 0; i < this.initproblemList.length;i++){
-					if (this.initproblemList[i].id === res.id) {
-						this.initproblemList[i] = res
+		},
+		
+		getLength(){
+			this.sumProjects = this.initproblemList.length
+		},
+		getData(res){
+			for (var i = 0; i < this.initproblemList.length;i++){
+				if (this.initproblemList[i].id === res.id) {
+					this.initproblemList[i] = res
+				}
+			}
+		},
+		getDeleteid(e){
+			var raw = JSON.stringify([
+			   e
+			])
+			this.ifpicDelete = 'yes'
+			this.deletepicMessage = raw
+		},
+		search(e){
+			uni.navigateTo({
+						 url:'/pages/project/search/search?searchText=' + e.detail.value
+			}) //由搜索页传递到搜索结果页
+		},
+		changeBig(e){
+			 this.newList[e].bigisOpen = !this.newList[e].bigisOpen
+			 this.$forceUpdate()
+			 this.active = !this.active
+		},
+		changeSmall(e,n){
+			console.log("看看")
+			
+			this.newList[e].data[n].isOpen = !this.newList[e].data[n].isOpen
+			// await uni.nextTick()
+			console.log(this.newList[e].data[n])
+			//
+			if(!this.newList[e].data[n].readed){
+				this.newList[e].data[n].readed = true
+				//console.log(this.newList[e].data[n].id)
+				//console.log(this.newList[e].data[n])
+				if(this.newList[e].data[n].description !== '' || this.newList[e].data[n].rectify !== ''){
+					//console.log("readed"+this.newList[e].data[n])
+					if(this.newList[e].data[n].basis.typeOne === '自定义'){
+						console.log("自定义道路")
+						var tranData = this.newList[e].data[n]
+						tranData.basis = null
+						// await uni.nextTick()
+						console.log(tranData)
+						updataProblems_API(tranData).then(res=>{
+							console.log(res)
+						})
+					} else{
+						updataProblems_API(this.newList[e].data[n]).then(res=>{
+							console.log(res)
+						})
 					}
 				}
-			},
-			getDeleteid(e){
-				var raw = JSON.stringify([
-				   e
-				])
-				this.ifpicDelete = 'yes'
-				this.deletepicMessage = raw
-			},
-			search(e){
-				uni.navigateTo({
-							 url:'/pages/project/search/search?searchText=' + e.detail.value
-				}) //由搜索页传递到搜索结果页
-			},
-			changeBig(e){
-				 this.newList[e].bigisOpen = !this.newList[e].bigisOpen
-				 this.$forceUpdate()
-				 this.active = !this.active
-			},
-			changeSmall(e,n){
-				console.log("看看")
-				
-				this.newList[e].data[n].isOpen = !this.newList[e].data[n].isOpen
-				// await uni.nextTick()
-				if(!this.newList[e].data[n].readed){
-					this.newList[e].data[n].readed = true
-					// console.log(this.newList[e].data[n].id)
-					// console.log(this.newList[e].data[n])
-					if(this.newList[e].data[n].description !== '' || this.newList[e].data[n].rectify !== ''){
-						//console.log("readed"+this.newList[e].data[n])
-						if(this.newList[e].data[n].basis.typeOne === '自定义'){
-							console.log("自定义道路")
-							var tranData = this.newList[e].data[n]
-							tranData.basis = null
-							// await uni.nextTick()
-							updataProblems_API(tranData).then(res=>{
-								console.log(res)
-							})
-						} else{
-							updataProblems_API(this.newList[e].data[n]).then(res=>{
-								console.log(res)
-							})
-						}
-					}
+			}else{
+				if(this.newList[e].data[n].basis === null || this.newList[e].data[n].basis.typeOne === '自定义'){
+					var tranData = this.newList[e].data[n]
+					tranData.basis = null
+					console.log("用了这里")
+					console.log(tranData)
+					updataProblems_API(tranData).then(res=>{
+						console.log(res)
+					})
 				}
-				
-				this.$forceUpdate()
-			},
-			sequ(id) {
-				if(this.selectPoint === this.typeList[id]){
-					this.selectPoint = null
-				} else {
-					this.selectPoint = this.typeList[id]
-				}
-				this.changeData()
-			},
-			filterList() {
-				var arr = [] //定义一个空数组
-				this.problemList.forEach((item) => arr.push(item)) //在zhiweilist查找数据放入空数组
-				if (this.selectPoint) { //如果有这个数据
-					arr = this.problemList.filter(item => item.type.includes(this.selectPoint))
-					//则在zhiweilist里过滤掉filterText
-				}
-				this.problemList = arr
-			},
-			clearProblems(e){
-				for(var i = 0;i<this.initproblemList.length;i++){
-					if(this.initproblemList[i].id === e.id){
-						this.initproblemList[i].detail = ''
-						this.initproblemList[i].rectify = ''
-					}
-				}
-			},
-			deleteProject(e) {
-				this.deleteName = e.description
-				this.deleteId = e.id
-				this.$refs['deletePop'].open()
-			},
-			dialogConfirm(e) {
-				this.initproblemList = this.initproblemList.filter(item => item.id != this.deleteId)
-				var data = JSON.stringify([
-				   this.deleteId
-				]);
-				deleteProblem_API(data).then(res=>{
+				updataProblems_API(this.newList[e].data[n]).then(res=>{
+					console.log(res)
 				})
-				this.changeData()
-			},
-			dialogClose() {
-				this.$refs['deletePop'].close()
-			},
-			 addProject() {
-				var sum = "";
-				// 获取问题ID
-				allProblem_API(sum).then(res=>{
-					this.problemId = res.data.data[res.data.data.length-1].id
-				})
-				if(this.terms.length === 0){
-					console.log('用了if')
-					this.newProject =
-						{
-						  "termsUrl": [],
-						  "terms":"条款描述略",
-						  "projectName": this.tranprojectName,
-						  "type": "质量",
-						  "severity": "一般",
-						  "description": "请填写问题描述",
-						  "detail": "请填写详细描述",
-						  "photoUrl": [],
-						  "rectify": "请填写整改要求",
-						  "deadline": "2023-4-1",
-						  "supervisionUnit": "督办单位1",
-						  "finder": this.userName,
-						  "readed": false,
-						  "basis": null
-						}
-				} else {
-					console.log('用了else')
-					this.newProject = 
+			}
+			
+			this.$forceUpdate()
+		},
+		sequ(id) {
+			if(this.selectPoint === this.typeList[id]){
+				this.selectPoint = null
+			} else {
+				this.selectPoint = this.typeList[id]
+			}
+			this.changeData()
+		},
+		filterList() {
+			var arr = [] //定义一个空数组
+			this.problemList.forEach((item) => arr.push(item)) //在zhiweilist查找数据放入空数组
+			if (this.selectPoint) { //如果有这个数据
+				arr = this.problemList.filter(item => item.type.includes(this.selectPoint))
+				//则在zhiweilist里过滤掉filterText
+			}
+			this.problemList = arr
+		},
+		clearProblems(e){
+			for(var i = 0;i<this.initproblemList.length;i++){
+				if(this.initproblemList[i].id === e.id){
+					this.initproblemList[i].detail = ''
+					this.initproblemList[i].rectify = ''
+				}
+			}
+		},
+		deleteProject(e) {
+			this.deleteName = e.description
+			this.deleteId = e.id
+			this.$refs['deletePop'].open()
+		},
+		dialogConfirm(e) {
+			this.initproblemList = this.initproblemList.filter(item => item.id != this.deleteId)
+			var data = JSON.stringify([
+			   this.deleteId
+			]);
+			deleteProblem_API(data).then(res=>{
+			})
+			this.changeData()
+		},
+		dialogClose() {
+			this.$refs['deletePop'].close()
+		},
+		 addProject() {
+			var sum = "";
+			// 获取问题ID
+			allProblem_API(sum).then(res=>{
+				this.problemId = res.data.data[res.data.data.length-1].id
+			})
+			console.log(this.tranprojectName)
+			if(this.terms.length === 0){
+				console.log('用了if')
+				this.newProject =
 					{
 					  "termsUrl": [],
-					  "terms":this.terms.terms,
+					  "terms":"",
 					  "projectName": this.tranprojectName,
-					  "type": this.terms.category, 
+					  "type": "质量",
 					  "severity": "一般",
-					  "description": this.terms.description,
-					  "detail": "详细描述略",
+					  "description": "请填写问题描述",
+					  "detail": "请填写详情描述",
 					  "photoUrl": [],
-					  "rectify": "整改要求略",
+					  "rectify": "请填写整改要求",
 					  "deadline": "2023-4-1",
 					  "supervisionUnit": "督办单位1",
 					  "finder": this.userName,
 					  "readed": false,
-						"basis": {
-						      "id": this.terms.id,
-						      "typeOne": this.terms.typeOne,
-						      "terms": this.terms.terms,
-							  "codeOne": "",
-							  "codeTwo": "",
-							  "codeThree": "",
-							  "typeTwo": "",
-							  "typeThree": "",
-							  "category": "",
-							  "description": "",
-							  "regulations": "",
-							  "labels": "",
-							  "remarks": null,
-							  "feedbacks": []
-						  }
-					  
+					  "basis": null
+					}
+			} else {
+				console.log('用了else')
+				this.newProject = 
+				{
+				  "termsUrl": [],
+				  "terms":this.terms.terms,
+				  "projectName": this.tranprojectName,
+				  "type": this.terms.category, 
+				  "severity": "一般",
+				  "description": this.terms.description,
+				  "detail": "请填写详情描述",
+				  "photoUrl": [],
+				  "rectify": "请填写整改要求",
+				  "deadline": "2023-4-1",
+				  "supervisionUnit": "督办单位1",
+				  "finder": this.userName,
+				  "readed": false,
+					"basis": {
+						  "id": this.terms.id,
+						  "typeOne": this.terms.typeOne,
+						  "terms": this.terms.terms,
+						  "codeOne": "",
+						  "codeTwo": "",
+						  "codeThree": "",
+						  "typeTwo": "",
+						  "typeThree": "",
+						  "category": "",
+						  "description": "",
+						  "regulations": "",
+						  "labels": "",
+						  "remarks": null,
+						  "feedbacks": []
 					}
 				}
-				this.initproblemList.push(this.newProject)
-				console.log("创建新问题")
-				addProblem(this.newProject).then(res=>{
+			}
+			this.initproblemList.push(this.newProject)
+			console.log(this.initproblemList)
+			console.log("创建新问题")
+			addProblem(this.newProject).then(res=>{
+				console.log(res)
+				this.problemId = res.data.data.id
+				
+				var bindMessage = {
+					teamId: this.teamid,
+					problemId: this.problemId
+				}
+				console.log("绑定信息")
+				console.log(bindMessage)
+				bindTeam_API(bindMessage).then(res=>{
 					console.log(res)
-					this.problemId = res.data.data.id
-					var bindMessage = {
-						teamId: this.teamid,
-						problemId: this.problemId
+				})
+			})
+			
+			this.changeData()
+			this.terms = ''
+		},
+		submitChange(){
+			var isSubmit = 'yes'
+			for(var i = 0;i<this.initproblemList.length;i++){
+				try{
+					if(this.initproblemList[i].basis.typeOne === '自定义'){
+						this.initproblemList[i].basis = null
 					}
-					bindTeam_API(bindMessage).then(res=>{
+				}catch(e){
+
+				}
+				
+				if(this.initproblemList[i].basis === null){
+					console.log("该问题是自定义问题")
+				}else{
+					if(!this.initproblemList[i].readed){
+						uni.showToast({
+							title: '模板问题尚看完！',
+							icon: 'none',
+							duration: 2000
+						})
+						isSubmit = 'no'
+						console.log("有模板问题未读")
+						break
+					}
+				}
+				if(this.initproblemList[i].detail === '' || this.initproblemList[i].rectify === ''){
+					uni.showToast({
+						title: '详情描述与整改要求不能为空！',
+						icon: 'none',
+						duration: 2000
+					})
+					isSubmit = 'no'
+					console.log("详情描述与整改要求没写")
+					break
+				} else {
+					updataProblems_API(this.initproblemList[i]).then(res=>{
 						console.log(res)
 					})
+				}
+			}
+			if (isSubmit === 'yes'){
+				uni.showToast({
+					title: '提交成功!',
+					duration: 1000
+				});
+				
+				this.projectStatus = '已检查'
+				projectInfo_API(this.projectId).then(res=>{
+					this.projectstatusChange = res.data.data
+					for (var i=0;i<this.projectstatusChange.patrolStatus.length;i++){
+						if(this.projectstatusChange.patrolStatus[i].patrol_name === this.patrolName){
+							this.projectstatusChange.patrolStatus[i].status = '已检查'
+							projectUpdate_API(this.projectstatusChange).then(res=>{
+								console.log(res)
+							})
+						}
+					}
+					
 				})
 				
 				this.changeData()
-				this.terms = ''
-			},
-			submitChange(){
-				var isSubmit = 'yes'
-				for(var i = 0;i<this.initproblemList.length;i++){
-					try{
-						if(this.initproblemList[i].basis.typeOne === '自定义'){
-							this.initproblemList[i].basis = null
-						}
-					}catch(e){
-						//TODO handle the exception
-					}
-					
-					if(this.initproblemList[i].basis === null){
-						console.log("该问题是自定义问题")
-					}else{
-						if(!this.initproblemList[i].readed){
-							uni.showToast({
-							    title: '模板问题尚看完！',
-							    icon: 'none',
-							    duration: 2000
-							})
-							isSubmit = 'no'
-							console.log("有模板问题未读")
+				
+				uni.redirectTo({
+					url:'/pages/project/info/info?id='+this.projectId
+				})
+				
+			} else {
+				uni.showToast({
+					title: '模板问题尚未完成或问题描述与整改要求为空！',
+					icon: 'none',
+					duration: 2000
+				})
+			}
+		},
+		changeData() {
+			this.problemList = this.initproblemList
+			this.filterList()
+			for (var j = 0; j < this.problemList.length; j++){
+				if (this.problemList[j].projectName === '自定义'){
+					this.problemList[j].isOpen = false
+				} else {
+					this.problemList[j].isOpen = false
+				}
+			
+			}
+			for (var j = 0; j < this.problemList.length; j++){
+				if (this.problemList[j].basis === undefined || this.problemList[j].basis === null || this.problemList[j].basis.typeOne === ''){
+					this.problemList[j].basis = {
+						  "id": '',
+						  "codeOne": "",
+						  "codeTwo": "",
+						  "codeThree": "",
+						  "typeOne": "自定义",
+						  "typeTwo": "",
+						  "typeThree": "",
+						  "category": "",
+						  "description": "",
+						  "regulations": "",
+						  "terms": '',
+						  "responsibleParties": "",
+						  "labels": "",
+						  "remarks": null,
+						  "feedbacks": []
+					  }
+				}
+			
+			}
+			console.log('yes')
+			var map = {}
+			var nList = []
+			for (var i = 0; i < this.problemList.length; i++) {
+				var item = this.problemList[i]
+				if (!map[item.basis.typeOne]) {
+					nList.push({
+						typeOne: item.basis.typeOne,
+						data: [item],
+						bigisOpen: true,
+					})
+					map[item.basis.typeOne] = item
+				} else {
+					for (var j = 0; j < nList.length; j++) {
+						var nItem = nList[j]
+						if (nItem.typeOne == item.basis.typeOne) {
+							nItem.data.push(item)
 							break
 						}
 					}
-					if(this.initproblemList[i].detail === '' || this.initproblemList[i].rectify === ''){
-						uni.showToast({
-						    title: '详情描述与整改要求不能为空！',
-						    icon: 'none',
-						    duration: 2000
-						})
-						isSubmit = 'no'
-						console.log("详情描述与整改要求没写")
-						break
-					} else {
-						updataProblems_API(this.initproblemList[i]).then(res=>{
-							console.log(res)
-						})
-					}
-					
 				}
-				if (isSubmit === 'yes'){
-					uni.showToast({
-						title: '提交成功!',
-						duration: 1000
-					});
-					
-					this.projectStatus = '已提交'
-					projectInfo_API(this.projectId).then(res=>{
-						this.projectstatusChange = res.data.data
-						for (var i=0;i<this.projectstatusChange.patrolStatus.length;i++){
-							if(this.projectstatusChange.patrolStatus[i].patrol_name === this.patrolName){
-								this.projectstatusChange.patrolStatus[i].status = '已提交'
-								projectUpdate_API(this.projectstatusChange).then(res=>{
-									console.log(res)
-								})
-							}
-						}
-						
-					})
-					
-					this.changeData()
-				} else {
-					uni.showToast({
-					    title: '模板问题尚未完成或问题描述与整改要求为空！',
-					    icon: 'none',
-					    duration: 2000
-					})
-				}
-			},
-			changeData() {
-				this.problemList = this.initproblemList
-				this.filterList()
-				for (var j = 0; j < this.problemList.length; j++){
-					if (this.problemList[j].projectName === '自定义'){
-						this.problemList[j].isOpen = false
-					} else {
-						this.problemList[j].isOpen = false
-					}
-				
-				}
-				for (var j = 0; j < this.problemList.length; j++){
-					if (this.problemList[j].basis === undefined || this.problemList[j].basis === null || this.problemList[j].basis.typeOne === ''){
-						this.problemList[j].basis = {
-						      "id": '',
-						      "codeOne": "",
-						      "codeTwo": "",
-						      "codeThree": "",
-						      "typeOne": "自定义",
-						      "typeTwo": "",
-						      "typeThree": "",
-						      "category": "",
-						      "description": "",
-						      "regulations": "",
-						      "terms": '',
-						      "responsibleParties": "",
-						      "labels": "",
-						      "remarks": null,
-						      "feedbacks": []
-						  }
-					}
-				
-				}
-				console.log('yes')
-				var map = {}
-				var nList = []
-				for (var i = 0; i < this.problemList.length; i++) {
-					var item = this.problemList[i]
-					if (!map[item.basis.typeOne]) {
-						nList.push({
-							typeOne: item.basis.typeOne,
-							data: [item],
-							bigisOpen: true,
-						})
-						map[item.basis.typeOne] = item
-					} else {
-						for (var j = 0; j < nList.length; j++) {
-							var nItem = nList[j]
-							if (nItem.typeOne == item.basis.typeOne) {
-								nItem.data.push(item)
-								break
-							}
-						}
-					}
-				}
-				var selfId = nList.length-1
-				for(var i =0;i<nList.length;i++){
-					if(nList[i].typeOne === '自定义'){
-						selfId = i
-					}
-				}
-				if (selfId != nList.length-1){
-					var tran = nList[selfId]
-					nList[selfId] = nList[nList.length-1]
-					nList[nList.length-1] = tran
-				}
-				this.newList = nList
 			}
+			var selfId = nList.length-1
+			for(var i =0;i<nList.length;i++){
+				if(nList[i].typeOne === '自定义'){
+					selfId = i
+				}
+			}
+			if (selfId != nList.length-1){
+				var tran = nList[selfId]
+				nList[selfId] = nList[nList.length-1]
+				nList[nList.length-1] = tran
+			}
+			this.newList = nList
 		}
 	}
+}
 </script>
 
 

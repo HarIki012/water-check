@@ -63,13 +63,14 @@
 			}
 		},
 		onLoad() {  
-			//this.initRecord();  
+			this.getUserName()  
 		},
 		methods: {
 			getUserName(){
 				try{
 					this.userData = uni.getStorageSync('user_key')
 					this.reportingData.name = this.userData.name
+					console.log(this.reportingData.name)
 				}catch(e){
 
 				}
@@ -104,13 +105,10 @@
 				return `${year}-${month}-${day}`;
 			},
 			submitAll(){
-				//提交功能没做
-				console.log(this.voiceResult)
-				console.log(this.begindate)
-				console.log(this.enddate)
 				this.reportingData.content = this.voiceResult
 				this.reportingData.start = this.begindate
 				this.reportingData.end = this.enddate
+				console.log(this.reportingData)
 				reporting_API(this.reportingData).then(res => {
 					uni.showToast({
 						title:'报备成功',

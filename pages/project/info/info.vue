@@ -18,7 +18,7 @@
 	</view>
 	
 	
-	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate(item.patrolId,item.status,item.check)">
+	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate(item.patrolId,item.status,item.check,item.id)">
 		<view style="padding: 25rpx;background-color: #F0F3F5;"></view>
 		<view class="contentDown">
 			<text v-if="item.status === '未检查'" class="check-before" style="color: #f1a532;border-left: 5px solid #f1a532;"></text>
@@ -53,6 +53,7 @@ import { patrolByProject_API } from '../../../api/api.js'
 import { basisByProject_API } from '../../../api/api.js'
 import { updataProject_API } from '../../../api/api.js'
 import { teamByProject_API } from '../../../api/api.js'
+import { team_API } from '../../../api/api.js'
 	export default {
 		data() {
 			
@@ -120,6 +121,9 @@ import { teamByProject_API } from '../../../api/api.js'
 				leaderName:[],
 				projectTemp:'',
 				patrolIdList:[],
+				patrolList:[],
+				teamMember:[],
+				modify:false,
 			}
 		},
 		onLoad(value) {
@@ -127,7 +131,6 @@ import { teamByProject_API } from '../../../api/api.js'
 			this.getprojectInfo()
 			this.getpatrolByProject()
 			this.setBasisByProject()
-			this.getLeaderName()
 		},
 		methods: {
 			// 获取项目详情
@@ -156,12 +159,15 @@ import { teamByProject_API } from '../../../api/api.js'
 					const checksTemp = []
 					for(var i = 0 ; i< this.projectTemp.length;i++ ){
 						var teamName = ''
+						var teamNameList = []
 						for(var j = 0; j <this.projectTemp[i].inspectionTeams[0].expertList.length; j++){ //队员名字
+							teamNameList.push(this.projectTemp[i].inspectionTeams[0].expertList[j].name)
 							teamName = teamName + this.projectTemp[i].inspectionTeams[0].expertList[j].name
 							if(j < this.projectTemp[i].inspectionTeams[0].expertList.length - 1){
 								teamName = teamName +'，'
 							}
 						}
+						this.teamMember.push(teamNameList)
 						this.temp = {
 							patrolId:this.projectTemp[i].id,
 							check: this.projectTemp[i].name, //巡检活动名,
@@ -171,8 +177,10 @@ import { teamByProject_API } from '../../../api/api.js'
 							teamName:teamName,
 							endTime:"结束时间",
 							endTimeInfo:this.projectTemp[i].patrolDate[this.projectTemp[i].patrolDate.length- 1],
-							status:""
+							status:"",
+							id:''
 						}
+						
 						this.patrolIdList.push(this.projectTemp[i].id)
 						
 						for(var k = 0 ;k<this.projectTable.patrolStatus.length;k++){
@@ -184,39 +192,41 @@ import { teamByProject_API } from '../../../api/api.js'
 								}
 							}
 						}
+						if(this.projectTable.patrolStatus.length === 0){
+							this.temp.status = "进行中"
+						}
 						checksTemp.push(this.temp)
 						//console.log(this.temp)
 					}
 					this.checks = checksTemp
-					
+					this.getLeaderName()
 				})
 			},
-			getLeaderName(){
-				var idTemp = [{
-					id:this.projectId,
-					patrolId:2,
-				},
-				 {
-					id:this.projectId,
-					patrolId:1,
-				},
-				{
-					id:this.projectId,
-					patrolId:2,
-				},
-				{
-					id:this.projectId,
-					patrolId:1,
-				}
-				]
+			async getLeaderName(){
 				// 返回的值，按id从大到小排序
-				for(var i=0;i<idTemp.length;i++){
-					console.log(idTemp[i])
-					teamByProject_API(idTemp[i]).then(res =>{
-						console.log(res.data.data)
+				for(var i = 0;i<this.patrolIdList.length;i++){
+					var idtemp={
+						id:Number(this.projectId),
+						patrolId:this.patrolIdList[i]
+					}
+					await teamByProject_API(idtemp).then(res => {
+						this.patrolList.push(res.data.data)
 					})
 				}
-				
+				console.log(this.patrolList)
+				for(var i = 0;i<this.checks.length;i++){
+					this.checks[i].leaderName = this.patrolList[i].leader
+					this.checks[i].id = this.patrolList[i].id
+					var teamName = ''
+					for(var j = 0; j <this.patrolList[i].expertList.length; j++){ //队员名字
+						teamName = teamName + this.patrolList[i].expertList[j].name
+						if(j < this.patrolList[i].expertList.length - 1){
+							teamName = teamName +'，'
+						}
+					}
+					this.checks[i].teamName = teamName
+				}
+				console.log(this.checks)
 			},
 			// 展开或收起
 			showTag(){
@@ -267,22 +277,57 @@ import { teamByProject_API } from '../../../api/api.js'
 				});
 			},
 			//跳转页面
-			gonavigate(id,status,name){
-				var data = {
+			gonavigate(id,status,name,teamid){
+				let data = {
 					projectId:this.projectId,
 					patrolstatus:status,
 					patrolname:name,
+					teamId:teamid,
+					projectName:this.list[0].info,
+					modify:false,
 				}
-				uni.setStorage({
-					key:'patrolStutas_key',
-					data:data,
-					success:function(){
-						console.log("patrolStutas save success")
-					}
-				})
+				try{
+					
+					var expert = uni.getStorageSync('user_key')
+					var username = expert.name
+					//console.log(this.teamMember)
+					team_API(teamid).then(res => {
+						var team = res.data.data.expertList
+						console.log(username)
+						var temp = team.filter(item => item.name === username)
+						if(temp.length >= 1){
+							console.log("执行")
+							this.modify = true
+						}else{
+							this.modify = false
+						}
+						data = {
+							projectId:this.projectId,
+							patrolstatus:status,
+							patrolname:name,
+							teamId:teamid,
+							projectName:this.list[0].info,
+							modify:this.modify,
+						}
+						uni.setStorage({
+							key:'patrolStutas_key',
+							data:data,
+							success:function(){
+								console.log("patrolStutas save success")
+							}
+						})
+					})
+				}catch(e){
+					
+				}
+				let temp = {
+					id:id,
+					url:Date.now(),
+					projectId:this.projectId,
+				}
 				uni.navigateTo({
 					//保留当前页面，跳转到应用内的某个页面
-					url: '/pages/project/checks/checks?id=' + id
+					url: '/pages/project/checks/checks?id=' + JSON.stringify(temp)
 				})
 			},
 			//存储从项目获取的basis模板

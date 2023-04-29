@@ -251,3 +251,11 @@ export function projectUpdate_API(data){
 		method:'PUT',
 	})
 }
+
+// 按id获取单个巡查组
+export function team_API(id){
+	return uni.request({
+		url: `${baseUrl}/team?id=${id}`,
+		method:'GET',
+	})
+}

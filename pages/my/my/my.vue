@@ -190,6 +190,11 @@
 					}
 				})
 				
+				try {
+					uni.clearStorageSync();
+				} catch (e) {
+					// error
+				}
 				
 				uni.redirectTo({
 					url:'/pages/login/login'

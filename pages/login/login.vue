@@ -65,17 +65,19 @@
 				];
 				
 				var formData = e.detail.value;
-				var reg = /^1[0-9]{10,10}$/;
-				
+				var reg = /^1\d+$/;
+				this.getAccounts()
 				console.log(this.allUserData)
 				const  userData = this.allUserData.filter(item => item.phone == formData.tel)
 				console.log(userData.length)
 				if(userData.length){
 					console.log("存在")
-					this.phone = userData[0].phone
+					this.phone = userData[0].phone.toString()
 					this.password = userData[0].password
-					console.log(userData[0].phone)
-					console.log(userData[0].password)
+					console.log(formData.tel)
+					console.log(formData.psd)
+					console.log(this.phone)
+					console.log(this.password)
 					if (!formData.tel | !formData.psd){
 						// 输入账号或者密码不全
 						console.log("输入账号或者密码不全")
@@ -88,6 +90,7 @@
 					}
 					else if (!reg.test(formData.tel)) {
 						// 账号或密码输入错误
+						console.log(reg.test(formData.tel))
 						uni.showToast({
 							title: rule[0].errorMsg,
 							icon: 'none',    //如果要纯文本，不要icon，将值设为'none'

@@ -148,13 +148,20 @@
 					status: "未审核",
 					proofUrl: this.proofPictureUrl
 				}
-
+				try{
+					var expert = uni.getStorageSync('user_key')
+					feedBackData.name = expert.name
+				}catch(e){
+					
+				}
+				console.log(feedBackData)
 				feedbackBasis_API(feedBackData).then(res =>{
 					this.feedBackId = res.data.data.id
 					var bindData = {
 						basisId:this.basisTable.id,
 						feedbackId:this.feedBackId,
 					}
+					
 					feedbackBindBasis_API(bindData).then(res =>{
 						console.log("binding feedback to basis success!")
 					})
@@ -167,14 +174,15 @@
 				this.$refs['popup'].close();
 			},
 			generateIssues(){
-				
+				console.log(this.data[0].type)
 				var basisData = {
 					id:this.data[0].id,
 					description:this.data[0].description,
 					typeOne:this.data[0].typeOne,
 					terms:this.data[0].terms,
-					category:this.data[0].category
+					category:this.data[0].type
 				}
+				console.log(basisData)
 				uni.setStorage({
 					key:'terms_key',
 					data:basisData,

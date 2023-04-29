@@ -6,7 +6,7 @@
 		<view class="text">
 			<text style="margin-bottom: 20rpx;">问题描述</text>
 			<text v-if="isSelf !== 'yes'" style="font-size: 33rpx;">{{projectData.description}}</text>
-			<textarea v-if="isSelf === 'yes'" class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" @input="sumFontNumDescription" :disabled="allow"></textarea>
+			<textarea v-if="isSelf === 'yes'" class="detailStyle" style="padding-left: 20rpx;" type="text" :value="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" @input="sumFontNumDescription" :disabled="allow"></textarea>
 		<view class="fontInput">
 			<button  v-if="isSelf === 'yes'" class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartQuestion" @touchend="touchEndQuestion"></button>
 			<text v-if="isSelf === 'yes'" class="currentWordNumber">{{fontNumDescription}}/200</text>
@@ -29,10 +29,12 @@
 		</view>
 		<view class="text" v-if="isSelf === 'yes'" >
 			<text style="margin-bottom: 20rpx;">条文规范</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.terms" placeholder="条文规范" @blur="projectChange" :disabled="allow"></textarea>
-			<!-- <view class="choose-pic">
-				<uni-file-picker limit="9" title="最多选择9张图片"></uni-file-picker>
-			</view> -->
+			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" :value="projectData.terms" placeholder="条文规范" @blur="projectChange" :disabled="allow"></textarea>
+			<view class="choose-pic">
+				<uni-file-picker v-if="picLengthTerms >= 2" v-model="realTermsurl" limit="9" title="最多选择9张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-else-if="picLengthTerms === 1" v-model="realTermsurl" limit="9" title="最多选择9张图片" @select="picTerms" @delete="deleteFileTerms" :del-icon="false" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow"></uni-file-picker>
+			</view>
 		</view>
 		
 		<view class="text" style="flex-direction: row;">
@@ -46,36 +48,41 @@
 			</view>
 			
 		</view>
-		<view class="text">
-			<text style="margin-bottom: 20rpx;">详情描述</text>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" v-model="projectData.detail" placeholder="详情描述" @blur="projectChange" @input="sumFontNumDetail" :disabled="allow"></textarea>
-		<view class="fontInput">
-			<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartDetail" @touchend="touchEndDetail" :disabled="allow"></button>
-			<text  class="currentWordNumber">{{fontNumDetail}}/200</text>
-		</view>
-		</view>
-		<view class="choose-pic">
-						<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
-						<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :del-icon="false" :readonly="allow"></uni-file-picker>
-			<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
-		</view>
-		<view class="text">
-			<view style="flex-direction: row; margin-bottom: 20rpx;">
-				<text style="margin-bottom: 20rpx;">整改要求</text>
-			</view>
-			<textarea class="detailStyle" style="padding-left: 20rpx;" type="text"  v-model="projectData.rectify" placeholder="整改要求" @blur="projectChange" @input="sumFontNumRectify" :disabled="allow"></textarea>
+		
+		<view class="bottom-container" v-if="severityselectIndex >= 2">
+			<view class="text">
+				<text style="margin-bottom: 20rpx;">详情描述</text>
+				<textarea class="detailStyle" style="padding-left: 20rpx;" type="text" :value="projectData.detail" placeholder="详情描述" @blur="projectChange" @input="sumFontNumDetail" :disabled="allow"></textarea>
 			<view class="fontInput">
-				<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartRectify" @touchend="touchEndRectify" :disabled="allow"></button>
-				<text  class="currentWordNumber">{{fontNumRectify}}/200</text>
+				<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartDetail" @touchend="touchEndDetail" :disabled="allow"></button>
+				<text  class="currentWordNumber">{{fontNumDetail}}/200</text>
+			</view>
+			</view>
+			<view class="choose-pic">
+				<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :del-icon="false" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
+			</view>
+			<view class="text">
+				<view style="flex-direction: row; margin-bottom: 20rpx;">
+					<text style="margin-bottom: 20rpx;">整改要求</text>
+				</view>
+				<textarea class="detailStyle" style="padding-left: 20rpx;" type="text"  :value="projectData.rectify" placeholder="整改要求" @blur="projectChange" @input="sumFontNumRectify" :disabled="allow"></textarea>
+				<view class="fontInput">
+					<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartRectify" @touchend="touchEndRectify" :disabled="allow"></button>
+					<text  class="currentWordNumber">{{fontNumRectify}}/200</text>
+				</view>
 			</view>
 		</view>
+		
+		
 	</view>
 </template>
 
 <script>
 import { uploadFiles } from '/api/api.js'
-	// var plugin = requirePlugin("WechatSI")
-	// let manager = plugin.getRecordRecognitionManager()
+	var plugin = requirePlugin("WechatSI")
+	let manager = plugin.getRecordRecognitionManager()
 	export default {
 		name:"projectdetail",
 		props:{
@@ -97,49 +104,77 @@ import { uploadFiles } from '/api/api.js'
 					}
 				],
 				testPicurl:[],
+				testPicTermsurl:[],
 				realurl:[],
-				severityChoose:['无此项','一般','较严重','严重','非常严重'],
-				severityselectIndex:'0',
+				realTermsurl:[],
+				severityChoose:['无此项','无问题','一般','较严重','严重','非常严重'],
+				severityselectIndex:'2',
 				severityselectName:'无',
 				typeChoose:['质量','安全','文明施工'],
 				typeIndex:'0',
 				typeName:'质量',
 				newRule:'',
 				uploadData:'',
+				uploadTermData:'',
 				from:0,//跳转页面确定,
 				samePic:'no',
 				deleteId:'',
 				fontNumDescription:0,
 				fontNumDetail:0,
 				fontNumRectify:0,
-				voiceResultDescription:"",
-				voiceResultDetail:"",
-				voiceResultRectify:"",
+				//voiceResultDescription:"",
+				//voiceResultDetail:"",
+				//voiceResultRectify:"",
 				picLength:'',
+				picLengthTerms:'',
 				allow:'',
 				mico:[0,0,0],
-				isSelf:''
+				isSelf:'',
+				modify:true,
 			};
 		},
 		mounted() {
 			this.initData()
-			// this.initRecord()
+			this.initRecord()
 		},
 		methods:{
 			sumFontNumDescription(e) {
 				this.fontNumDescription = e.detail.value.length
-				this.voiceResultDescription = e.detail.value
+				this.projectData.description = e.detail.value
 				// console.log(this.fontNum)
 			},
 			sumFontNumDetail(e) {
 				this.fontNumDetail = e.detail.value.length
-				this.voiceResultDetail = e.detail.value
+				this.projectData.detail = e.detail.value
 				// console.log(this.fontNum)
 			},
 			sumFontNumRectify(e) {
 				this.fontNumRectify = e.detail.value.length
-				this.voiceResultRectify = e.detail.value
+				this.projectData.rectify = e.detail.value
 				// console.log(this.fontNum)
+			},
+			picTerms(e){
+				console.log(e)
+				uni.uploadFile({
+					url: 'https://zsjs.huaskj.com/weps-api/upload_files', //仅为示例，非真实的接口地址
+					filePath: e.tempFilePaths[0],
+					name: 'files',
+					formData: {
+						'dirName': "水务/"
+					},
+					success: (uploadFileRes) => {
+						let json_data = JSON.parse(uploadFileRes.data)
+						//console.log(json_data.data[0]);
+						this.uploadData = 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + json_data.data[0]
+						//console.log(this.uploadData)
+						this.projectData.termsUrl.push(
+							json_data.data[0]
+						)
+						console.log(this.projectData)
+						//console.log(this.projectData.photoUrl)
+						this.$emit("sendData",this.projectData)
+					}
+				})
 			},
 			picTest(e){
 				console.log(e)
@@ -152,29 +187,122 @@ import { uploadFiles } from '/api/api.js'
 					},
 					success: (uploadFileRes) => {
 						let json_data = JSON.parse(uploadFileRes.data)
-						console.log(json_data.data[0]);
-						this.uploadData = 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + json_data.data[0]
-						console.log(this.uploadData)
+						//console.log(json_data.data[0]);
+						this.uploadTermData = 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + json_data.data[0]
+						//console.log(this.uploadData)
 						this.projectData.photoUrl.push(
 							json_data.data[0]
 						)
-						console.log(this.projectData.photoUrl)
+						//console.log(this.projectData.photoUrl)
+						console.log(this.projectData)
 						this.$emit("sendData",this.projectData)
 					}
 				})
 			},
-			hello(){
-				console.log('hello')
+			deleteFileTerms(e){
+				var sameSum = 0
+				for (var i = 0;i<this.testPicTermsurl.length;i++){
+					if(this.testPicTermsurl[i].url === e.tempFilePath){
+						this.deleteId = i
+						sameSum = sameSum + 1
+					}
+				}
+				if(sameSum >= 2){
+					this.projectData.termsUrl.splice(this.deleteId,1)
+					//console.log(this.projectData.photoUrl)
+				} else {
+					this.projectData.termsUrl.splice(this.deleteId,1)
+					//console.log(this.projectData.photoUrl)
+					let result = e.tempFilePath.slice(57)
+					console.log(result)
+					this.$emit("deleteId",result)
+				}
+				this.picLengthTerms = this.picLengthTerms - 1
+					if(this.picLengthTerms === 1){
+						var tran = []
+						this.realTermsurl = tran
+						this.realTermsurl = [{
+							name: this.projectData.termsUrl[0],
+							extname: this.filterImgType(this.projectData.termsUrl[0]),
+							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.termsUrl[0]
+						}]
+						//console.log(this.realurl)
+						this.picLengthTerms = this.realTermsurl.length
+					}
+					//console.log(this.picLength)
+				
+						// uni.showToast({
+						//     title: '至少保留一张图片！',
+						//     icon: 'none',
+						//     duration: 2000
+						// })
+				
 				
 			},
+			
+			deleteFile(e){
+				var sameSum = 0
+				for (var i = 0;i<this.testPicurl.length;i++){
+					if(this.testPicurl[i].url === e.tempFilePath){
+						this.deleteId = i
+						sameSum = sameSum + 1
+					}
+				}
+				if(sameSum >= 2){
+					this.projectData.photoUrl.splice(this.deleteId,1)
+					//console.log(this.projectData.photoUrl)
+				} else {
+					this.projectData.photoUrl.splice(this.deleteId,1)
+					//console.log(this.projectData.photoUrl)
+					let result = e.tempFilePath.slice(57)
+					console.log(result)
+					this.$emit("deleteId",result)
+				}
+				this.picLength = this.picLength - 1
+					if(this.picLength === 1){
+						var tran = []
+						this.realurl = tran
+						this.realurl = [{
+							name: this.projectData.photoUrl[0],
+							extname: this.filterImgType(this.projectData.photoUrl[0]),
+							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[0]
+						}]
+						//console.log(this.realurl)
+						this.picLength = this.realurl.length
+					}
+					
+			},
 			initData(){
+				
+				try{
+					console.log("看看projectData")
+					console.log(this.projectData)
+					var temp = uni.getStorageSync('patrolStutas_key')
+					this.modify = temp.modify
+					console.log("能否修改？+"+this.modify)
+				}catch(e){
+
+				}
 				console.log('状态:'+this.status)
-				if (this.status === '未检查' || this.status === '进行中'){
+				if ((this.status === '未检查' || this.status === '进行中') && this.modify === true){
 					this.allow = false
 				} else {
 					this.allow = true
 				}
 				console.log(this.allow)
+				//console.log(this.projectData.basis)
+				if(this.projectData.basis === null){
+					
+				}else{
+					uni.setStorage({
+						key:'basisID_key',
+						data:this.projectData.basis.id,
+						success: function(){
+							console.log("basisID save success!")
+						}
+					})
+				}
+				
 				if (this.projectData.basis === null || this.projectData.basis.typeOne === '自定义' ){
 					this.isSelf = 'yes'
 				} else {
@@ -182,7 +310,7 @@ import { uploadFiles } from '/api/api.js'
 				}
 				this.severityselectName = this.projectData.severity
 				this.typeName = this.projectData.type
-				console.log(this.projectData.photoUrl.length)
+				//console.log(this.projectData.photoUrl.length)
 				// if(this.projectData.photoUrl.length === 0){
 				// 	this.testPicurl = null
 				// }
@@ -200,10 +328,26 @@ import { uploadFiles } from '/api/api.js'
 						// })
 					}
 				}
+				if(this.projectData.termsUrl.length !== 0){
+					for (var i = 0;i<this.projectData.termsUrl.length;i++){
+						console.log(i)
+						this.testPicTermsurl[i] = {
+							name: this.projectData.termsUrl[i],
+							extname: this.filterImgType(this.projectData.termsUrl[i]),
+							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.termsUrl[i]
+						}
+						// this.testPicurl.push({
+						// 	fileId: this.projectData.photoUrl[i],
+						// 	url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
+						// })
+					}
+				}
 				
-				console.log(this.testPicurl)
+				//console.log(this.testPicurl)
 				this.realurl = this.testPicurl
 				this.picLength = this.testPicurl.length
+				this.realTermsurl = this.testPicTermsurl
+				this.picLengthTerms = this.testPicTermsurl.length
 			},
 			severitySelect(e) {
 			    this.severityselectIndex = e.detail.value;
@@ -218,7 +362,7 @@ import { uploadFiles } from '/api/api.js'
 				this.$emit("sendData",this.projectData)
 			},
 			projectChange(){
-				console.log(this.testPicurl)
+				//console.log(this.testPicurl)
 				if(this.projectData.description === ''){
 					uni.showToast({
 					    title: '问题描述不能为空！',
@@ -240,46 +384,7 @@ import { uploadFiles } from '/api/api.js'
 			uploadPic(){
 				
 			},
-			deleteFile(e){
-				var sameSum = 0
-				for (var i = 0;i<this.testPicurl.length;i++){
-					if(this.testPicurl[i].url === e.tempFilePath){
-						this.deleteId = i
-						sameSum = sameSum + 1
-					}
-				}
-				if(sameSum >= 2){
-					this.projectData.photoUrl.splice(this.deleteId,1)
-					console.log(this.projectData.photoUrl)
-				} else {
-					this.projectData.photoUrl.splice(this.deleteId,1)
-					console.log(this.projectData.photoUrl)
-					let result = e.tempFilePath.slice(57)
-					console.log(result)
-					this.$emit("deleteId",result)
-				}
-				this.picLength = this.picLength - 1
-					if(this.picLength === 1){
-						var tran = []
-						this.realurl = tran
-						this.realurl = [{
-							name: this.projectData.photoUrl[0],
-							extname: this.filterImgType(this.projectData.photoUrl[0]),
-							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[0]
-						}]
-						console.log(this.realurl)
-						this.picLength = this.realurl.length
-					}
-					console.log(this.picLength)
-				
-						// uni.showToast({
-						//     title: '至少保留一张图片！',
-						//     icon: 'none',
-						//     duration: 2000
-						// })
-	
-				
-			},
+			
 			filterImgType(img) {
 				if (/png/g.test(img)) {
 					  return 'png'
@@ -296,79 +401,79 @@ import { uploadFiles } from '/api/api.js'
 					url:'/pages/project/detail/detail?from='+this.from
 				})
 			},
-			// //语音识别功能
-			// touchStartQuestion: function() {   
-			// 	manager.start({  
-			// 		duration: 60000,  
-			// 		lang: "zh_CN"  
-			// 	});
-			// 	this.mico[0] = 1
-			// },  
-			// touchEndQuestion: function() {  
-			// 	uni.showToast()  
-			// 	manager.stop();
-			// 	this.mico[0] = 1
-			// },
-			//   //语音识别功能
-			//   touchStartDetail: function() {   
-			//   	manager.start({  
-			//   		duration: 60000,  
-			//   		lang: "zh_CN"  
-			//   	});  
-			// 	this.mico[1] = 1
-			//   },  
-			//   touchEndDetail: function() {  
-			//   	uni.showToast()  
-			//   	manager.stop();  
-			// 	this.mico[1] = 1
-			//   },
-			//   //语音识别功能
-			//   touchStartRectify: function() {   
-			//   	manager.start({  
-			//   		duration: 60000,  
-			//   		lang: "zh_CN"  
-			//   	});  
-			// 	this.mico[2] = 1
-			//   },  
-			//   touchEndRectify: function() {  
-			//   	uni.showToast()  
-			//   	manager.stop();  
-			// 	this.mico[2] = 1
-			//   },
-			// /**  
-			//  * 初始化语音识别回调  
-			//  * 绑定语音播放开始事件  
-			//  */  
-			// initRecord: function() {  
-			// 	manager.onStart = function(res) {  
-			// 		this.voiceState ="onStart:"+ res.msg+"正在录音"  
-			// 	};  
-			// 	//有新的识别内容返回，则会调用此事件  
-			// 	manager.onRecognize = (res) => {  
-			// 		for(var i = 0; i<3;i++){
-			// 			if(i == 0 && this.mico[i] == 1){
-			// 				this.projectData.description = res.result
-			// 			}else if(i == 1 && this.mico[i] == 1){
-			// 				this.projectData.detail = res.result
-			// 			}else if(i == 2 && this.mico[i] == 1){
-			// 				this.projectData.rectify = res.result
-			// 			}
-			// 		}
-			// 	}  
+			//语音识别功能
+			touchStartQuestion: function() {   
+				manager.start({  
+					duration: 60000,  
+					lang: "zh_CN"  
+				});
+				this.mico[0] = 1
+			},  
+			touchEndQuestion: function() {  
+				uni.showToast()  
+				manager.stop();
+				this.mico[0] = 1
+			},
+			  //语音识别功能
+			  touchStartDetail: function() {   
+			  	manager.start({  
+			  		duration: 60000,  
+			  		lang: "zh_CN"  
+			  	});  
+				this.mico[1] = 1
+			  },  
+			  touchEndDetail: function() {  
+			  	uni.showToast()  
+			  	manager.stop();  
+				this.mico[1] = 1
+			  },
+			  //语音识别功能
+			  touchStartRectify: function() {   
+			  	manager.start({  
+			  		duration: 60000,  
+			  		lang: "zh_CN"  
+			  	});  
+				this.mico[2] = 1
+			  },  
+			  touchEndRectify: function() {  
+			  	uni.showToast()  
+			  	manager.stop();  
+				this.mico[2] = 1
+			  },
+			/**  
+			 * 初始化语音识别回调  
+			 * 绑定语音播放开始事件  
+			 */  
+			initRecord: function() {  
+				manager.onStart = function(res) {  
+					this.voiceState ="onStart:"+ res.msg+"正在录音"  
+				};  
+				//有新的识别内容返回，则会调用此事件  
+				manager.onRecognize = (res) => {  
+					for(var i = 0; i<3;i++){
+						if(i == 0 && this.mico[i] == 1){
+							this.projectData.description = res.result
+						}else if(i == 1 && this.mico[i] == 1){
+							this.projectData.detail = res.result
+						}else if(i == 2 && this.mico[i] == 1){
+							this.projectData.rectify = res.result
+						}
+					}
+				}  
 			
-			// 	// 识别结束事件  
-			// 	manager.onStop = (res) => {  
+				// 识别结束事件  
+				manager.onStop = (res) => {  
 			
-			// 		this.voiceState = res.result;  
-			// 	}  
+					this.voiceState = res.result;  
+				}  
 			
-			// 	// 识别错误事件  
-			// 	manager.onError = (res) => {  
+				// 识别错误事件  
+				manager.onError = (res) => {  
 			
-			// 		this.voiceState = res.msg;  
+					this.voiceState = res.msg;  
 			
-			// 	}  
-			// },
+				}  
+			},
 		}
 	}
 </script>

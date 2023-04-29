@@ -70,7 +70,7 @@
 			this._mapContext.initMarkerCluster({
 				enableDefaultStyle: false,
 				zoomOnClick: true,
-				gridSize: 30,
+				gridSize: 40,
 				complete(res) {
 				  console.log('initMarkerCluster', res)
 				}
@@ -131,6 +131,7 @@
 					  textAlign: 'center',
 					  bgColor: 'transparent',
 					  fontSize: 14,
+					  anchorX:-50,
 					};
 					let newMarker = Object.assign({},this.markerTemp)
 					markers.push(newMarker)
@@ -155,9 +156,9 @@
 					// error
 				}
 			},
-			clickMarker(){
-				this.$refs.popup.open('top')
-			}
+			// clickMarker(){
+			// 	this.$refs.popup.open('top')
+			// }
 			
 		}
 	}
