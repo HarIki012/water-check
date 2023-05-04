@@ -5,7 +5,7 @@
 				<label style="text-align: center;height: 100%;">{{ projectselectName }}</label>
 			</picker>
 		</view>
-		<input class="selectStyle" style="padding-left: 20rpx;" type="text" v-model="basisSearch" placeholder="问题检索" confirm-type="search">
+		<input class="selectStyle" style="padding-left: 20rpx;" type="text" :value="basisSearch" placeholder="问题检索" confirm-type="search">
 		<text class="select-text" @click="searchByName">搜索</text>
 	</view>
 	<view class="sortBorder">
@@ -58,6 +58,7 @@
 					description: "",
 					show:true,
 				},
+				ismodify:false,
 			};
 
 		},
@@ -66,10 +67,22 @@
 		// },
 		onLoad(value) {
 			//console.log(value.searchText)
-			if(value.searchText){
-				this.getSearch(value.searchText)
-				this.getBasis(value.searchText)
+			//console.log(value.ismodify)
+			//console.log(value.basisSearch)
+			if(value.ismodify === undefined){
+				if(value.searchText){
+					this.getSearch(value.searchText)
+					this.getBasis(this.basisSearch)
+				}
+			}else if(value.ismodify === true){
+				this.basisSearch = value.basisSearch
+				this.termsData = []
+				this.getBasis(value.basisSearch)
 			}
+			
+		},
+		onShow() {
+			
 			
 		},
 		computed: {
@@ -88,6 +101,7 @@
 				})
 			},
 			processBasisData(data){
+				this.termsData = []
 				this.termsTable = data
 				if (this.termsTable) {
 					var index = 0;
@@ -132,7 +146,6 @@
 			//按名称选择
 			searchByName(){
 				this.getBasis(this.basisSearch)
-				this.processBasisData()
 			},
 			//按钮选择type
 			filterList() {

@@ -24,11 +24,12 @@
 		display: flex;
 		align-items: center;
 		flex-direction: row;
+		
 	}
 	.location{
+		color: #0CBCC2; 
 		display: flex;
 		justify-content: left;
-		-webkit-flex: 1;flex: 1;
 	}
 	.borderDown{
 		margin-bottom: 15rpx;

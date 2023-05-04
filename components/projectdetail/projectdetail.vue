@@ -71,7 +71,7 @@
 				<view style="flex-direction: row; margin-bottom: 20rpx;">
 					<text style="margin-bottom: 20rpx;">整改要求</text>
 				</view>
-				<textarea class="detailStyle" style="padding-left: 20rpx;" type="text"  :value="projectData.rectify" placeholder="整改要求" @blur="projectChange" @input="sumFontNumRectify" :disabled="allow"></textarea>
+				<textarea class="detailStyle" :style="{'border': isFocused && !projectData.rectify ? '1px solid red' : '1px solid darkgray'}" style="padding-left: 20rpx;" type="text"  @focus="onFocus" :value="projectData.rectify" placeholder="整改要求" @blur="projectChange" @input="sumFontNumRectify" :disabled="allow"></textarea>
 				<view class="fontInput">
 					<button class="voice-text iconfont iconfontmico icon-maikefeng" @touchstart="touchStartRectify" @touchend="touchEndRectify" :disabled="allow"></button>
 					<text  class="currentWordNumber">{{fontNumRectify}}/200</text>
@@ -90,8 +90,9 @@ import { uploadFiles } from '/api/api.js'
 	export default {
 		name:"projectdetail",
 		props:{
-			projectData:Object,
-			status:String
+			projectData:{
+				type:Object
+			}
 			},
 		data() {
 			return {
@@ -133,16 +134,25 @@ import { uploadFiles } from '/api/api.js'
 				picLength:'',
 				picLengthTerms:'',
 				allow:'',
-				mico:[0,0,0],
+				mico:[0,0,0,0],
 				isSelf:'',
-				modify:true,
+				//modify:true,
+				status:'',
+				isFocused: false,
 			};
 		},
+		onLoad() {
+			
+		},
 		mounted() {
+			
 			this.initData()
 			this.initRecord()
 		},
 		methods:{
+			onFocus(){
+				this.isFocused = true
+			},
 			sumFontNumDescription(e) {
 				this.fontNumDescription = e.detail.value.length
 				this.projectData.description = e.detail.value
@@ -287,18 +297,30 @@ import { uploadFiles } from '/api/api.js'
 				try{
 					console.log("看看projectData")
 					console.log(this.projectData)
+					console.log(typeof this.projectData.rectify)
 					var temp = uni.getStorageSync('patrolStutas_key')
-					this.modify = temp.modify
-					console.log("专家是否为该小组成员+"+this.modify)
+					//this.modify = temp.modify
+					this.status = temp.patrolstatus
+					//console.log("专家是否为该小组成员+"+this.modify)
+					// if(this.modify === false){
+					// 	uni.showToast({
+					// 		title: '您不是该项目小组成员！',
+					// 		icon: 'none',
+					// 		duration: 2000
+					// 	})
+					// }
+					
+						
+					console.log('状态:'+this.status)
+					if (this.status === '未检查' || this.status === '进行中' || this.status === '检查中' || this.status === '待检查' || this.status === '已检查'){
+						this.allow = false
+					} else {
+						this.allow = true
+					}
 				}catch(e){
 
 				}
-				console.log('状态:'+this.status)
-				if ((this.status === '未检查' || this.status === '进行中') && this.modify === true){
-					this.allow = false
-				} else {
-					this.allow = true
-				}
+				
 				console.log(this.allow)
 				//console.log(this.projectData.basis)
 				if(this.projectData.basis === null){
@@ -384,11 +406,11 @@ import { uploadFiles } from '/api/api.js'
 					})
 				}
 				if(this.projectData.rectify === ''){
-					uni.showToast({
-					    title: '整改要求不能为空！',
-					    icon: 'none',
-					    duration: 2000
-					})
+					// uni.showToast({
+					//     title: '整改要求不能为空！',
+					//     icon: 'none',
+					//     duration: 2000
+					// })
 				}
 				if(this.projectData.description !== '' && this.projectData.rectify !== ''){
 					this.$emit("sendData",this.projectData)
@@ -420,12 +442,26 @@ import { uploadFiles } from '/api/api.js'
 					duration: 60000,  
 					lang: "zh_CN"  
 				});
-				this.mico[0] = 1
+				this.mico = [1,0,0,0]
+				
 			},  
 			touchEndQuestion: function() {  
 				uni.showToast()  
 				manager.stop();
-				this.mico[0] = 1
+				this.mico = [1,0,0,0]
+			},
+			//语音识别功能
+			touchStartTerms: function() {
+				manager.start({  
+					duration: 60000,  
+					lang: "zh_CN"  
+				});  
+				this.mico = [0,0,0,1]
+			},  
+			touchEndTerms: function() {  
+				uni.showToast()  
+				manager.stop();  
+				this.mico = [0,0,0,1]
 			},
 			  //语音识别功能
 			  touchStartDetail: function() {   
@@ -433,12 +469,12 @@ import { uploadFiles } from '/api/api.js'
 			  		duration: 60000,  
 			  		lang: "zh_CN"  
 			  	});  
-				this.mico[1] = 1
+				this.mico = [0,1,0,0]
 			  },  
 			  touchEndDetail: function() {  
 			  	uni.showToast()  
 			  	manager.stop();  
-				this.mico[1] = 1
+				this.mico = [0,1,0,0]
 			  },
 			  //语音识别功能
 			  touchStartRectify: function() {   
@@ -446,30 +482,43 @@ import { uploadFiles } from '/api/api.js'
 			  		duration: 60000,  
 			  		lang: "zh_CN"  
 			  	});  
-				this.mico[2] = 1
+				this.mico = [0,0,1,0]
 			  },  
 			  touchEndRectify: function() {  
 			  	uni.showToast()  
 			  	manager.stop();  
-				this.mico[2] = 1
+				this.mico = [0,0,1,0]
 			  },
 			/**  
 			 * 初始化语音识别回调  
 			 * 绑定语音播放开始事件  
 			 */  
 			initRecord: function() {  
-				manager.onStart = function(res) {  
-					this.voiceState ="onStart:"+ res.msg+"正在录音"  
+				manager.onStart = function(res) { 
+					for(var i = 0; i<4;i++){
+						if(i == 0 && this.mico[i] == 1){
+							this.projectData.description = "onStart:"+ res.msg+"正在录音"
+						}else if(i == 1 && this.mico[i] == 1){
+							this.projectData.detail = "onStart:"+ res.msg+"正在录音"
+						}else if(i == 2 && this.mico[i] == 1){
+							this.projectData.rectify = "onStart:"+ res.msg+"正在录音"
+						}else if(i == 3 && this.mico[i] == 1){
+							this.projectData.terms = "onStart:"+ res.msg+"正在录音"
+						}
+					}
+					//this.voiceState ="onStart:"+ res.msg+"正在录音"  
 				};  
 				//有新的识别内容返回，则会调用此事件  
 				manager.onRecognize = (res) => {  
-					for(var i = 0; i<3;i++){
+					for(var i = 0; i<4;i++){
 						if(i == 0 && this.mico[i] == 1){
 							this.projectData.description = res.result
 						}else if(i == 1 && this.mico[i] == 1){
 							this.projectData.detail = res.result
 						}else if(i == 2 && this.mico[i] == 1){
 							this.projectData.rectify = res.result
+						}else if(i == 3 && this.mico[i] == 1){
+							this.projectData.terms = res.result
 						}
 					}
 				}  
@@ -477,13 +526,33 @@ import { uploadFiles } from '/api/api.js'
 				// 识别结束事件  
 				manager.onStop = (res) => {  
 			
-					this.voiceState = res.result;  
+					for(var i = 0; i<4;i++){
+						if(i == 0 && this.mico[i] == 1){
+							this.projectData.description = res.result
+						}else if(i == 1 && this.mico[i] == 1){
+							this.projectData.detail = res.result
+						}else if(i == 2 && this.mico[i] == 1){
+							this.projectData.rectify = res.result
+						}else if(i == 3 && this.mico[i] == 1){
+							this.projectData.terms = res.result
+						}
+					} 
 				}  
 			
 				// 识别错误事件  
 				manager.onError = (res) => {  
 			
-					this.voiceState = res.msg;  
+					for(var i = 0; i<4;i++){
+						if(i == 0 && this.mico[i] == 1){
+							this.projectData.description = res.result
+						}else if(i == 1 && this.mico[i] == 1){
+							this.projectData.detail = res.result
+						}else if(i == 2 && this.mico[i] == 1){
+							this.projectData.rectify = res.result
+						}else if(i == 3 && this.mico[i] == 1){
+							this.projectData.terms = res.result
+						}
+					}
 			
 				}  
 			},

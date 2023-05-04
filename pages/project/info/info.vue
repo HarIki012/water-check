@@ -3,7 +3,7 @@
 		<view class="content" style="-webkit-flex-wrap: wrap;flex-wrap: wrap; " v-for="(item,index) in list">
 			<view class="projectName" style="font-weight: 100; width: 200rpx">{{item.name}}</view>
 			<view class="projectName-info" style="-webkit-flex: 1;flex: 1; flex-wrap: wrap; ">{{item.info}}
-			<text class="location iconfont icon icon-dingwei" v-if="item.name === '项目地址'" style="color: #0CBCC2; " @click="addressGet()">校正定位</text>
+				<text class="location iconfont icon icon-dingwei" v-if="item.name === '项目地址'" @click="addressGet()">校正定位</text>
 			</view>
 		</view>
 		
@@ -123,7 +123,7 @@ import { team_API } from '../../../api/api.js'
 				patrolIdList:[],
 				patrolList:[],
 				teamMember:[],
-				modify:false,
+				//modify:false,
 			}
 		},
 		onLoad(value) {
@@ -284,7 +284,7 @@ import { team_API } from '../../../api/api.js'
 					patrolname:name,
 					teamId:teamid,
 					projectName:this.list[0].info,
-					modify:false,
+					//modify:false,
 				}
 				try{
 					
@@ -295,11 +295,12 @@ import { team_API } from '../../../api/api.js'
 						var team = res.data.data.expertList
 						console.log(username)
 						var temp = team.filter(item => item.name === username)
+						console.log(team)
 						if(temp.length >= 1){
 							console.log("执行")
-							this.modify = true
+							//this.modify = true
 						}else{
-							this.modify = false
+							//this.modify = false
 						}
 						data = {
 							projectId:this.projectId,
@@ -307,7 +308,7 @@ import { team_API } from '../../../api/api.js'
 							patrolname:name,
 							teamId:teamid,
 							projectName:this.list[0].info,
-							modify:this.modify,
+							//modify:this.modify,
 						}
 						uni.setStorage({
 							key:'patrolStutas_key',

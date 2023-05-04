@@ -259,3 +259,12 @@ export function team_API(id){
 		method:'GET',
 	})
 }
+
+//修改密码
+export function userUpdate_API(data){
+	return uni.request({
+		url: `${baseUrl}/account_update`,
+		data: data,
+		method:'PUT',
+	})
+}

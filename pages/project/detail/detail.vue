@@ -180,6 +180,17 @@
 				})
 				this.$refs['popup'].close();
 			},
+			filterImgType(img) {
+				if (/png/g.test(img)) {
+					  return 'png'
+				  } else if (/jpg/g.test(img)) {
+					  return 'jpg'
+				  } else if (/gif/g.test(img)) {
+					  return 'gif'
+				  } else if (/jpeg/g.test(img)) {
+					  return 'jpeg'
+				  }
+			 },
 			generateIssues(){
 				console.log(this.data[0].type)
 				var basisData = {
@@ -187,7 +198,8 @@
 					description:this.data[0].description,
 					typeOne:this.data[0].typeOne,
 					terms:this.data[0].terms,
-					category:this.data[0].type
+					category:this.data[0].type,
+					termfrom:"generate",
 				}
 				console.log(basisData)
 				uni.setStorage({

@@ -101,6 +101,7 @@
 		    {
 		        "navigationBarTitleText": "检查内容",
 		        "enablePullDownRefresh": false,
+				"disableNVueCache": true, // 禁止页面缓存
 				"mp-weixin": {
 						  "titleNView": {
 							"buttons": [

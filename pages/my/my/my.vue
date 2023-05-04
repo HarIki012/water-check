@@ -79,6 +79,7 @@
 </template>
 
 <script>
+	import { userUpdate_API } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -139,6 +140,14 @@
 						title: '密码修改成功',
 						duration: 1500
 					});
+					var temp = {
+						id:this.userId,
+						phone:this.phonenumber,
+						password:this.newPassword
+					}
+					userUpdate_API(temp).then(res => {
+						console.log(res)
+					})
 				}
 			},
 			// 验证旧密码

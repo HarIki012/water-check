@@ -99,6 +99,14 @@
 						console.log(rule[0].errorMsg);
 						
 					}
+					else if(formData.psd !== this.password){
+						uni.showToast({
+							title: '密码错误',
+							icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
+							duration: 1500    //持续时间为 2秒
+						})  
+						
+					}
 					else if (formData.tel == this.phone & formData.psd == this.password){
 						
 						await expertByPhone_API(formData.tel).then(res => {
