@@ -5,12 +5,12 @@
 			<view class="name">描述</view>
 			<view class="detail">{{data[0].description}}
 				<view class="remarkContent">
-					<view v-if="this.data[0].remarks[0].detail !== 0" class="remark" v-for="(item,index) in data[0].remarks">
-						<text v-if="item.detail === '强条'" class="remarkDetail" style="background-color: #bf1f00;">{{item.detail}}</text>
-						<text v-if="item.detail === '专家重点'" class="remarkDetail" style="background-color: #ffd606;">{{item.detail}}</text>
-						<text v-if="item.detail === '政府重点'" class="remarkDetail" style="background-color: #ffd606;">{{item.detail}}</text>
-						<text v-if="item.detail === '过时'" class="remarkDetail" style="background-color: #ff6207;">{{item.detail}}</text>
-						<text v-if="item.detail === '错误'" class="remarkDetail" style="background-color: #bf1f00;">{{item.detail}}</text>
+					<view v-if="this.data[0].remarks.length !== 0" class="remark" v-for="(item,index) in data[0].remarks">
+						<text v-if="item === '强条'" class="remarkDetail" style="background-color: #bf1f00;">{{item}}</text>
+						<text v-if="item === '专家重点'" class="remarkDetail" style="background-color: #ffd606;">{{item}}</text>
+						<text v-if="item === '政府重点'" class="remarkDetail" style="background-color: #ff9020;">{{item}}</text>
+						<text v-if="item === '过时'" class="remarkDetail" style="background-color: #ff6207;">{{item}}</text>
+						<text v-if="item === '错误'" class="remarkDetail" style="background-color: #bfbfbf;">{{item}}</text>
 					</view>
 				</view>
 			</view>
@@ -62,10 +62,7 @@
 				            regulations: "武汉市水务工地文明施工标准化图册（2020年版）第1.1.1条，第1点",
 				            terms: "第七条水利工程项目法人（建设单位）、监理、设计、施工等单位的负责人，对本单位的质量工作负领导责任。各单位在工程现场的项目负责人对本单位在工程现场的质量工作负直接领导责任。各单位的工程技术负责人对质量工作负技术责任。具体工作人员为直接责任人。\n第十六条2.组建建设单位由项目主管部门或投资各方负责；建设单位需具备下列条件：\n（1）具有相对独立的组织形式。内部机构设置，人员配备能满足工程建设的需要；\n（3）主要行政和技术、经济负责人是专职人员，并保持相对稳定。\n第四条（十一）水利工程建设项目法人应具备以下基本条件:3.总人数应满足工程建设管理需要，大、中、小型工程人数一般按照不少于30、12、6人配备，其中工程专业技术人员原则上不少于总人数的50%。\n4.项目法人的主要负责人、技术负责人和财务负责人应具备相应的管理能力和工程建设管理经验。其中，技术负责人应为专职人员，有从事类似水利工程建设管理的工作经历和经验，能够独立处理工程建设中的专业问题，并具备与工程建设相适应的专业技术职称。大型水利工程和坝高大于70米的水库工程项目法人技术负责人应具备水利或相关专业高级职称或执业资格，其他水利工程项目法人技术负责人应具备水利或相关专业中级以上职称或执业资格",
 				            responsibleParties: "建设单位",
-				            remarks: [{
-								detail:""
-							},
-							],
+				            remarks: [],
 				        }
 				    ],
 				cameFrom:0,
@@ -77,6 +74,7 @@
 				patrolTemp:'',
 				projectId:'',
 				patrolStatus:'',
+				teamId:0,
 				
 			}
 		},
@@ -99,21 +97,42 @@
 							this.data[0].responsibleParties = this.basisTable.responsibleParties
 							this.data[0].typeOne = this.basisTable.typeOne
 							this.data[0].type = this.basisTable.category
-							console.log(this.basisTable.labels)
-							if(this.basisTable.labels == 3) {
-								this.data[0].remarks[0].detail = "专家重点" 
-							}else if(this.basisTable.labels == 2){
-								this.data[0].remarks[0].detail = "政府重点" 
-							}else if(this.basisTable.labels == 1){
-								this.data[0].remarks[0].detail = "强条" 
-							}else if(this.basisTable.labels == 4){
-								this.data[0].remarks[0].detail = "过时" 
-							}else if(this.basisTable.labels == 5){
-								this.data[0].remarks[0].detail = "错误" 
+							const reg = /\d+/g
+							const number = this.basisTable.labels.match(reg)
+							
+							console.log(number)
+							if(number !== null){
+								for(var i = 0;i < number.length;i++){
+									if(number[i] == 3) {
+										console.log(3)
+										let detail = "专家重点" 
+										this.data[0].remarks.push(detail)
+									}else if(number[i] == 2){
+										console.log(2)
+										let detail = "政府重点"
+										this.data[0].remarks.push(detail)
+									}else if(number[i] == 1){
+										console.log(1)
+										let detail = "强条"
+										this.data[0].remarks.push(detail)
+									}else if(number[i] == 4){
+										console.log(4)
+										let detail = "过时"
+										this.data[0].remarks.push(detail)
+										console.log(5)
+									}else if(number[i] == 5){
+										let detail = "错误"
+										this.data[0].remarks.push(detail)
+									}
+								}
 							}
+							
+							console.log(this.data[0].remarks)
+							
 							this.patrolTemp = uni.getStorageSync('patrolStutas_key')
 							this.projectId = this.patrolTemp.projectId
 							this.patrolStatus = this.patrolTemp.patrolstatus
+							this.teamId = this.patrolTemp.teamId
 							//console.log(this.patrolStatus)
 						})
 					}
@@ -229,7 +248,8 @@
 				let temp = {
 					url:Date.now(),
 					projectId:this.projectId,
-					patrolstatus:this.patrolStatus
+					patrolstatus:this.patrolStatus,
+					teamid:this.teamId,
 				}
 				//console.log(temp)
 				uni.redirectTo({

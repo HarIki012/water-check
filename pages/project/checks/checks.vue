@@ -194,6 +194,7 @@ export default {
 			this.patrolId = this.checkId
 		}
 		this.projectId = idtemp.projectId
+		this.projectId = Number(this.projectId)
 		console.log(idtemp.patrolstatus)
 		if(idtemp.patrolstatus !== undefined){
 			this.projectStatus = idtemp.patrolstatus
@@ -223,14 +224,15 @@ export default {
 		this.savePatrolId()
 		this.getTemplate()
 		this.getPatrol()
-		//this.getTerms()
+		this.getTerms()
 		//this.savePatrolId()
 		//this.getTemplate()
 		this.sequ(0)
 		//this.getDiy()
 	},
 	onShow() {
-		this.getTerms()
+		// this.getTerms()
+		
 		//this.refresh(this.checkId)
 		//this.sequ(0)
 	},
@@ -238,29 +240,25 @@ export default {
 		// this.changeData(),
 		// this.getLength()
 	},
+	onPullDownRefresh () {
+		console.log('触发了下拉刷新')	
+		this.getChecks()
+		setTimeout(()=>{
+			uni.stopPullDownRefresh()
+		},500)
+	},
+	// onReachBottom() {
+	// 	console.log('页面触底了')
+	// },
 	methods: {
-		//获取自定义ID
-		getDiy(){
-			
-			try{
-				uni.getStorage({
-					key:'diy_key',
-					success:function(res){
-						this.diyId = res.data
-					}
-				})
-			}catch(e){
-
-			}
-		},
 		// 获取活动名，项目ID，项目状态，巡检组id
 		getPatrol(){
 			try{
 				this.patrolTemp = uni.getStorageSync('patrolStutas_key')
 				this.patrolName = this.patrolTemp.patrolname
 				this.projectId = this.patrolTemp.projectId
+				this.projectId = Number(this.projectId)
 				this.projectStatus = this.patrolTemp.patrolstatus
-				//this.teamid = this.patrolTemp.teamId
 				this.tranprojectName = this.patrolTemp.projectName
 				
 				//console.log(this.patrolTemp.projectName)
@@ -278,6 +276,9 @@ export default {
 					id: this.projectId,
 					patrol_id: this.patrolId
 				}
+				console.log(idBoxthree)
+				console.log(typeof this.projectId)
+				console.log(typeof this.patrolId)
 				problemsbyId_API(idBoxthree).then(res => {
 					console.log("获取原有问题！")
 					
@@ -289,8 +290,8 @@ export default {
 					}
 					this.templateDate = uni.getStorageSync('template_key')
 					console.log("get template success!")
-					console.log("生成模板问题")
-					console.log(this.templateDate)
+					//console.log("生成模板问题")
+					//console.log(this.templateDate)
 					this.changeData()
 					for(var i=0; i<this.templateDate.length;i++){
 						//console.log("第"+i+"个")
@@ -339,11 +340,8 @@ export default {
 				}
 			})
 		},
-		
+
 		getChecks(){
-			// uni.showLoading({
-			// 	title: '加载中'
-			// })
 			uni.showToast({
 				title: '数据加载中!',
 				icon:"loading",
@@ -356,7 +354,7 @@ export default {
 			}
 			console.log(idBox)
 			problemsbyId_API(idBox).then(res=>{
-				console.log(res.data.data)
+				//console.log(res.data.data)
 				if(Number(res.data.data) === 0){
 					//console.log(Number(res.data.data))
 					console.log("调用模板")
@@ -364,17 +362,9 @@ export default {
 				}else{
 					this.tranprojectName = res.data.data[0].projectName
 					this.initproblemList = res.data.data
-					// uni.setStorage({
-					// 	key:'problem_key',
-					// 	data:this.initproblemList,
-					// 	success: function() {
-					// 		console.log('problem save success!')
-					// 	}
-					// });
 					this.changeData(),
 					this.getLength()
 				}
-				// uni.hideLoading();
 			})
 			var sumProblems = "";
 		},
@@ -387,7 +377,7 @@ export default {
 			}
 			console.log(idBoxtwo)
 			problemsbyId_API(idBoxtwo).then(res=>{
-				console.log(res.data.data)
+				//console.log(res.data.data)
 				if(Number(res.data.data) === 0){
 					//this.getTemplate()
 				}else{
@@ -490,7 +480,7 @@ export default {
 			 this.active = !this.active
 		},
 		changeSmall(e,n){
-			if(this.newList[e].data[n].rectify === ""){
+			if(this.newList[e].data[n].rectify === "" && this.newList[e].data[n].isSelf === 'yes'){
 				if(this.newList[e].data[n].isOpen === true){
 					// uni.showToast({
 					// title: '整改要求不能为空!',
@@ -550,6 +540,8 @@ export default {
 				
 				this.$forceUpdate()
 				//$nextTick()
+				//this.refresh(e,n)
+				
 			}
 			
 		},
@@ -608,7 +600,7 @@ export default {
 			if(this.terms.length === 0){
 				console.log('用了if')
 				tick = '1'
-				console.log(tick)
+				//console.log(tick)
 				this.newProject =
 					{
 					  "termsUrl": [],
@@ -666,14 +658,6 @@ export default {
 					tick = '1'
 				}
 			}
-			uni.setStorage({
-				key:'diy_key',
-				data:this.diyId,
-				success:function(){
-					console.log("diy_id save success!")
-				}
-			})
-			
 			this.initproblemList.push(this.newProject)
 			//console.log(this.initproblemList)
 			console.log("创建新问题")
@@ -684,7 +668,7 @@ export default {
 				if(tick === '1'){
 					this.newOpen = res.data.data.id
 				}
-				this.teamid = this.patrolTemp.teamId
+				//this.teamid = this.patrolTemp.teamId
 				console.log(this.teamid)
 				var bindMessage = {
 					teamId: this.teamid,
@@ -698,14 +682,13 @@ export default {
 				})
 				this.changeData()
 			})
-			
-			
 			this.terms = ''
 		},
-		submitChange(){
+		async submitChange(){
 			var isSubmit = ['yes','yes','yes']
-			//var isSubmit = 'yes'
+			var forsum = 0
 			for(var i = 0;i<this.initproblemList.length;i++){
+				forsum = forsum + 1
 				try{
 					if(this.initproblemList[i].basis.typeOne === '自定义'){
 						this.initproblemList[i].basis = null
@@ -714,47 +697,27 @@ export default {
 
 				}
 				
-				if(this.initproblemList[i].basis === null || this.initproblemList[i].basis.remarks === 'generate'){
+				if(this.initproblemList[i].basis === null){
 					console.log("该问题是自定义问题")
 					if(this.initproblemList[i].description === "请填写问题描述"){
-						// uni.showToast({
-						// 	title: '请更新问题描述！',
-						// 	icon: 'none',
-						// 	duration: 2000
-						// })
 						isSubmit[0]='no'
 						break
 					}
 					if(this.initproblemList[i].rectify === ''){
-						// uni.showToast({
-						// 	title: '整改要求不能为空！',
-						// 	icon: 'none',
-						// 	duration: 2000
-						// })
 						isSubmit[2] = 'no'
 						console.log("整改要求没写")
 						break
 					}
 				}else{
 					if(!this.initproblemList[i].readed){
-						// uni.showToast({
-						// 	title: '模板问题尚看完！',
-						// 	icon: 'none',
-						// 	duration: 2000
-						// })
 						isSubmit[1] = 'no'
 						console.log("有模板问题未读")
 						break
 					}
 				}
-				if(this.initproblemList[i].rectify === ''){
-					// uni.showToast({
-					// 	title: '整改要求不能为空！',
-					// 	icon: 'none',
-					// 	duration: 2000
-					// })
+				if(this.initproblemList[i].rectify === ''  && this.initproblemList[i].finder !== "管理员"){
 					isSubmit[2] = 'no'
-					console.log("整改要求没写")
+					console.log("固定项整改要求没写")
 					break
 				} else {
 					updataProblems_API(this.initproblemList[i]).then(res=>{
@@ -762,49 +725,51 @@ export default {
 					})
 				}
 			}
-		
-			for(var i=0;i<isSubmit.length;i++){
-				if(isSubmit[i] === 'no' && i === 0){
-					uni.showToast({
-						title: '请更新问题描述！',
-						icon: 'none',
-						duration: 2000
-					})
-				}else if(isSubmit[i] === 'no' && i === 1){
-					uni.showToast({
-						title: '模板问题尚看完！',
-						icon: 'none',
-						duration: 2000
-					})
-				}else if(isSubmit[i] === 'no' && i === 2){
-					uni.showToast({
-						title: '整改要求不能为空！',
-						icon: 'none',
-						duration: 2000
-					})
-				}else{
-					uni.showToast({
-						title: '提交成功!',
-						duration: 1000
-					});
-					this.projectStatus = '已检查'
-					projectInfo_API(this.projectId).then(res=>{
-						this.projectstatusChange = res.data.data
-						for (var i=0;i<this.projectstatusChange.patrolStatus.length;i++){
-							if(this.projectstatusChange.patrolStatus[i].patrol_name === this.patrolName){
-								this.projectstatusChange.patrolStatus[i].status = '已检查'
-								projectUpdate_API(this.projectstatusChange).then(res=>{
-									console.log(res)
-								})
-							}
+			
+			console.log("看一下isSubmit")
+			//console.log(isSubmit)
+			//console.log(forsum)
+			if(isSubmit[0] === 'no'){
+				uni.showToast({
+					title: '请更新问题描述！',
+					icon: 'none',
+					duration: 2000
+				})
+			} else if(isSubmit[1] === 'no'){
+				uni.showToast({
+					title: '模板问题尚看完！',
+					icon: 'none',
+					duration: 2000
+				})
+			} else if(isSubmit[2] === 'no'){
+				 uni.showToast({
+				 	title: '整改要求不能为空！',
+				 	icon: 'none',
+				 	duration: 2000
+				 })
+			} else {
+				uni.showToast({
+					title: '提交成功!',
+					duration: 1000
+				});
+				this.projectStatus = '已检查'
+				projectInfo_API(this.projectId).then(res=>{
+					this.projectstatusChange = res.data.data
+					for (var i=0;i<this.projectstatusChange.patrolStatus.length;i++){
+						if(this.projectstatusChange.patrolStatus[i].patrol_name === this.patrolName){
+							this.projectstatusChange.patrolStatus[i].status = '已检查'
+							projectUpdate_API(this.projectstatusChange).then(res=>{
+								console.log(res)
+							})
 						}
-					})
-					this.changeData()
-					uni.redirectTo({
-						url:'/pages/project/info/info?id='+this.projectId
-					})
-				}
+					}
+				})
+				this.changeData()
+				uni.redirectTo({
+					url:'/pages/project/info/info?id='+this.projectId
+				})
 			}
+			
 			
 		},
 		changeData() {
@@ -813,8 +778,8 @@ export default {
 			
 			// 添加是否为自定义问题字段
 			
-			console.log(this.problemList)
-			console.log(this.templateDate)
+			//console.log(this.problemList)
+			//console.log(this.templateDate)
 			for (var j = 0; j < this.problemList.length; j++){
 				this.problemList[j].isSelf = 'yes'
 				this.problemList[j].isOpen = false
@@ -831,9 +796,9 @@ export default {
 				}
 				
 			}
-			console.log("看看tick")
-			console.log(this.newOpen)
-			console.log(this.problemList)
+			//console.log("看看tick")
+			//console.log(this.newOpen)
+			//console.log(this.problemList)
 			for (var j = 0; j < this.problemList.length; j++){
 				
 				if (this.problemList[j].basis === undefined || this.problemList[j].basis === null || this.problemList[j].basis.typeOne === ''){
@@ -891,17 +856,7 @@ export default {
 				nList[nList.length-1] = tran
 			}
 			this.newList = nList
-			// for (var i = 0;i<this.newList.length;i++){
-			// 	for(var j=0;j<this.newList[i].length;j++){
-			// 		for(var k=0;k<this.templateDate.length;k++){
-			// 			if(this.newList[i].data[j].basis !== undefined) && this.newList[i].data[j].basis.id !== undefined && this.newList[i].data[j].basis.id === this.templateDate[k].id){
-			// 					this.newList[i].data[j].isSelf = 'no'
-			// 			}
-			// 		}
-			// 	}
-			// }
-			console.log("输出目前全部项目test")
-			console.log(this.newList)
+
 		}
 	}
 }
