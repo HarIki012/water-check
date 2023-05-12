@@ -84,7 +84,6 @@
 </template>
 
 <script>
-import { uploadFiles } from '/api/api.js'
 	var plugin = requirePlugin("WechatSI")
 	let manager = plugin.getRecordRecognitionManager()
 	export default {
@@ -139,10 +138,11 @@ import { uploadFiles } from '/api/api.js'
 				//modify:true,
 				status:'',
 				isFocused: false,
+				token:'',
 			};
 		},
 		onLoad() {
-			
+			this.token = uni.getStorageSync('token_key')
 		},
 		mounted() {
 			
@@ -175,12 +175,16 @@ import { uploadFiles } from '/api/api.js'
 			},
 			picTerms(e){
 				console.log(e)
+				
 				uni.uploadFile({
 					url: 'https://zsjs.huaskj.com/weps-api/upload_files', //仅为示例，非真实的接口地址
 					filePath: e.tempFilePaths[0],
 					name: 'files',
 					formData: {
 						'dirName': "水务/"
+					},
+					header:{
+						"Authorization":this.token,
 					},
 					success: (uploadFileRes) => {
 						let json_data = JSON.parse(uploadFileRes.data)
@@ -204,6 +208,9 @@ import { uploadFiles } from '/api/api.js'
 					name: 'files',
 					formData: {
 						'dirName': "水务/"
+					},
+					header:{
+						"Authorization":this.token,
 					},
 					success: (uploadFileRes) => {
 						let json_data = JSON.parse(uploadFileRes.data)

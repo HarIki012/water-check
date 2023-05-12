@@ -50,8 +50,8 @@
 				  start: "2018-10-20",
 				  end: "2019-10-20"
 				},
-				userData:{}
-				
+				userData:{},
+				token:'',
 			}
 		},
 		computed: {
@@ -62,7 +62,8 @@
 				return this.getDate('end');
 			}
 		},
-		onLoad() {  
+		onLoad() {
+			this.token = uni.getStorageSync('token_key')
 			this.getUserName()  
 		},
 		methods: {
@@ -109,7 +110,11 @@
 				this.reportingData.start = this.begindate
 				this.reportingData.end = this.enddate
 				console.log(this.reportingData)
-				reporting_API(this.reportingData).then(res => {
+				var data = {
+					reportingData:this.reportingData,
+					token:this.token
+				}
+				reporting_API(data).then(res => {
 					uni.showToast({
 						title:'报备成功',
 						duration:1000,

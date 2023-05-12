@@ -9,12 +9,12 @@
 		<text class="select-text" @click="searchByName">搜索</text>
 	</view>
 	<view class="sortBorder">
-			<view class="sort" v-for="(item,index) in termsData">
+			<view class="sort" v-for="(item,index) in termsData" :key="index">
 				<view v-if="!item.delete">
 					<view class="delete iconfont icon icon-shanchu2" @click="deleteTagData(index)"> </view>
 					<view :class="item.flag ? 'sortItemOpen iconfont icon icon-xiangxia1' : 'sortItem iconfont icon icon-xiangyou'" @click="showTagData(index)">{{item.typeOne}}</view>
 					<view :class="item.flag ? 'active':'border'">
-						<view class="info" v-for="(item,index) in item.info">
+						<view class="info" v-for="(item,index) in item.info" :key="index">
 							<view v-if="item.show" class="detail" @click="navigateTodetail(item.id)">{{item.description}}</view>
 						</view>
 					</view>
@@ -25,7 +25,6 @@
 </template>
 
 <script>
-	import { allBasis_API } from '../../../api/api.js'
 	import { searchBasis_API } from '../../../api/api.js'
 	export default {
 		
@@ -59,6 +58,7 @@
 					show:true,
 				},
 				ismodify:false,
+				token:'',
 			};
 
 		},
@@ -66,9 +66,7 @@
 		// 	checkItemDetail
 		// },
 		onLoad(value) {
-			//console.log(value.searchText)
-			//console.log(value.ismodify)
-			//console.log(value.basisSearch)
+			this.token = uni.getStorageSync('token_key')
 			if(value.ismodify === undefined){
 				if(value.searchText){
 					this.getSearch(value.searchText)
@@ -90,11 +88,15 @@
 		},
 		methods:{
 			//获取所有依据
-			getBasis(data){
+			getBasis(search){
 				uni.showLoading({
 					title:"搜索中..."
 				})
-				searchBasis_API(data).then(res =>{
+				var temp={
+					data:search,
+					token:this.token
+				}
+				searchBasis_API(temp).then(res =>{
 					this.processBasisData(res.data.data)
 					console.log("search basis success")
 					uni.hideLoading()

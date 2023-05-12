@@ -43,7 +43,7 @@
 							<text v-if="item.patrolStatus[0].status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '已提交'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
-							<text v-if="item.patrolStatus[0].status === '已审核'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
+							<text v-if="item.patrolStatus[0].status === '已审核'" style="color: #00ee0f;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 						</view>
 						<!-- <view v-else>
 							<text style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">未检查</text>
@@ -107,7 +107,6 @@
 
 <script>
 import { warn } from "vue"
-import { patrolAll_API } from '../../../api/api.js'
 import { projectsAll_API } from '../../../api/api.js'
 import { createProject_API } from '../../../api/api.js'
 	export default {
@@ -132,6 +131,8 @@ import { createProject_API } from '../../../api/api.js'
 				sumData:10,
 				testArr: '',
 				loginData:{},
+				role:'',
+				token:'',
 			}
 		},
 		computed: {
@@ -144,18 +145,12 @@ import { createProject_API } from '../../../api/api.js'
 				}
 				if (this.projectselectName !== '区域选择') {
 					arr = this.projectTable.filter(item => item.district.includes(this.projectselectName))
-						// if (item.patrolStatus !== null && item.patrolStatus.length !== 0){
-						// 	if (item.patrolStatus[0].status === this.projectselectName) {
-						// 		return true
-						// 	}
-						// 	// item.patrolStatus[0].status.includes(this.projectselectName)
-						// }
 				}
+				console.log(arr)
 				return arr
 			}
 		},
 		onLoad() {
-			this.getProjects()
 			this.checkLogin()
 		},
 		methods: {
@@ -164,13 +159,17 @@ import { createProject_API } from '../../../api/api.js'
 				try{
 					this.loginData = uni.getStorageSync('user_key')
 					console.log(this.loginData)
-					if(!this.loginData.isLogin){
+					this.token = uni.getStorageSync('token_key')
+					console.log(this.token)
+					if(this.token === undefined || this.token === ''){
 						uni.redirectTo({
 							url:'/pages/login/login'
 						})
-						console.log(this.loginData.isLogin)
+						//console.log(this.loginData.isLogin)
 					}else{
-						console.log(this.loginData.isLogin)
+						
+						this.role = this.loginData.role
+						this.getProjects()
 					}
 				}catch(e){
 
@@ -182,8 +181,11 @@ import { createProject_API } from '../../../api/api.js'
 				    title: '加载中',
 				})
 				var tranData = {
-					page:1,
-					size:this.sumData
+					data:{
+						page:1,
+						size:this.sumData,
+						},
+					token:this.token
 				}
 				try{
 					this.projectTable = uni.getStorageSync('project_key')
@@ -204,8 +206,11 @@ import { createProject_API } from '../../../api/api.js'
 			},
 			getallProjects(){
 				var tranData = {
-					page:1,
-					size:this.sumData
+					data:{
+						page:1,
+						size:this.sumData,
+						},
+					token:this.token
 				}
 				projectsAll_API(tranData).then(result=>{
 					//console.log(result.data.data.data)
@@ -231,12 +236,14 @@ import { createProject_API } from '../../../api/api.js'
 				})
 			},
 			openPop(){
-				this.newProjectname = this.blankSpace
-				this.errorTips1 = this.blankSpace
-				this.errorTips2 = this.blankSpace
-				this.dateName = this.firstName
-				this.addressData = this.blankSpace
-				this.$refs['popup'].open();
+				if(this.role !== "Guest"){
+					this.newProjectname = this.blankSpace
+					this.errorTips1 = this.blankSpace
+					this.errorTips2 = this.blankSpace
+					this.dateName = this.firstName
+					this.addressData = this.blankSpace
+					this.$refs['popup'].open();
+				}
 			},
 			closePop() {
 				uni.showLoading({
@@ -254,6 +261,10 @@ import { createProject_API } from '../../../api/api.js'
 				  "regulator": "监管部门1",
 				  "contracts": "监理-XXX-18888888888",
 				  "visualProgress": "0%",
+				}
+				var data = {
+					newProject:newProject,
+					token:this.token
 				}
 				//console.log(newProject)
 				createProject_API(newProject).then(res=>{

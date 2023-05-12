@@ -5,7 +5,7 @@
 			<view class="name">描述</view>
 			<view class="detail">{{data[0].description}}
 				<view class="remarkContent">
-					<view v-if="this.data[0].remarks.length !== 0" class="remark" v-for="(item,index) in data[0].remarks">
+					<view v-if="this.data[0].remarks.length !== 0" class="remark" v-for="(item,index) in data[0].remarks" :key="index">
 						<text v-if="item === '强条'" class="remarkDetail" style="background-color: #bf1f00;">{{item}}</text>
 						<text v-if="item === '专家重点'" class="remarkDetail" style="background-color: #ffd606;">{{item}}</text>
 						<text v-if="item === '政府重点'" class="remarkDetail" style="background-color: #ff9020;">{{item}}</text>
@@ -46,7 +46,6 @@
 </template>
 
 <script>
-	import { problemById_API } from '../../../api/api.js'
 	import { basisById_API } from '../../../api/api.js'
 	import { feedbackBasis_API } from '../../../api/api.js'
 	import { feedbackBindBasis_API } from '../../../api/api.js'
@@ -75,10 +74,13 @@
 				projectId:'',
 				patrolStatus:'',
 				teamId:0,
+				deadline:'',
+				token:'',
 				
 			}
 		},
 		onLoad(value) {
+			this.token = uni.getStorageSync('token_key')
 			this.cameFrom = value.from
 			this.getStorageBasisId()
 		},
@@ -88,7 +90,11 @@
 					this.basisId = uni.getStorageSync('basisID_key');
 					if (this.basisId) {
 						console.log("basisID get success!")
-						basisById_API(this.basisId).then(res => {
+						var temp = {
+							id:this.basisId,
+							token:this.token
+						}
+						basisById_API(temp).then(res => {
 							this.basisTable = res.data.data
 							this.data[0].id = this.basisTable.id
 							this.data[0].description = this.basisTable.description
@@ -133,6 +139,7 @@
 							this.projectId = this.patrolTemp.projectId
 							this.patrolStatus = this.patrolTemp.patrolstatus
 							this.teamId = this.patrolTemp.teamId
+							this.deadline = this.patrolTemp.deadline
 							//console.log(this.patrolStatus)
 						})
 					}
@@ -150,6 +157,9 @@
 					name: 'files',
 					formData: {
 						'dirName': "水务/"
+					},
+					header:{
+						"Authorization":this.token,
 					},
 					success: (uploadFileRes) => {
 						let json_data = JSON.parse(uploadFileRes.data)
@@ -169,10 +179,13 @@
 					proofpic.push(this.proofPictureUrl[i])
 				}
 				var feedBackData = {
-					name: "专家1",
-					content: this.proofValue,
-					status: "未审核",
-					proofUrl: proofpic
+					data:{
+						name: "专家1",
+						content: this.proofValue,
+						status: "未审核",
+						proofUrl: proofpic
+					},
+					token:this.token
 				}
 				try{
 					var expert = uni.getStorageSync('user_key')
@@ -180,12 +193,15 @@
 				}catch(e){
 					
 				}
-				console.log(feedBackData)
+				//console.log(feedBackData)
 				feedbackBasis_API(feedBackData).then(res =>{
 					this.feedBackId = res.data.data.id
 					var bindData = {
+						data:{
 						basisId:this.basisTable.id,
 						feedbackId:this.feedBackId,
+					},
+						token:this.token
 					}
 					
 					feedbackBindBasis_API(bindData).then(res =>{
@@ -228,33 +244,37 @@
 						console.log('terms save success!')
 					}
 				});
-				// // 判断巡检结束 是否能够新增问题。
-				// if(this.patrolStatus == '未检查'|| this.patrolStatus == '检查中'){
-				// 	let temp = {
-				// 		url:Date.now(),
-				// 		projectId:this.projectId,
-				// 		patrolstatus:this.patrolStatus
-				// 	}
-				// 	//console.log(temp)
-				// 	uni.redirectTo({
-				// 		url:'/pages/project/checks/checks?id='+JSON.stringify(temp)
-				// 	})
-				// }else{
-				// 	uni.showToast({
-				// 		title:"该项目已巡检结束！",
-				// 		duration:1500
-				// 	})
-				// }
-				let temp = {
-					url:Date.now(),
-					projectId:this.projectId,
-					patrolstatus:this.patrolStatus,
-					teamid:this.teamId,
+				// 判断巡检结束 是否能够新增问题。
+				if(this.patrolStatus == '未检查'|| this.patrolStatus == '检查中' || this.patrolStatus == '检查中'){
+					let temp = {
+						url:Date.now(),
+						projectId:this.projectId,
+						patrolstatus:this.patrolStatus,
+						teamid:this.teamId,
+						deadline:this.deadline
+					}
+					//console.log(temp)
+					uni.redirectTo({
+						url:'/pages/project/checks/checks?id='+JSON.stringify(temp)
+					})
+				}else{
+					uni.showToast({
+						title:"该项目已巡检结束！",
+						icon:'error',
+						duration:1000
+					})
 				}
-				//console.log(temp)
-				uni.redirectTo({
-					url:'/pages/project/checks/checks?id='+JSON.stringify(temp)
-				})
+				// let temp = {
+				// 	url:Date.now(),
+				// 	projectId:this.projectId,
+				// 	patrolstatus:this.patrolStatus,
+				// 	teamid:this.teamId,
+				// 	deadline:this.deadline
+				// }
+				
+				// uni.redirectTo({
+				// 	url:'/pages/project/checks/checks?id='+JSON.stringify(temp)
+				// })
 				
 			},
 		}

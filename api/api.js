@@ -1,45 +1,37 @@
 import { baseUrl } from './config.js'
 
-// 获取所有的巡检活动
-export function patrolAll_API(){
-	
-	return uni.request({
-		url: `${baseUrl}/patrols`,
-		method:'GET',
-	});
-}
 
-
-// 按ID获取单次巡检活动
-export function patrolById_API(id){
-	
-	return uni.request({
-		url: `${baseUrl}/patrols?id=${id}`,
-		method:'GET',
-	});
-}
 // 获取所有的项目详情
 export function projectsAll_API(data) {
 	return uni.request({
 		url: `${baseUrl}/projects`,
-		data: data,
+		data: data.data,
 		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
 // 按ID获取项目详情
-export function projectInfo_API(id){
+export function projectInfo_API(data){
 	return uni.request({
-		url:`${baseUrl}/project?id=${id}`,
+		url:`${baseUrl}/project?id=${data.data}`,
 		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
 // 按照工程项目获取历史巡检活动
-export function patrolByProject_API(id){
+export function patrolByProject_API(data){
 	return uni.request({
-		url:`${baseUrl}/patrols_by_project?id=${id}`,
+		url:`${baseUrl}/patrols_by_project?id=${data.data}`,
 		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
@@ -47,63 +39,36 @@ export function patrolByProject_API(id){
 export function createProject_API(data) {
 	return uni.request({
 		url: `${baseUrl}/project_create`,
-		data: data,
+		data: data.newProject,
 		method:'POST',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
-// 按id获取单次巡检活动
-export function patrolID_API(id) {
-	return uni.request({
-		url:`${baseUrl}/patrol?id=${id}`,
-		method:'GET',
-	})
-}
 
 // 修改问题记录
 export function updataProblems_API(data) {
 	return uni.request({
 		url: `${baseUrl}/problem_update`,
-		data: data,
+		data: data.data,
 		method:'PUT',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
 // 新增问题记录
-export function addProblem(data) {
+export function addProblem_API(data) {
 	return uni.request({
 		url: `${baseUrl}/problem_create`,
-		data: data,
+		data: data.data,
 		method:'POST',
-	})
-}
-
-// 上传文件
-export function uploadFiles(data) {
-	return uni.request({
-		url: `${baseUrl}/upload_files`,
-		data: data,
-		method:'POST',
-		header: {
-		    "Content-Type": "application/json"
-		},
-	})
-}
-
-// 删除存储文件
-export function deleteFile(data) {
-	return uni.request({
-		url: `${baseUrl}/delete_files`,
-		data: data,
-		method:'DELETE',
-	})
-}
-
-// 按ID查找单条问题记录
-export function problemById_API(id) {
-	return uni.request({
-		url:`${baseUrl}/problem?id=${id}`,
-		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
@@ -111,8 +76,11 @@ export function problemById_API(id) {
 export function allProblem_API(data) {
 	return uni.request({
 		url: `${baseUrl}/problems`,
-		data: data,
+		data: data.data,
 		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
@@ -120,8 +88,10 @@ export function allProblem_API(data) {
 export function bindTeam_API(data) {
 	return uni.request({
 		url: `${baseUrl}/problem_team_bind?team_id=${data.teamId}&problem_id=${data.problemId}`,
-		
 		method:'PUT',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
@@ -130,25 +100,22 @@ export function bindTeam_API(data) {
 export function deleteProblem_API(data) {
 	return uni.request({
 		url: `${baseUrl}/problem_delete`,
-		data: data,
+		data: data.data,
 		method:'DELETE',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
 // 按ID查找单条问题记录
-export function basisById_API(id) {
+export function basisById_API(data) {
 	return uni.request({
-		url:`${baseUrl}/basis?id=${id}`,
+		url:`${baseUrl}/basis?id=${data.id}`,
 		method:'GET',
-	})
-}
-
-// 按页获取多个依据
-export function allBasis_API(data) {
-	return uni.request({
-		url: `${baseUrl}/bases`,
-		data: data,
-		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
@@ -156,10 +123,11 @@ export function allBasis_API(data) {
 export function feedbackBasis_API(data) {
 	return uni.request({
 		url: `${baseUrl}/feedback_create`,
-		data: data,
+		data: data.data,
 		method:'POST',
 		header: {
-		    "Content-Type": "application/json"
+		    "Content-Type": "application/json",
+			"Authorization":data.token,
 		},
 	})
 }
@@ -167,24 +135,33 @@ export function feedbackBasis_API(data) {
 //查找条款
 export function searchBasis_API(data) {
 	return uni.request({
-		url: `${baseUrl}/basis_from_search?desc=${data}`,
+		url: `${baseUrl}/basis_from_search?desc=${data.data}`,
 		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
 //依据反馈绑定依据
 export function feedbackBindBasis_API(data) {
 	return uni.request({
-		url: `${baseUrl}/feedback_basis_bind?basis_id=${data.basisId}&feedback_id=${data.feedbackId}`,
+		url: `${baseUrl}/feedback_basis_bind?basis_id=${data.data.basisId}&feedback_id=${data.data.feedbackId}`,
 		method:'PUT',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
 //获取该项目使用的固定检查项模板下的固定检查项
-export function basisByProject_API(id) {
+export function basisByProject_API(data) {
 	return uni.request({
-		url: `${baseUrl}/bases_by_project?id=${id}`,
+		url: `${baseUrl}/bases_by_project?id=${data.data}`,
 		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
@@ -192,8 +169,11 @@ export function basisByProject_API(id) {
 export function updataProject_API(data) {
 	return uni.request({
 		url: `${baseUrl}/project_update`,
-		data: data,
+		data: data.data,
 		method:'PUT',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
@@ -201,16 +181,22 @@ export function updataProject_API(data) {
 export function problemsbyId_API(data) {
 	return uni.request({
 		url: `${baseUrl}/problems_by_project`,
-		data: data,
+		data: data.data,
 		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
-// 依据专家手机号查找账户实现伪登录
-export function expertByPhone_API(phone) {
+// 依据专家手机号查找账户
+export function expertByPhone_API(data) {
 	return uni.request({
-		url: `${baseUrl}/expert_by_phone?phone=${phone}`,
+		url: `${baseUrl}/expert_by_phone?phone=${data.phone}`,
 		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
@@ -218,27 +204,23 @@ export function expertByPhone_API(phone) {
 export function reporting_API(data) {
 	return uni.request({
 		url: `${baseUrl}/reporting_create`,
-		data: data,
+		data: data.reportingData,
 		method:'POST',
 		header: {
-		    "Content-Type": "application/json"
+		    "Content-Type": "application/json",
+			"Authorization":data.token,
 		},
-	})
-}
-
-//获取所有的账号信息
-export function accounts_API(){
-	return uni.request({
-		url: `${baseUrl}/accounts`,
-		method:'GET',
 	})
 }
 
 //获得该活动下巡查该项目的专家组
 export function teamByProject_API(data){
 	return uni.request({
-		url: `${baseUrl}/team_by_project?id=${data.id}&patrol_id=${data.patrolId}`,
+		url: `${baseUrl}/team_by_project?id=${data.data.id}&patrol_id=${data.data.patrolId}`,
 		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
@@ -247,24 +229,35 @@ export function teamByProject_API(data){
 export function projectUpdate_API(data){
 	return uni.request({
 		url: `${baseUrl}/project_update`,
-		data: data,
+		data: data.data,
 		method:'PUT',
+		header:{
+			"Authorization":data.token,
+		}
 	})
 }
 
-// 按id获取单个巡查组
-export function team_API(id){
-	return uni.request({
-		url: `${baseUrl}/team?id=${id}`,
-		method:'GET',
-	})
-}
 
 //修改密码
 export function userUpdate_API(data){
 	return uni.request({
 		url: `${baseUrl}/account_update`,
-		data: data,
+		data: data.data,
 		method:'PUT',
+		header:{
+			"Authorization":data.token,
+		}
+	})
+}
+
+//登录
+export function login_API(data){
+	return uni.request({
+		url:`${baseUrl}/login`,
+		data:data,
+		method:'POST',
+		header: {
+		    "Content-Type": "application/json",
+		},
 	})
 }

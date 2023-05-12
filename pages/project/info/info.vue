@@ -1,6 +1,6 @@
 <template>
 	<view class="border"  :class="{active:flag}" >
-		<view class="content" style="-webkit-flex-wrap: wrap;flex-wrap: wrap; " v-for="(item,index) in list">
+		<view class="content" style="-webkit-flex-wrap: wrap;flex-wrap: wrap; " v-for="(item,index) in list" :key="index">
 			<view class="projectName" style="font-weight: 100; width: 200rpx">{{item.name}}</view>
 			<view class="projectName-info" style="-webkit-flex: 1;flex: 1; flex-wrap: wrap; ">{{item.info}}
 				<text class="location iconfont icon icon-dingwei" v-if="item.name === '项目地址'" @click="addressGet()">校正定位</text>
@@ -18,7 +18,7 @@
 	</view>
 	
 	
-	<view class="borderDown"  v-for="(item,index) in checks" @tap="gonavigate(item.patrolId,item.status,item.check,item.id)">
+	<view class="borderDown"  v-for="(item,index) in checks" :key="index" @tap="gonavigate(item.patrolId,item.status,item.check,item.id,item.endTimeInfo)">
 		<view style="padding: 25rpx;background-color: #F0F3F5;"></view>
 		<view class="contentDown">
 			<text v-if="item.status === '未检查'" class="check-before" style="color: #f1a532;border-left: 5px solid #f1a532;"></text>
@@ -26,6 +26,7 @@
 			<text v-if="item.status === '已提交'" class="check-before" style="color: #00CD00;border-left: 5px solid #00CD00;"></text>
 			<text v-if="item.status === '已检查'" class="check-before" style="color: #00CD00;border-left: 5px solid #00CD00;"></text>
 			<text v-if="item.status === '已中止'" class="check-before" style="color: #EE2C2C;border-left: 5px solid #EE2C2C;"></text>
+			<text v-if="item.status === '已审核'" class="check-before" style="color: #ee430e;border-left: 5px solid #EE2C2C;"></text>
 			<view class="check" >{{item.check}}</view>
 			<view class="status" >
 				<text v-if="item.status === '未检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
@@ -33,6 +34,7 @@
 				<text v-if="item.status === '已提交'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 				<text v-if="item.status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 				<text v-if="item.status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+				<text v-if="item.status === '已审核'" style="color: #ee430e;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 			</view>
 		</view>
 		
@@ -53,7 +55,6 @@ import { patrolByProject_API } from '../../../api/api.js'
 import { basisByProject_API } from '../../../api/api.js'
 import { updataProject_API } from '../../../api/api.js'
 import { teamByProject_API } from '../../../api/api.js'
-import { team_API } from '../../../api/api.js'
 	export default {
 		data() {
 			
@@ -123,19 +124,39 @@ import { team_API } from '../../../api/api.js'
 				patrolIdList:[],
 				patrolList:[],
 				teamMember:[],
-				//modify:false,
+				role:'',
+				token:'',
+				uploadData:{
+					data:'',
+					token:''
+				}
 			}
 		},
 		onLoad(value) {
-			this.projectId = value.id
-			this.getprojectInfo()
-			this.getpatrolByProject()
-			this.setBasisByProject()
+			this.token = uni.getStorageSync('token_key')
+			this.uploadData.token = this.token
+			if(value !== undefined){
+				this.projectId = value.id
+				this.getUserRole()
+				this.getprojectInfo()
+				if(this.role !== "Guest"){
+					this.getpatrolByProject()
+					this.setBasisByProject()
+				}
+			}else{
+				this.getpatrolByProject()
+			}		
+			
 		},
 		methods: {
+			getUserRole(){
+				var temp = uni.getStorageSync('user_key')
+				this.role = temp.role
+			},
 			// 获取项目详情
 			getprojectInfo(){
-				projectInfo_API(this.projectId).then(res=>{
+				this.uploadData.data = this.projectId
+				projectInfo_API(this.uploadData).then(res=>{
 					// console.log(res)
 					this.projectTable = res.data.data
 					// console.log(this.projectTable)
@@ -153,7 +174,8 @@ import { team_API } from '../../../api/api.js'
 			},
 			// 获取巡检信息
 			getpatrolByProject(){
-				patrolByProject_API(this.projectId).then(res=>{
+				this.uploadData.data = this.projectId
+				patrolByProject_API(this.uploadData).then(res=>{
 					console.log(res.data.data)
 					this.projectTemp = res.data.data
 					const checksTemp = []
@@ -209,7 +231,8 @@ import { team_API } from '../../../api/api.js'
 						id:Number(this.projectId),
 						patrolId:this.patrolIdList[i]
 					}
-					await teamByProject_API(idtemp).then(res => {
+					this.uploadData.data = idtemp
+					await teamByProject_API(this.uploadData).then(res => {
 						this.patrolList.push(res.data.data)
 					})
 				}
@@ -256,7 +279,8 @@ import { team_API } from '../../../api/api.js'
 								console.log('纬度：' + result.latitude);
 								console.log('经度：' + result.longitude);
 								console.log(that.projectTable)
-								updataProject_API(that.projectTable).then(res =>{
+								that.uploadData.data = that.projectTable
+								updataProject_API(that.uploadData).then(res =>{
 									console.log(res.data.message)
 								})
 								
@@ -277,46 +301,28 @@ import { team_API } from '../../../api/api.js'
 				});
 			},
 			//跳转页面
-			gonavigate(id,status,name,teamid){
-				let data = {
-					projectId:this.projectId,
-					patrolstatus:status,
-					patrolname:name,
-					teamId:teamid,
-					projectName:this.list[0].info,
-					//modify:false,
-				}
+			gonavigate(id,status,name,teamid,time){
 				try{
-					
 					var expert = uni.getStorageSync('user_key')
 					var username = expert.name
-					//console.log(this.teamMember)
-					team_API(teamid).then(res => {
-						var team = res.data.data.expertList
-						console.log(username)
-						var temp = team.filter(item => item.name === username)
-						console.log(team)
-						if(temp.length >= 1){
-							console.log("执行")
-							//this.modify = true
-						}else{
-							//this.modify = false
+					var session = {
+						projectId:this.projectId,
+						patrolstatus:status,
+						patrolname:name,
+						teamId:teamid,
+						projectName:this.list[0].info,
+						deadline:time,
+					}
+					console.log(session)
+					uni.setStorage({
+						key:'patrolStutas_key',
+						data:session,
+						success:function(){
+							console.log("patrolStutas save success")
+						},
+						fail:function(){
+							console.log("失败")
 						}
-						data = {
-							projectId:this.projectId,
-							patrolstatus:status,
-							patrolname:name,
-							teamId:teamid,
-							projectName:this.list[0].info,
-							//modify:this.modify,
-						}
-						uni.setStorage({
-							key:'patrolStutas_key',
-							data:data,
-							success:function(){
-								console.log("patrolStutas save success")
-							}
-						})
 					})
 				}catch(e){
 					
@@ -327,6 +333,7 @@ import { team_API } from '../../../api/api.js'
 					projectId:this.projectId,
 					patrolstatus:status,
 					teamid:teamid,
+					deadline:time,
 				}
 				uni.navigateTo({
 					//保留当前页面，跳转到应用内的某个页面
@@ -335,7 +342,8 @@ import { team_API } from '../../../api/api.js'
 			},
 			//存储从项目获取的basis模板
 			setBasisByProject(){
-				basisByProject_API(this.projectId).then(res =>{
+				this.uploadData.data = this.projectId
+				basisByProject_API(this.uploadData).then(res =>{
 					this.basisData = res.data.data
 					console.log(this.basisData)
 					uni.setStorage({

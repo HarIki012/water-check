@@ -5,29 +5,9 @@
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "项目列表",
-				"enablePullDownRefresh": false,
-				"navigationStyle": "custom",
-				"app-plus": {
-						  "titleNView": {
-							"buttons": [
-							  {
-								 "text": "\ue771",
-								"fontSrc": "/common/icon/iconfont.ttf",
-								"fontSize": "17px",
-								"type": "popup",
-								"float": "left",
-								"width":"auto"
-							  },
-							  {
-								  "text": "新建",
-								  "fontSize": "17px",
-								  "type": "popup",
-								  "float": "left",
-								  "width":"auto"
-							  }
-							]
-						  }
-						}
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom"
+				
 		    }
 		    
 		},
@@ -37,11 +17,7 @@
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "",
-		        "enablePullDownRefresh": false,
-				
-				"mp-weixin": {
-					
-				}
+		        "enablePullDownRefresh": false
 		    }
 		    
 		},
@@ -76,10 +52,7 @@
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "报备",
-		        "enablePullDownRefresh": false,
-				"mp-weixin": {
-					
-				}
+		        "enablePullDownRefresh": false
 		    }
 		    
 		},
@@ -88,10 +61,7 @@
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "项目详情",
-		        "enablePullDownRefresh": false,
-				"mp-weixin": {
-					
-				}
+		        "enablePullDownRefresh": false
 		    }
 		    
 		},
@@ -100,19 +70,7 @@
 		    "style" :                                                                                    
 		    {
 		        "navigationBarTitleText": "检查内容",
-		        "enablePullDownRefresh": true,
-				"disableNVueCache": true, // 禁止页面缓存
-				"mp-weixin": {
-						  "titleNView": {
-							"buttons": [
-							  {
-								"text": "提交",
-								"fontSize": "15",
-								"type": "popup"
-							  }
-							]
-						  }
-						}
+		        "enablePullDownRefresh": true
 		    }
 		    
 		}
@@ -130,31 +88,15 @@
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "条款说明",
-                "enablePullDownRefresh": false,
-				"mp-weixin": {
-					  "titleNView": {
-						"buttons": [
-						  {
-							"text": "生成问题",
-							"fontSize": "14",
-							"type": "popup"
-						  }
-						]
-					  }
-					}
+                "enablePullDownRefresh": false
             }
             
         }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		//"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8",
-		
-		"mp-weixin":{
-				
-			}
+		"backgroundColor": "#F8F8F8"
 	},
 	"uniIdRouter": {
 		

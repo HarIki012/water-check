@@ -14,7 +14,11 @@
 			</view>
 		</view>
 		<view style="margin-bottom: 150rpx;">
-			<view v-for="(item, index) in newList" :key="index">
+			<view v-if="newList.length === 0" class="image-container">
+				<image class="no-check" src="../../../static/check-none.png"></image>
+			</view>
+			
+			<view v-else v-for="(item, index) in newList" :key="index">
 				<view :class="newList[index].bigisOpen ? 'titleStyle iconfont icon icon-xiangxia1' : 'titleStyle iconfont icon icon-xiangyou'" @click="changeBig(index)" style="margin-top: 30rpx;">{{item.typeOne}}</view>
 				<!-- <view v-if="item.basis === null" :class="newList[index].bigisOpen ? 'titleStyle iconfont icon icon-xiangxia1' : 'titleStyle iconfont icon icon-xiangyou'" @click="changeBig(index)" style="margin-top: 30rpx;">自定义</view> -->
 				<view v-if="newList[index].bigisOpen" >
@@ -72,10 +76,8 @@
 
 <script>
 import projectdetail from "/components/projectdetail/projectdetail.vue";
-import { patrolID_API } from '../../../api/api.js'
 import { updataProblems_API } from '../../../api/api.js'
-import { addProblem } from '../../../api/api.js'
-import { deleteFile } from '../../../api/api.js'
+import { addProblem_API } from '../../../api/api.js'
 import { allProblem_API } from '../../../api/api.js'
 import { bindTeam_API } from '../../../api/api.js'
 import { deleteProblem_API } from '../../../api/api.js'
@@ -92,58 +94,7 @@ export default {
 			selectPoint: '',
 			problemList:'',
 			msgType: 'type',
-			initproblemList: [
-				{
-					id: 1,
-					projectName:'南湖水环境提升工程',
-					type: '安全',
-					severity: '较严重',
-					description: '问题描述略1',
-					detail: '详细描述略',
-					photoUrl: [],   //放图片
-					rectify: '整改要求略',
-				},
-				{
-					id: 2,
-					projectName:'南湖水环境提升工程',
-					type: '质量',
-					severity: '较严重',
-					description: '问题描述略2',
-					detail: '详细描述略',
-					photoUrl: [],   //放图片
-					rectify: '整改要求略',
-				},
-				{
-					id: 3,
-					projectName:'南湖水环境提升工程',
-					type: '安全',
-					severity: '较严重',
-					description: '问题描述略3',
-					detail: '详细描述略',
-					photoUrl: [],   //放图片
-					rectify: '整改要求略',
-				},
-				{
-					id: 4,
-					projectName:'土石方工程',
-					type: '质量',
-					severity: '较严重',
-					description: '问题描述略4',
-					detail: '详细描述略',
-					photoUrl: [],   //放图片
-					rectify: '整改要求略',
-				},
-				{
-					id: 5,
-					projectName:'土石方工程',
-					type: '文明施工',
-					severity: '较严重',
-					description: '问题描述略5',
-					detail: '详细描述略',
-					photoUrl: [],   //放图片
-					rectify: '整改要求略',
-				}
-			],
+			initproblemList: [],
 			newList:'',
 			deleteName:'',
 			deleteId:'',
@@ -174,15 +125,26 @@ export default {
 			projectstatusChange:'',
 			buttonUsed:'',
 			diyId:[],
-			newOpen:''
-			
+			newOpen:'',
+			deadline:'',
+			token:'',
+			idbox:{
+				id: 0,
+				patrol_id: 0,
+				finder:''
+			},
+			uploadData:{
+				data:'',
+				token:'',
+			}
 		}
 	},
 	components:{
 		projectdetail
 	},
 	onLoad(value) {
-		
+		this.token = uni.getStorageSync('token_key')
+		this.uploadData.token = this.token
 		console.log(value.id)
 		value.id = JSON.parse(value.id)
 		let idtemp = value.id
@@ -208,6 +170,9 @@ export default {
 		if(idtemp.teamid !== undefined){
 			this.teamid = idtemp.teamid
 		}
+		if(idtemp.deadline !== undefined){
+			this.deadline = idtemp.deadline
+		}
 		try{
 			//this.checkIdTemp = uni.getStorageSync('patrolId_key')
 			this.userName = uni.getStorageSync('user_key')
@@ -218,27 +183,25 @@ export default {
 		}catch(e){
 
 		}
-		
+		this.idbox.id = this.projectId
+		this.idbox.patrol_id = this.patrolId
+		this.idbox.finder = this.userName
+		uni.showToast({
+			title: '数据加载中!',
+			icon:"loading",
+			duration: 1000
+		});
+		this.getPatrol()
 		this.getChecks()
-		//this.getTerms()
 		this.savePatrolId()
 		this.getTemplate()
-		this.getPatrol()
 		this.getTerms()
-		//this.savePatrolId()
-		//this.getTemplate()
-		this.sequ(0)
-		//this.getDiy()
-	},
-	onShow() {
-		// this.getTerms()
-		
-		//this.refresh(this.checkId)
 		//this.sequ(0)
 	},
+	onShow() {
+		
+	},
 	mounted() {
-		// this.changeData(),
-		// this.getLength()
 	},
 	onPullDownRefresh () {
 		console.log('触发了下拉刷新')	
@@ -258,10 +221,7 @@ export default {
 				this.patrolName = this.patrolTemp.patrolname
 				this.projectId = this.patrolTemp.projectId
 				this.projectId = Number(this.projectId)
-				this.projectStatus = this.patrolTemp.patrolstatus
 				this.tranprojectName = this.patrolTemp.projectName
-				
-				//console.log(this.patrolTemp.projectName)
 			}catch(e){
 
 			}
@@ -270,64 +230,63 @@ export default {
 		//获取模板问题
 		getTemplate(){
 			try{
-				//this.getPatrol()
-				// 
-				var idBoxthree = {
-					id: this.projectId,
-					patrol_id: this.patrolId
-				}
-				console.log(idBoxthree)
-				console.log(typeof this.projectId)
-				console.log(typeof this.patrolId)
-				problemsbyId_API(idBoxthree).then(res => {
-					console.log("获取原有问题！")
-					
-					console.log(res.data.data)
-					if(Number(res.data.data) == 0){
-						this.initproblemList = []
-					}else{
-						this.initproblemList = res.data.data
-					}
-					this.templateDate = uni.getStorageSync('template_key')
-					console.log("get template success!")
-					//console.log("生成模板问题")
-					//console.log(this.templateDate)
-					this.changeData()
-					for(var i=0; i<this.templateDate.length;i++){
-						//console.log("第"+i+"个")
-						this.terms ={
-							id: '1',
-							terms: '1',
-							typeOne: '1',
-							typeTwo:'',
-							category:'',
-							length:1,
-							description:'',
+				// 判断巡检活动的状态 是否生成模板
+				console.log(this.projectStatus)
+				var modify = (this.projectStatus ==="已审核" || this.projectStatus ==="已提交" || this.projectStatus === "已中止")
+				console.log(modify)
+				if(modify){
+					//禁止生成
+					return false
+				}else{
+					this.uploadData.data = this.idbox
+					console.log(this.uploadData)
+					problemsbyId_API(this.uploadData).then(res => {
+						console.log("获取原有问题！")
+						console.log(res.data.data)
+						if(Number(res.data.data) == 0){
+							this.initproblemList = []
+						}else{
+							this.initproblemList = res.data.data
 						}
-						this.terms.id = this.templateDate[i].id
-						this.terms.terms = this.templateDate[i].terms
-						this.terms.typeOne = this.templateDate[i].typeOne
-						this.terms.description = this.templateDate[i].description
-						for(var j = 0; j<this.typeList.length;j++){
-							if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
-								this.terms.category = this.typeList[j]
+						this.templateDate = uni.getStorageSync('template_key')
+						console.log("get template success!")
+						//console.log("生成模板问题")
+						for(var i=0; i<this.templateDate.length;i++){
+							this.terms ={
+								id: '1',
+								terms: '1',
+								typeOne: '1',
+								typeTwo:'',
+								category:'',
+								length:1,
+								description:'',
 							}
+							this.terms.id = this.templateDate[i].id
+							this.terms.terms = this.templateDate[i].terms
+							this.terms.typeOne = this.templateDate[i].typeOne
+							this.terms.description = this.templateDate[i].description
+							for(var j = 0; j<this.typeList.length;j++){
+								if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
+									this.terms.category = this.typeList[j]
+								}
+							}
+							this.terms.length = 1
+							var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
+							if(isExist.length == 0){
+								this.addProject()
+								this.changeData()
+							}
+							this.terms = []
 						}
-						this.terms.length = 1
-						var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
-						if(isExist.length == 0){
-							this.userName = "管理员"
-							this.addProject()
-							this.changeData()
-						}
-						this.terms = []
-					}
-					
-					//this.getPatrol()
-				})
+					})
+				}
 			}catch(e){
 
 			}
+			setTimeout(()=>{
+				this.sequ(0)
+				console.log('创建完问题进行了刷新')
+			},500)
 		},
 		
 		// 存储巡检ID
@@ -342,24 +301,15 @@ export default {
 		},
 
 		getChecks(){
-			uni.showToast({
-				title: '数据加载中!',
-				icon:"loading",
-				duration: 1000
-			});
-			//this.getPatrol()
-			var idBox = {
-				id: this.projectId,
-				patrol_id: this.patrolId
-			}
-			console.log(idBox)
-			problemsbyId_API(idBox).then(res=>{
-				//console.log(res.data.data)
+			console.log(this.idbox)
+			this.uploadData.data = this.idbox
+			problemsbyId_API(this.uploadData).then(res=>{
+				console.log(res.data.data)
 				if(Number(res.data.data) === 0){
-					//console.log(Number(res.data.data))
+					console.log("没有数据")
 					console.log("调用模板")
-					//this.getTemplate()
 				}else{
+					
 					this.tranprojectName = res.data.data[0].projectName
 					this.initproblemList = res.data.data
 					this.changeData(),
@@ -370,16 +320,12 @@ export default {
 		},
 		// 快捷生成
 		getTerms(){
-			//this.getPatrol()
-			var idBoxtwo = {
-				id: this.projectId,
-				patrol_id: this.patrolId
-			}
-			console.log(idBoxtwo)
-			problemsbyId_API(idBoxtwo).then(res=>{
+			console.log(this.idbox)
+			this.uploadData.data = this.idbox
+			problemsbyId_API(this.uploadData).then(res=>{
 				//console.log(res.data.data)
 				if(Number(res.data.data) === 0){
-					//this.getTemplate()
+					
 				}else{
 					this.initproblemList = res.data.data
 					try {
@@ -439,18 +385,14 @@ export default {
 		
 		search(e){
 			var pages = getCurrentPages()
-			//var temp = pages.filter(item => item.route === 'pages/project/search/search')
 			console.log(pages)
 			let delta = 0
-			//console.log(temp.length)
 			for(var i = 0;i<pages.length;i++){
 				if(pages[i].route === 'pages/project/search/search'){
 					delta = i
 				}
 			}
 			console.log(delta)
-			// var temp = pages.filter(item => item.router === '/pages/project/search/search')
-			// console.log(temp.length)
 			if(delta === 0){
 				console.log("正常跳转！")
 				uni.navigateTo({
@@ -474,11 +416,13 @@ export default {
 			// 	 url:'/pages/project/search/search?searchText=' + e.detail.value
 			// }) //由搜索页传递到搜索结果页
 		},
+		
 		changeBig(e){
 			 this.newList[e].bigisOpen = !this.newList[e].bigisOpen
 			 //this.$forceUpdate()
 			 this.active = !this.active
 		},
+		
 		changeSmall(e,n){
 			if(this.newList[e].data[n].rectify === "" && this.newList[e].data[n].isSelf === 'yes'){
 				if(this.newList[e].data[n].isOpen === true){
@@ -500,18 +444,17 @@ export default {
 					if(this.newList[e].data[n].description !== '' || this.newList[e].data[n].rectify !== ''){
 						//console.log("readed"+this.newList[e].data[n])
 						if(this.newList[e].data[n].basis.typeOne === '自定义'){
-							console.log("自定义道路")
+							//console.log("自定义道路")
 							var tranData = this.newList[e].data[n]
 							tranData.basis = null
-							console.log(tranData)
-							console.log(typeof tranData.rectify)
-							updataProblems_API(tranData).then(res=>{
+							this.uploadData.data = tranData
+							updataProblems_API(this.uploadData).then(res=>{
 								console.log(res)
 								console.log("自定义道路")
 							})
 						} else{
-							console.log(typeof this.newList[e].data[n].rectify)
-							updataProblems_API(this.newList[e].data[n]).then(res=>{
+							this.uploadData.data = this.newList[e].data[n]
+							updataProblems_API(this.uploadData).then(res=>{
 								console.log(res)
 								console.log("不是自定义道路")
 							})
@@ -521,17 +464,14 @@ export default {
 					if(this.newList[e].data[n].basis === null || this.newList[e].data[n].basis.typeOne === '自定义'){
 						var tranData = this.newList[e].data[n]
 						tranData.basis = null
-						console.log("用了这里")
-						console.log(tranData)
-						console.log(typeof tranData.rectify)
-						updataProblems_API(tranData).then(res=>{
+						this.uploadData.data = tranData
+						updataProblems_API(this.uploadData).then(res=>{
 							console.log(res)
 							console.log("用了这里")
 						})
 					}else{
-						console.log(typeof this.newList[e].data[n].rectify)
-						console.log("不是自定义且basis不为空")
-						updataProblems_API(this.newList[e].data[n]).then(res=>{
+						this.uploadData.data = this.newList[e].data[n]
+						updataProblems_API(this.uploadData).then(res=>{
 							console.log(res)
 							console.log("不是自定义且basis不为空")
 						})
@@ -539,20 +479,20 @@ export default {
 				}
 				
 				this.$forceUpdate()
-				//$nextTick()
-				//this.refresh(e,n)
-				
 			}
 			
 		},
+		
 		sequ(id) {
 			if(this.selectPoint === this.typeList[id]){
 				this.selectPoint = null
 			} else {
 				this.selectPoint = this.typeList[id]
 			}
+			this.getChecks()
 			this.changeData()
 		},
+		
 		filterList() {
 			var arr = [] //定义一个空数组
 			this.problemList.forEach((item) => arr.push(item)) //在zhiweilist查找数据放入空数组
@@ -562,6 +502,7 @@ export default {
 			}
 			this.problemList = arr
 		},
+		
 		clearProblems(e){
 			for(var i = 0;i<this.initproblemList.length;i++){
 				if(this.initproblemList[i].id === e.id){
@@ -570,17 +511,21 @@ export default {
 				}
 			}
 		},
+		
 		deleteProject(e) {
 			this.deleteName = e.description
 			this.deleteId = e.id
 			this.$refs['deletePop'].open()
 		},
+		
 		dialogConfirm(e) {
 			this.initproblemList = this.initproblemList.filter(item => item.id != this.deleteId)
-			var data = JSON.stringify([
-			   this.deleteId
-			]);
-			deleteProblem_API(data).then(res=>{
+			var data = JSON.stringify([this.deleteId]);
+			var temp = {
+				data:data,
+				token:this.token
+			}
+			deleteProblem_API(temp).then(res=>{
 			})
 			this.changeData()
 		},
@@ -588,10 +533,12 @@ export default {
 		dialogClose() {
 			this.$refs['deletePop'].close()
 		},
-				
-				
+		
 		addProject() {
-			var sum = "";
+			var sum = {
+				data:"",
+				token:this.token
+			};
 			// 获取问题ID
 			allProblem_API(sum).then(res=>{
 				this.problemId = res.data.data[res.data.data.length-1].id
@@ -612,7 +559,7 @@ export default {
 					  "detail": "",
 					  "photoUrl": [],
 					  "rectify": "",
-					  "deadline": "2023-4-1",
+					  "deadline": this.deadline,
 					  "supervisionUnit": "督办单位1",
 					  "finder": this.userName,
 					  "readed": false,
@@ -632,7 +579,7 @@ export default {
 				  "detail": "",
 				  "photoUrl": [],
 				  "rectify": "",
-				  "deadline": "2023-4-1",
+				  "deadline": this.deadline,
 				  "supervisionUnit": "督办单位1",
 				  "finder": this.userName,
 				  "readed": false,
@@ -658,10 +605,14 @@ export default {
 					tick = '1'
 				}
 			}
+			console.log(this.newProject)
 			this.initproblemList.push(this.newProject)
-			//console.log(this.initproblemList)
+			var temp = {
+				data:this.newProject,
+				token:this.token
+			}
 			console.log("创建新问题")
-			addProblem(this.newProject).then(res=>{
+			addProblem_API(temp).then(res=>{
 				console.log(res)
 				this.problemId = res.data.data.id
 				console.log(tick)
@@ -672,7 +623,8 @@ export default {
 				console.log(this.teamid)
 				var bindMessage = {
 					teamId: this.teamid,
-					problemId: this.problemId
+					problemId: this.problemId,
+					token:this.token
 				}
 				console.log("绑定信息")
 				console.log(bindMessage)
@@ -684,20 +636,35 @@ export default {
 			})
 			this.terms = ''
 		},
-		async submitChange(){
+		
+		submitChange(){
 			var isSubmit = ['yes','yes','yes']
 			var forsum = 0
 			for(var i = 0;i<this.initproblemList.length;i++){
+				// temp是和当前依据id相同的对象
+				let temp = this.templateDate.filter(item => item.id === this.initproblemList[i].basis.id)
+				//console.log(temp[0].id)
+				let tempDiy = temp
+				if(temp.length === 1){
+					temp = this.initproblemList.filter(item => item.basis.id === temp[0].id)
+				}
+				console.log(temp)
+				if(temp.length > 1 ){
+					tempDiy.slice(0,1)
+				}
+				var submitDiy = tempDiy.filter(item => item.id === this.initproblemList[i].id)
 				forsum = forsum + 1
 				try{
-					if(this.initproblemList[i].basis.typeOne === '自定义'){
+					if(this.initproblemList[i].basis.typeOne === '自定义' || submitDiy.length !== 0){
 						this.initproblemList[i].basis = null
 					}
 				}catch(e){
-
+					
 				}
 				
-				if(this.initproblemList[i].basis === null){
+				
+				
+				if(this.initproblemList[i].basis === null || submitDiy.length === 1){
 					console.log("该问题是自定义问题")
 					if(this.initproblemList[i].description === "请填写问题描述"){
 						isSubmit[0]='no'
@@ -715,20 +682,32 @@ export default {
 						break
 					}
 				}
-				if(this.initproblemList[i].rectify === ''  && this.initproblemList[i].finder !== "管理员"){
-					isSubmit[2] = 'no'
-					console.log("固定项整改要求没写")
-					break
+				if(temp.length === 1){
+					//isSubmit[2] = 'no'
+					
+					let submitTemp =  (this.initproblemList[i].rectify === '' && this.initproblemList[i].severity === "一般"  && this.initproblemList[i].photoUrl.length ===0 )
+					//console.log(submitTemp)
+					if(submitTemp){//固定项没有填写
+						console.log("删除未填写")
+						this.deleteId = this.initproblemList[i].id
+						var data = JSON.stringify([
+						   this.deleteId
+						]);
+						var tempdata = {
+							data:data,
+							token:this.token
+						}
+						deleteProblem_API(tempdata).then(res =>{
+							
+						})
+					}
 				} else {
-					updataProblems_API(this.initproblemList[i]).then(res=>{
+					updataProblems_API(this.uploadData).then(res=>{
 						console.log(res)
 					})
 				}
 			}
-			
 			console.log("看一下isSubmit")
-			//console.log(isSubmit)
-			//console.log(forsum)
 			if(isSubmit[0] === 'no'){
 				uni.showToast({
 					title: '请更新问题描述！',
@@ -753,25 +732,45 @@ export default {
 					duration: 1000
 				});
 				this.projectStatus = '已检查'
-				projectInfo_API(this.projectId).then(res=>{
+				this.uploadData.data = this.projectId
+				projectInfo_API(this.uploadData).then(res=>{
 					this.projectstatusChange = res.data.data
 					for (var i=0;i<this.projectstatusChange.patrolStatus.length;i++){
 						if(this.projectstatusChange.patrolStatus[i].patrol_name === this.patrolName){
 							this.projectstatusChange.patrolStatus[i].status = '已检查'
-							projectUpdate_API(this.projectstatusChange).then(res=>{
+							this.uploadData.data = this.projectstatusChange
+							projectUpdate_API(this.uploadData).then(res=>{
 								console.log(res)
 							})
 						}
 					}
 				})
 				this.changeData()
-				uni.redirectTo({
-					url:'/pages/project/info/info?id='+this.projectId
+				const pages = getCurrentPages()
+				console.log(pages)
+				let delta = 0
+				for(var i = 0;i<pages.length;i++){
+					if(pages[i].route === 'pages/project/info/info'){
+						delta = i
+					}
+				}
+				let temp = pages.length - delta - 1
+				console.log(temp)
+				console.log("跳转堆栈！")
+				var infopage = pages[delta]
+				uni.navigateBack({
+					delta:temp,
 				})
+				
+				// uni.redirectTo({
+				// 	url:'/pages/project/info/info?id='+this.projectId
+				// })
+				// uni.navigateBack({
+				// 	delta:
+				// })
 			}
-			
-			
 		},
+		
 		changeData() {
 			this.problemList = this.initproblemList
 			this.filterList()

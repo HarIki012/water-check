@@ -96,9 +96,12 @@
 				userQuit:0,
 				userData:{},
 				userId:1,
+				role:'',
+				token:'',
 			}
 		},
 		onLoad() {
+			this.token = uni.getStorageSync('token_key')
 			this.getUser()
 		},
 		methods: {
@@ -109,6 +112,7 @@
 					this.adminname = this.userData.name
 					this.phonenumber = this.userData.phone
 					this.userId = this.userData.id
+					this.role = this.userData.role
 				}catch(e){
 
 				}
@@ -125,8 +129,10 @@
 			},
 			// 打开弹窗
 			openPop() {
-				this.$refs['popup'].open();
-				this.initPop()
+				if(this.role !== "Guest"){
+					this.$refs['popup'].open();
+					this.initPop()
+				}
 			},
 			// 关闭弹窗
 			closePop() {
@@ -141,9 +147,12 @@
 						duration: 1500
 					});
 					var temp = {
+						data:{
 						id:this.userId,
 						phone:this.phonenumber,
 						password:this.newPassword
+					},
+						token:this.token
 					}
 					userUpdate_API(temp).then(res => {
 						console.log(res)
@@ -185,9 +194,11 @@
 			},
 			redirectTo()
 			{
-				uni.navigateTo({
-					url:'/pages/my/offwork/offwork'
-				});
+				if(this.role !== "Guest"){
+					uni.navigateTo({
+						url:'/pages/my/offwork/offwork'
+					});
+				}
 			},
 			async redirectToLogin(){
 				

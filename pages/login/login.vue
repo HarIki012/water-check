@@ -22,7 +22,7 @@
 
 <script>
 	import { expertByPhone_API } from '../../api/api.js'
-	import { accounts_API } from'../../api/api.js'
+	import { login_API } from '../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -39,6 +39,8 @@
 					isLogin:false,
 				},
 				allUserData:[],
+				userToken:'',
+				userRole:'',
 			};
 		},
 		computed:{
@@ -48,15 +50,9 @@
 			}
 		},
 		onLoad() {
-			this.getAccounts()
 		},
 		methods:{
-			//获取所有的账号
-			getAccounts(){
-				accounts_API().then(res => {
-					this.allUserData = res.data.data
-				})
-			},
+			
 			// 验证账号密码
 			async formSubmit(e) {
 				var rule = [
@@ -66,81 +62,71 @@
 				
 				var formData = e.detail.value;
 				var reg = /^1\d+$/;
-				this.getAccounts()
-				console.log(this.allUserData)
-				const  userData = this.allUserData.filter(item => item.phone == formData.tel)
-				console.log(userData.length)
-				if(userData.length){
-					console.log("存在")
-					this.phone = userData[0].phone.toString()
-					this.password = userData[0].password
-					console.log(formData.tel)
-					console.log(formData.psd)
-					console.log(this.phone)
-					console.log(this.password)
-					if (!formData.tel | !formData.psd){
-						// 输入账号或者密码不全
-						console.log("输入账号或者密码不全")
-						uni.showToast({
-							title: rule[1].errorMsg,
-							icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
-							duration: 1500    //持续时间为 2秒
-						})  
-						console.log(rule[1].errorMsg);
+				
+				if (!formData.tel | !formData.psd){
+					// 输入账号或者密码不全
+					console.log("输入账号或者密码不全")
+					uni.showToast({
+						title: rule[1].errorMsg,
+						icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
+						duration: 1500    //持续时间为 2秒
+					})  
+					
+				}
+				else if (!reg.test(formData.tel)) {
+					// 账号或密码输入错误
+					uni.showToast({
+						title: rule[0].errorMsg,
+						icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
+						duration: 1500    //持续时间为 2秒
+					})  
+				}else{
+					
+					let data = {
+						 phone:formData.tel,
+						 password:formData.psd
 					}
-					else if (!reg.test(formData.tel)) {
-						// 账号或密码输入错误
-						console.log(reg.test(formData.tel))
-						uni.showToast({
-							title: rule[0].errorMsg,
-							icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
-							duration: 1500    //持续时间为 2秒
-						})  
-						console.log(rule[0].errorMsg);
+					
+					login_API(data).then(res => {
+						this.userToken = res.data.data.token
+						this.userRole = res.data.data.user.role
 						
-					}
-					else if(formData.psd !== this.password){
-						uni.showToast({
-							title: '密码错误',
-							icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
-							duration: 1500    //持续时间为 2秒
-						})  
-						
-					}
-					else if (formData.tel == this.phone & formData.psd == this.password){
-						
-						await expertByPhone_API(formData.tel).then(res => {
-							
+						var tempData = {
+							phone:formData.tel,
+							token:this.userToken
+						}
+						uni.setStorage({
+							key:'token_key',
+							data:this.userToken,
+							success:function(){
+								console.log("token save success!")
+							}
+						});
+						expertByPhone_API(tempData).then(res =>{
 							this.expertData = {
 								id:res.data.data.id,
 								name:res.data.data.name,
 								phone:res.data.data.phone,
+								role:this.userRole,
 								isLogin:true,
 							}
-							console.log(this.expertData)
+							uni.setStorage({
+								key:'user_key',
+								data:this.expertData,
+								success:function(){
+									console.log("login success!")
+								}
+							});
+							//跳转到项目页面
+							uni.switchTab({
+								url: '/pages/project/list/project'
+							});
 						})
 						
-						uni.setStorage({
-							key:'user_key',
-							data:this.expertData,
-							success:function(){
-								console.log("login success!")
-							}
-						});
-						console.log(this.expertData)
-						//跳转到项目页面
-						uni.switchTab({
-							url: '/pages/project/list/project'
-						});
-					}
-				}else{
-					console.log("不存在")
-					uni.showToast({
-						title:'账户不存在！',
-						duration:1500
+						
 					})
 				}
-				
+			
 			},
 			// 密码框显示密码
 			changePassword: function() {
