@@ -43,7 +43,7 @@
 							<text v-if="item.patrolStatus[0].status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '已提交'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
-							<text v-if="item.patrolStatus[0].status === '已审核'" style="color: #00ee0f;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
+							<text v-if="item.patrolStatus[0].status === '已审核'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 						</view>
 						<!-- <view v-else>
 							<text style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">未检查</text>
@@ -153,6 +153,13 @@ import { createProject_API } from '../../../api/api.js'
 		onLoad() {
 			this.checkLogin()
 		},
+		onPullDownRefresh () {
+			console.log('触发了下拉刷新')	
+			this.checkLogin()
+			setTimeout(()=>{
+				uni.stopPullDownRefresh()
+			},500)
+		},
 		methods: {
 			//检测登录状态
 			checkLogin(){
@@ -167,7 +174,6 @@ import { createProject_API } from '../../../api/api.js'
 						})
 						//console.log(this.loginData.isLogin)
 					}else{
-						
 						this.role = this.loginData.role
 						this.getProjects()
 					}
@@ -213,11 +219,9 @@ import { createProject_API } from '../../../api/api.js'
 					token:this.token
 				}
 				projectsAll_API(tranData).then(result=>{
-					//console.log(result.data.data.data)
 					this.projectTable = result.data.data.data
 					console.log("数据获取成功！")
 					uni.hideLoading();
-					console.log("隐藏加载！")
 					uni.setStorage({
 						key:'project_key',
 						data:this.projectTable,
@@ -225,14 +229,12 @@ import { createProject_API } from '../../../api/api.js'
 							console.log('project save success!')
 						}
 					});
-					console.log("存储数据！")
-					
 				})
 			
 			},
 			navigatortoinfo(id){
 				uni.navigateTo({
-					url:'/pages/project/info/info?id=' + id
+					url:'/pages/project/info/info?projectId=' + id
 				})
 			},
 			openPop(){

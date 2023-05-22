@@ -13,52 +13,53 @@
 				</button>
 			</view>
 		</view>
-		<view style="margin-bottom: 150rpx;">
-			<view v-if="newList.length === 0" class="image-container">
-				<image class="no-check" src="../../../static/check-none.png"></image>
-			</view>
-			
-			<view v-else v-for="(item, index) in newList" :key="index">
-				<view :class="newList[index].bigisOpen ? 'titleStyle iconfont icon icon-xiangxia1' : 'titleStyle iconfont icon icon-xiangyou'" @click="changeBig(index)" style="margin-top: 30rpx;">{{item.typeOne}}</view>
-				<!-- <view v-if="item.basis === null" :class="newList[index].bigisOpen ? 'titleStyle iconfont icon icon-xiangxia1' : 'titleStyle iconfont icon icon-xiangyou'" @click="changeBig(index)" style="margin-top: 30rpx;">自定义</view> -->
-				<view v-if="newList[index].bigisOpen" >
-					<view v-for="(it, id) in item.data" :key="id">
-						<view style="display: flex;flex-direction: row;">
-							<view v-if="newList[index].data[id].readed===false" :class="newList[index].data[id].isOpen===false?'closeStyle':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">
-								<text v-if="newList[index].data[id].rectify == '' &&  (newList[index].data[id].basis === null || newList[index].data[id].basis.typeOne === '自定义' || newList[index].data[id].basis.remarks === 'generate' || newList[index].data[id].isSelf === 'yes')" style="color: #ff0004;" class="text-title-style">{{it.description}}</text>
-								<text v-else class="text-title-style">{{it.description}}</text>
-							</view>
-							<view v-if="newList[index].data[id].readed===true" :class="newList[index].data[id].isOpen===false?'closeStyle-readed':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">
-								<text v-if="newList[index].data[id].rectify == '' && (newList[index].data[id].basis === null || newList[index].data[id].basis.typeOne === '自定义' || newList[index].data[id].basis.remarks === 'generate' || newList[index].data[id].isSelf === 'yes')" style="color: #ff0004;" class="text-title-style">{{it.description}}</text>
-								<text v-else class="text-title-style">{{it.description}}</text>
-							</view>
-							<view v-if="newList[index].data[id].isOpen && !buttonUsed  " class="deleteStyle">
-								<text v-if="newList[index].data[id].basis !== null && newList[index].data[id].basis.typeOne !== '自定义' && newList[index].data[id].basis.remarks !=='generate' && newList[index].data[id].isSelf === 'no'" style="width: 100%;" @click="clearProblems(newList[index].data[id])">
-									<text style="text-align: center;">
-										清空
+		
+		<scroll-view scroll-y="true" :scroll-into-view="intoView" :style="`height: 100vh`" scroll-with-animation="true">
+			<view style="margin-bottom: 150rpx;">
+				<view v-if="newList.length === 0" class="image-container">
+					<image class="no-check" src="../../../static/check-none.png"></image>
+				</view>
+				<view v-else v-for="(item, index) in newList" :key="index">
+					<view :class="newList[index].bigisOpen ? 'titleStyle iconfont icon icon-xiangxia1' : 'titleStyle iconfont icon icon-xiangyou'" @click="changeBig(index)" style="margin-top: 30rpx;">{{item.typeOne}}</view>
+					<!-- <view v-if="item.basis === null" :class="newList[index].bigisOpen ? 'titleStyle iconfont icon icon-xiangxia1' : 'titleStyle iconfont icon icon-xiangyou'" @click="changeBig(index)" style="margin-top: 30rpx;">自定义</view> -->
+					<view v-if="newList[index].bigisOpen" >
+						<view v-for="(it, id) in item.data" :key="id" :id='"text" + it.index'>
+							<view style="display: flex;flex-direction: row;">
+								<view v-if="newList[index].data[id].readed===false" :class="newList[index].data[id].isOpen===false?'closeStyle':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">
+									<text v-if="newList[index].data[id].rectify == '' &&  (newList[index].data[id].basis === null || newList[index].data[id].basis.typeOne === '自定义' || newList[index].data[id].basis.remarks === 'generate' || newList[index].data[id].isSelf === 'yes')" style="color: #ff0004;" class="text-title-style">{{it.description}}</text>
+									<text v-else class="text-title-style">{{it.description}}</text>
+								</view>
+								<view v-if="newList[index].data[id].readed===true" :class="newList[index].data[id].isOpen===false?'closeStyle-readed':'openStyle'" @click="changeSmall(index,id)" style="background-color: #e3e3e3;">
+									<text v-if="newList[index].data[id].rectify == '' && (newList[index].data[id].basis === null || newList[index].data[id].basis.typeOne === '自定义' || newList[index].data[id].basis.remarks === 'generate' || newList[index].data[id].isSelf === 'yes')" style="color: #ff0004;" class="text-title-style">{{it.description}}</text>
+									<text v-else class="text-title-style">{{it.description}}</text>
+								</view>
+								<view v-if="newList[index].data[id].isOpen && !buttonUsed  " class="deleteStyle">
+									<text v-if="newList[index].data[id].basis !== null && newList[index].data[id].basis.typeOne !== '自定义' && newList[index].data[id].basis.remarks !=='generate' && newList[index].data[id].isSelf === 'no'" style="width: 100%;" @click="clearProblems(newList[index].data[id])">
+										<text style="text-align: center;">
+											清空
+										</text>
 									</text>
-								</text>
-								<text v-else style="width: 100%;" @click="deleteProject(newList[index].data[id])" >
-									<text style="text-align: center;">
-										删除
+									<text v-else style="width: 100%;" @click="deleteProject(newList[index].data[id])" >
+										<text style="text-align: center;">
+											删除
+										</text>
 									</text>
-								</text>
+								</view>
 							</view>
-						</view>
-						
-						<view v-if="newList[index].data[id].isOpen">
-							<view style="display: flex;flex-direction: column;border-bottom: 1rpx solid darkgray;">
-								<projectdetail :projectData="it"  @sendData="getData" @deleteId="getDeleteid"></projectdetail>
-								<view style="height: 60rpx;text-align: center;" @click="changeSmall(index,id)">
-									^
+							
+							<view v-if="newList[index].data[id].isOpen">
+								<view style="display: flex;flex-direction: column;border-bottom: 1rpx solid darkgray;">
+									<projectdetail :projectData="it"  @sendData="getData" @deleteId="getDeleteid"></projectdetail>
+									<view style="height: 60rpx;text-align: center;" @click="changeSmall(index,id)">
+										^
+									</view>
 								</view>
 							</view>
 						</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		
+		</scroll-view>
 		<uni-popup ref="deletePop" type="dialog">
 			<uni-popup-dialog :type="msgType" cancelText="取消" confirmText="确定" title="是否删除此项问题" :content=deleteName @confirm="dialogConfirm"
 								@close="dialogClose"></uni-popup-dialog>
@@ -136,7 +137,9 @@ export default {
 			uploadData:{
 				data:'',
 				token:'',
-			}
+			},
+			intoView: '',
+			
 		}
 	},
 	components:{
@@ -145,29 +148,29 @@ export default {
 	onLoad(value) {
 		this.token = uni.getStorageSync('token_key')
 		this.uploadData.token = this.token
-		console.log(value.id)
+		//console.log(value.id)
 		value.id = JSON.parse(value.id)
 		let idtemp = value.id
 		// this.checkId = value.id.id
 		// this.patrolId = this.checkId
 		if(idtemp.id !== undefined) {
-			console.log(idtemp.id)
+			//console.log(idtemp.id)
 			this.checkId = idtemp.id
 			this.patrolId = this.checkId
 		}
 		this.projectId = idtemp.projectId
 		this.projectId = Number(this.projectId)
-		console.log(idtemp.patrolstatus)
+		//console.log(idtemp.patrolstatus)
 		if(idtemp.patrolstatus !== undefined){
 			this.projectStatus = idtemp.patrolstatus
-			console.log("状态:"+this.projectStatus)
+			//console.log("状态:"+this.projectStatus)
 			if(this.projectStatus === '待检查' || this.projectStatus === '检查中' || this.projectStatus === '进行中' || this.projectStatus === '未检查' || this.projectStatus === '已检查'){
 				this.buttonUsed = false
 			} else {
 				this.buttonUsed = true
 				}
 		}
-		if(idtemp.teamid !== undefined){
+		if(idtemp.teamid !== undefined && idtemp.teamid !== null){
 			this.teamid = idtemp.teamid
 		}
 		if(idtemp.deadline !== undefined){
@@ -189,14 +192,14 @@ export default {
 		uni.showToast({
 			title: '数据加载中!',
 			icon:"loading",
-			duration: 1000
+			duration:1500,
 		});
 		this.getPatrol()
-		this.getChecks()
 		this.savePatrolId()
 		this.getTemplate()
+		this.getChecks()
+		this.sequ(0)
 		this.getTerms()
-		//this.sequ(0)
 	},
 	onShow() {
 		
@@ -214,6 +217,13 @@ export default {
 	// 	console.log('页面触底了')
 	// },
 	methods: {
+		move(num){
+			this.$nextTick(()=> {
+				this.intoView = "text" + num
+				console.log(this.intoView)
+			})
+		},
+		
 		// 获取活动名，项目ID，项目状态，巡检组id
 		getPatrol(){
 			try{
@@ -231,15 +241,16 @@ export default {
 		getTemplate(){
 			try{
 				// 判断巡检活动的状态 是否生成模板
-				console.log(this.projectStatus)
+				//console.log(this.projectStatus)
 				var modify = (this.projectStatus ==="已审核" || this.projectStatus ==="已提交" || this.projectStatus === "已中止")
-				console.log(modify)
+				//console.log(modify)
 				if(modify){
 					//禁止生成
 					return false
 				}else{
 					this.uploadData.data = this.idbox
-					console.log(this.uploadData)
+					//console.log(this.uploadData)
+					
 					problemsbyId_API(this.uploadData).then(res => {
 						console.log("获取原有问题！")
 						console.log(res.data.data)
@@ -249,6 +260,7 @@ export default {
 							this.initproblemList = res.data.data
 						}
 						this.templateDate = uni.getStorageSync('template_key')
+						console.log(this.templateDate)
 						console.log("get template success!")
 						//console.log("生成模板问题")
 						for(var i=0; i<this.templateDate.length;i++){
@@ -263,30 +275,28 @@ export default {
 							}
 							this.terms.id = this.templateDate[i].id
 							this.terms.terms = this.templateDate[i].terms
-							this.terms.typeOne = this.templateDate[i].typeOne
+							this.terms.typeOne = this.templateDate[i].description
 							this.terms.description = this.templateDate[i].description
-							for(var j = 0; j<this.typeList.length;j++){
-								if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
-									this.terms.category = this.typeList[j]
-								}
-							}
-							this.terms.length = 1
 							var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
+							//console.log(isExist.length)
 							if(isExist.length == 0){
+								for(var j = 0; j<this.typeList.length;j++){
+									if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
+										this.terms.category = this.typeList[j]
+									}
+								}
 								this.addProject()
-								this.changeData()
 							}
 							this.terms = []
 						}
+						
 					})
+					this.getChecks()
 				}
 			}catch(e){
 
 			}
-			setTimeout(()=>{
-				this.sequ(0)
-				console.log('创建完问题进行了刷新')
-			},500)
+			
 		},
 		
 		// 存储巡检ID
@@ -301,15 +311,14 @@ export default {
 		},
 
 		getChecks(){
-			console.log(this.idbox)
+			//console.log(this.idbox)
 			this.uploadData.data = this.idbox
 			problemsbyId_API(this.uploadData).then(res=>{
-				console.log(res.data.data)
+				//console.log(res.data.data)
 				if(Number(res.data.data) === 0){
 					console.log("没有数据")
 					console.log("调用模板")
 				}else{
-					
 					this.tranprojectName = res.data.data[0].projectName
 					this.initproblemList = res.data.data
 					this.changeData(),
@@ -330,7 +339,6 @@ export default {
 					this.initproblemList = res.data.data
 					try {
 						this.terms = uni.getStorageSync('terms_key');
-						//this.getPatrol()
 						for(var j = 0; j<this.typeList.length;j++){
 							if (this.terms.category.indexOf(this.typeList[j]) !== -1) {
 								this.terms.category = this.typeList[j]
@@ -339,10 +347,7 @@ export default {
 						if (this.terms.id !== undefined) {
 							console.log("terms get success!")
 							console.log("即将新增问题")
-							
 							this.addProject()
-							
-							//this.terms = ''
 							var tempData = []
 							uni.setStorage({
 								key:'terms_key',
@@ -351,7 +356,6 @@ export default {
 									console.log('terms save null success!')
 								}
 							});
-							
 						}
 					} catch (e) {
 						// error
@@ -359,7 +363,6 @@ export default {
 				}
 				
 			})
-			this.changeData()
 			
 		},
 		
@@ -419,43 +422,73 @@ export default {
 		
 		changeBig(e){
 			 this.newList[e].bigisOpen = !this.newList[e].bigisOpen
-			 //this.$forceUpdate()
 			 this.active = !this.active
 		},
-		
+		problemDataUpdate(old){
+			let problem = {
+				    "id": 0,
+				    "projectName": "",
+				    "type": "",
+				    "severity": "",
+				    "description": "",
+				    "detail": "",
+				    "terms": "",
+				    "termsUrl": [],
+				    "photoUrl": [],
+				    "rectify": "",
+				    "deadline": "",
+				    "supervisionUnit": "",
+				    "finder": "",
+				    "readed": false
+			}
+			problem.id = old.id
+			problem.projectName = old.projectName
+			problem.type = old.type
+			problem.severity = old.severity
+			problem.description = old.description
+			problem.detail = old.detail
+			problem.terms = old.terms
+			problem.termsUrl = old.termsUrl
+			problem.photoUrl = old.photoUrl
+			problem.rectify = old.rectify
+			problem.deadline = old.deadline
+			problem.supervisionUnit = old.supervisionUnit
+			problem.finder = old.finder
+			problem.readed = old.readed
+			return problem
+		},
 		changeSmall(e,n){
+			console.log(this.newList)
+			//console.log(this.initproblemList)
 			if(this.newList[e].data[n].rectify === "" && this.newList[e].data[n].isSelf === 'yes'){
 				if(this.newList[e].data[n].isOpen === true){
-					// uni.showToast({
-					// title: '整改要求不能为空!',
-					// icon:"error",
-					// duration: 2000
-				// });
+					
 				}
 				this.newList[e].data[n].isOpen = !this.newList[e].data[n].isOpen
 			} else {
-				console.log("看看")
-				//this.$forceUpdate()
+				//console.log("看看")
 				this.newList[e].data[n].isOpen = !this.newList[e].data[n].isOpen
-				console.log(this.newList[e].data[n])
-				if(!this.newList[e].data[n].readed){
+				//console.log(this.newList[e].data[n])
+				if(this.newList[e].data[n].readed === false){
 					this.newList[e].data[n].readed = true
-					//console.log(this.newList[e].data[n].id)
+					
 					if(this.newList[e].data[n].description !== '' || this.newList[e].data[n].rectify !== ''){
-						//console.log("readed"+this.newList[e].data[n])
+						
 						if(this.newList[e].data[n].basis.typeOne === '自定义'){
-							//console.log("自定义道路")
+							
 							var tranData = this.newList[e].data[n]
 							tranData.basis = null
-							this.uploadData.data = tranData
+							this.uploadData.data = this.problemDataUpdate(tranData)
+							//console.log(JSON.stringify(this.uploadData))
 							updataProblems_API(this.uploadData).then(res=>{
-								console.log(res)
+								//console.log(res)
 								console.log("自定义道路")
 							})
 						} else{
-							this.uploadData.data = this.newList[e].data[n]
+							this.uploadData.data = this.problemDataUpdate(this.newList[e].data[n])
+							//console.log(JSON.stringify(this.uploadData))
 							updataProblems_API(this.uploadData).then(res=>{
-								console.log(res)
+								//console.log(res)
 								console.log("不是自定义道路")
 							})
 						}
@@ -464,20 +497,21 @@ export default {
 					if(this.newList[e].data[n].basis === null || this.newList[e].data[n].basis.typeOne === '自定义'){
 						var tranData = this.newList[e].data[n]
 						tranData.basis = null
-						this.uploadData.data = tranData
+						this.uploadData.data = this.problemDataUpdate(tranData)
+						//console.log(JSON.stringify(this.uploadData))
 						updataProblems_API(this.uploadData).then(res=>{
-							console.log(res)
+							//console.log(res)
 							console.log("用了这里")
 						})
 					}else{
-						this.uploadData.data = this.newList[e].data[n]
+						this.uploadData.data = this.problemDataUpdate(this.newList[e].data[n])
+						//console.log(JSON.stringify(this.uploadData))
 						updataProblems_API(this.uploadData).then(res=>{
-							console.log(res)
+							//console.log(res)
 							console.log("不是自定义且basis不为空")
 						})
 					}
 				}
-				
 				this.$forceUpdate()
 			}
 			
@@ -490,7 +524,6 @@ export default {
 				this.selectPoint = this.typeList[id]
 			}
 			this.getChecks()
-			this.changeData()
 		},
 		
 		filterList() {
@@ -540,15 +573,16 @@ export default {
 				token:this.token
 			};
 			// 获取问题ID
-			allProblem_API(sum).then(res=>{
-				this.problemId = res.data.data[res.data.data.length-1].id
-			})
+			// allProblem_API(sum).then(res=>{
+			// 	console.log(res)
+			// 	// this.problemId = res.data.data[res.data.data.length-1].id
+			// })
 			var tick = '0'
 			if(this.terms.length === 0){
 				console.log('用了if')
 				tick = '1'
 				//console.log(tick)
-				this.newProject =
+				this.newProject = 
 					{
 					  "termsUrl": [],
 					  "terms":"",
@@ -571,7 +605,7 @@ export default {
 				this.newProject = 
 				{
 				  "termsUrl": [],
-				  "terms":this.terms.terms,
+				  "terms":"",
 				  "projectName": this.tranprojectName,
 				  "type": this.terms.category, 
 				  "severity": "一般",
@@ -587,11 +621,7 @@ export default {
 						  "id": this.terms.id,
 						  "typeOne": this.terms.typeOne,
 						  "terms": this.terms.terms,
-						  "codeOne": "",
-						  "codeTwo": "",
-						  "codeThree": "",
-						  "typeTwo": "",
-						  "typeThree": "",
+						  "code": "",
 						  "category": "",
 						  "description": "",
 						  "regulations": "",
@@ -604,9 +634,14 @@ export default {
 					this.diyId.push(this.problemId)
 					tick = '1'
 				}
+				
 			}
-			console.log(this.newProject)
-			this.initproblemList.push(this.newProject)
+			//console.log(this.newProject)
+			// this.initproblemList.push(this.newProject)
+			
+			if(this.newProject.basis !== null && this.newProject.basis.remarks === undefined){
+				this.newProject.basis.remarks = ""
+			}
 			var temp = {
 				data:this.newProject,
 				token:this.token
@@ -615,10 +650,11 @@ export default {
 			addProblem_API(temp).then(res=>{
 				console.log(res)
 				this.problemId = res.data.data.id
-				console.log(tick)
 				if(tick === '1'){
 					this.newOpen = res.data.data.id
 				}
+				this.newProject.id = this.problemId
+				this.initproblemList.push(this.newProject)
 				//this.teamid = this.patrolTemp.teamId
 				console.log(this.teamid)
 				var bindMessage = {
@@ -626,33 +662,38 @@ export default {
 					problemId: this.problemId,
 					token:this.token
 				}
-				console.log("绑定信息")
-				console.log(bindMessage)
-				this.initproblemList[this.initproblemList.length - 1].id = this.problemId
+				console.log(this.initproblemList)
 				bindTeam_API(bindMessage).then(res=>{
 					console.log(res)
+					this.changeData()
 				})
-				this.changeData()
+				
 			})
 			this.terms = ''
+			
 		},
 		
 		submitChange(){
 			var isSubmit = ['yes','yes','yes']
 			var forsum = 0
 			for(var i = 0;i<this.initproblemList.length;i++){
-				// temp是和当前依据id相同的对象
-				let temp = this.templateDate.filter(item => item.id === this.initproblemList[i].basis.id)
+				// temp是依据
+				//console.log(this.templateDate)
+				let temp = this.templateDate.filter(item =>  (this.initproblemList[i].basis!== null && item.id === this.initproblemList[i].basis.id))
 				//console.log(temp[0].id)
 				let tempDiy = temp
-				if(temp.length === 1){
-					temp = this.initproblemList.filter(item => item.basis.id === temp[0].id)
+				if(temp.length ===0 || temp === undefined){
+					var submitDiy = []
+				}else{
+					if(temp.length === 1){ //是模板项
+						temp = this.initproblemList.filter(item => (item.basis !== null && item.basis.id === temp[0].id))
+					}
+					console.log(temp)
+					if(temp.length > 1 ){ // 是模板快捷生成问题等同于自定义
+						tempDiy.slice(0,1) // 刨掉第一个 剩下全是自定义
+					}
+					var submitDiy = tempDiy.filter(item => item.id === this.initproblemList[i].id)
 				}
-				console.log(temp)
-				if(temp.length > 1 ){
-					tempDiy.slice(0,1)
-				}
-				var submitDiy = tempDiy.filter(item => item.id === this.initproblemList[i].id)
 				forsum = forsum + 1
 				try{
 					if(this.initproblemList[i].basis.typeOne === '自定义' || submitDiy.length !== 0){
@@ -661,9 +702,6 @@ export default {
 				}catch(e){
 					
 				}
-				
-				
-				
 				if(this.initproblemList[i].basis === null || submitDiy.length === 1){
 					console.log("该问题是自定义问题")
 					if(this.initproblemList[i].description === "请填写问题描述"){
@@ -731,7 +769,6 @@ export default {
 					title: '提交成功!',
 					duration: 1000
 				});
-				this.projectStatus = '已检查'
 				this.uploadData.data = this.projectId
 				projectInfo_API(this.uploadData).then(res=>{
 					this.projectstatusChange = res.data.data
@@ -740,38 +777,43 @@ export default {
 							this.projectstatusChange.patrolStatus[i].status = '已检查'
 							this.uploadData.data = this.projectstatusChange
 							projectUpdate_API(this.uploadData).then(res=>{
-								console.log(res)
+								//console.log(res.data)
 							})
 						}
 					}
 				})
 				this.changeData()
+				this.initproblemList = []
+				this.problemList = []
 				const pages = getCurrentPages()
-				console.log(pages)
+				//console.log(pages)
 				let delta = 0
 				for(var i = 0;i<pages.length;i++){
 					if(pages[i].route === 'pages/project/info/info'){
 						delta = i
 					}
 				}
-				let temp = pages.length - delta - 1
-				console.log(temp)
+				let temp = pages.length - delta - 1 
+				//console.log(temp)
 				console.log("跳转堆栈！")
 				var infopage = pages[delta]
+				var id = this.projectId
+				var patrolid = this.patrolId
 				uni.navigateBack({
 					delta:temp,
+					success() {
+						infopage.onLoad({
+							update:true,
+							projectId:id,
+							patrolId:patrolid,
+							status:'已检查'
+						})
+					}
 				})
-				
-				// uni.redirectTo({
-				// 	url:'/pages/project/info/info?id='+this.projectId
-				// })
-				// uni.navigateBack({
-				// 	delta:
-				// })
 			}
 		},
 		
-		changeData() {
+		changeData(name) {
 			this.problemList = this.initproblemList
 			this.filterList()
 			
@@ -780,48 +822,43 @@ export default {
 			//console.log(this.problemList)
 			//console.log(this.templateDate)
 			for (var j = 0; j < this.problemList.length; j++){
+				this.problemList[j].index = j
 				this.problemList[j].isSelf = 'yes'
 				this.problemList[j].isOpen = false
 				for(var i=0;i<this.templateDate.length;i++){
 					// console.log("看这里")
 					// console.log(this.problemList[j].basis.id)
 					if(this.problemList[j].basis !== null && this.problemList[j].basis.id !== undefined && this.problemList[j].basis.id === this.templateDate[i].id){
-							this.problemList[j].isSelf = 'no'    //添加自定义字段
+							this.problemList[j].isSelf = 'no'    //表示该问题是模板问题
+					}
+					if (this.problemList[j].basis === undefined || this.problemList[j].basis === null || this.problemList[j].basis.typeOne === ''){
+						this.problemList[j].basis = {
+							  "id": '',
+							  "typeOne": "自定义",
+							  "category": "",
+							  "description": "",
+							  "regulations": "",
+							  "terms": '',
+							  "responsibleParties": "",
+							  "labels": "",
+							  "remarks": null,
+							  "feedbacks": [],
+							  "code": "2.12.2",
+							  "parentCode": "2.12",
+							  "isleaf": "Y",
+							  "problems": [],
+						  }
+						  
 					}
 				}
 				
-				if(this.problemList[j].id === this.newOpen){
+				if(this.problemList[j].id === this.newOpen && this.newOpen !== ''){
 					this.problemList[j].isOpen = true
+					this.move(j)
 				}
 				
 			}
-			//console.log("看看tick")
-			//console.log(this.newOpen)
-			//console.log(this.problemList)
-			for (var j = 0; j < this.problemList.length; j++){
-				
-				if (this.problemList[j].basis === undefined || this.problemList[j].basis === null || this.problemList[j].basis.typeOne === ''){
-					this.problemList[j].basis = {
-						  "id": '',
-						  "codeOne": "",
-						  "codeTwo": "",
-						  "codeThree": "",
-						  "typeOne": "自定义",
-						  "typeTwo": "",
-						  "typeThree": "",
-						  "category": "",
-						  "description": "",
-						  "regulations": "",
-						  "terms": '',
-						  "responsibleParties": "",
-						  "labels": "",
-						  "remarks": null,
-						  "feedbacks": []
-					  }
-					  
-				}
-				
-			}
+			
 			var map = {}
 			var nList = []
 			for (var i = 0; i < this.problemList.length; i++) {
@@ -855,7 +892,8 @@ export default {
 				nList[nList.length-1] = tran
 			}
 			this.newList = nList
-
+			// sconsole.log(this.newList)
+			
 		}
 	}
 }

@@ -56,7 +56,7 @@
 			// 验证账号密码
 			async formSubmit(e) {
 				var rule = [
-					{name:"error",  errorMsg:"账号或密码输入错误"},
+					{name:"error",  errorMsg:"请输入正确的手机号"},
 					{name:"null",   errorMsg:"请输入账号或密码"}
 				];
 				
@@ -88,44 +88,51 @@
 					}
 					
 					login_API(data).then(res => {
-						this.userToken = res.data.data.token
-						this.userRole = res.data.data.user.role
-						
-						var tempData = {
-							phone:formData.tel,
-							token:this.userToken
-						}
-						uni.setStorage({
-							key:'token_key',
-							data:this.userToken,
-							success:function(){
-								console.log("token save success!")
-							}
-						});
-						expertByPhone_API(tempData).then(res =>{
-							this.expertData = {
-								id:res.data.data.id,
-								name:res.data.data.name,
-								phone:res.data.data.phone,
-								role:this.userRole,
-								isLogin:true,
+						if(res.data.message !== "success"){
+							uni.showToast({
+								title: "账号不存在或密码错误",
+								icon: 'none',    //如果要纯文本，不要icon，将值设为'none'
+								duration: 1500    //持续时间为 2秒
+							}) 
+						}else{
+							this.userToken = res.data.data.token
+							this.userRole = res.data.data.user.role
+							
+							var tempData = {
+								phone:formData.tel,
+								token:this.userToken
 							}
 							uni.setStorage({
-								key:'user_key',
-								data:this.expertData,
+								key:'token_key',
+								data:this.userToken,
 								success:function(){
-									console.log("login success!")
+									console.log("token save success!")
 								}
 							});
-							//跳转到项目页面
-							uni.switchTab({
-								url: '/pages/project/list/project'
-							});
-						})
-						
-						
+							expertByPhone_API(tempData).then(res =>{
+								this.expertData = {
+									id:res.data.data.id,
+									name:res.data.data.name,
+									phone:res.data.data.phone,
+									role:this.userRole,
+									isLogin:true,
+								}
+								uni.setStorage({
+									key:'user_key',
+									data:this.expertData,
+									success:function(){
+										console.log("login success!")
+									}
+								});
+								//跳转到项目页面
+								uni.switchTab({
+									url: '/pages/project/list/project'
+								});
+							})
+						}
 					})
 				}
+				
 			
 			},
 			// 密码框显示密码

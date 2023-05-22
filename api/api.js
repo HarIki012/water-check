@@ -180,7 +180,7 @@ export function updataProject_API(data) {
 // 按活动与项目查找所有问题
 export function problemsbyId_API(data) {
 	return uni.request({
-		url: `${baseUrl}/problems_by_project`,
+		url: `${baseUrl}/problems_by_project_patrol_finder`,
 		data: data.data,
 		method:'GET',
 		header:{

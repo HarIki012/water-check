@@ -2,6 +2,7 @@
 	<view class="border"  :class="{active:flag}" >
 		<view class="content" style="-webkit-flex-wrap: wrap;flex-wrap: wrap; " v-for="(item,index) in list" :key="index">
 			<view class="projectName" style="font-weight: 100; width: 200rpx">{{item.name}}</view>
+			<view class="projectName-info" v-if="item.info === null" style="-webkit-flex: 1;flex: 1; flex-wrap: wrap; ">暂无数据</view>
 			<view class="projectName-info" style="-webkit-flex: 1;flex: 1; flex-wrap: wrap; ">{{item.info}}
 				<text class="location iconfont icon icon-dingwei" v-if="item.name === '项目地址'" @click="addressGet()">校正定位</text>
 			</view>
@@ -77,43 +78,51 @@ import { teamByProject_API } from '../../../api/api.js'
 				],
 				list:[{
 					name:"项目名称",
-					info:"2017年江岸区沿江商务区现状道路雨污管涵完善工程",
+					info:"",
 				},
 					{
 					name:"辖区归属",
-					info:"江岸区",
+					info:"",
 				},
 					{
 					name:"项目类型",
-					info:"水利工程",
+					info:"",
 				},
 					{
 					name:"项目地址",
-					info:"兴瑞街（黄埔大街-永泰路）、永祥路（中山大道-沿江大道）",
+					info:"",
 				},
 					{
 					name:"建设单位",
-					info:"江岸区水务和湖泊局",
+					info:"",
 				},
 					{
 					name:"施工单位",
-					info:"江西中林建设集团有限公司",
+					info:"",
 				},
 					{
 					name:"监理单位",
-					info:"武汉市青山建设工程监理有限责任公司",
+					info:"",
 				},
 					{
 					name:"监管部门",
-					info:"水务局,城建局",
+					info:"城务局，水务局",
 				},
 					{
-					name:"联系人",
-					info:"王立冈18162790040",
+					name:"总监",
+					info:"",
+				},
+					{
+					name:"项目经理",
+					info:"",
+				},
+					{
+					name:"项目负责人",
+					info:"",
 				},
 					{
 					name:"形象进度",
-					info:"已完成合同额80%",
+					info:"50%",
 				}
 				],
 				addressMessage:'',
@@ -129,24 +138,42 @@ import { teamByProject_API } from '../../../api/api.js'
 				uploadData:{
 					data:'',
 					token:''
-				}
+				},
+				update:false,
+				jump:0,
+				
 			}
 		},
 		onLoad(value) {
+			//console.log(value)
 			this.token = uni.getStorageSync('token_key')
 			this.uploadData.token = this.token
-			if(value !== undefined){
-				this.projectId = value.id
-				this.getUserRole()
-				this.getprojectInfo()
-				if(this.role !== "Guest"){
+			if(value.update !== undefined && value.update){
+				var temp = this.checks.findIndex(item => item.id === value.patrolId)
+				if(temp === -1){
+					temp = 0
+				}
+				this.checks[temp].status = value.status
+				uni.removeStorageSync('project_key');
+				this.update = true
+			}
+			console.log(this.update + "load")
+			this.projectId = value.projectId
+			this.getUserRole()
+			this.getprojectInfo()
+			if(this.role !== "Guest"){
+				console.log("获取！")
+				if(this.checks.length === 0){
 					this.getpatrolByProject()
 					this.setBasisByProject()
 				}
-			}else{
-				this.getpatrolByProject()
-			}		
-			
+				
+			}
+		},
+		onShow() {
+			setTimeout(()=>{
+				this.jump = 1
+			},1500)
 		},
 		methods: {
 			getUserRole(){
@@ -157,26 +184,57 @@ import { teamByProject_API } from '../../../api/api.js'
 			getprojectInfo(){
 				this.uploadData.data = this.projectId
 				projectInfo_API(this.uploadData).then(res=>{
-					// console.log(res)
-					this.projectTable = res.data.data
-					// console.log(this.projectTable)
-					this.list[0].info = this.projectTable.name
-					this.list[1].info = this.projectTable.district
-					this.list[2].info = this.projectTable.type
-					this.list[3].info = this.projectTable.address
-					this.list[4].info = this.projectTable.employer
-					this.list[5].info = this.projectTable.builder
-					this.list[6].info = this.projectTable.supervisor
-					//this.list[7].info = this.projectTable.regulator
-					this.list[8].info = this.projectTable.contracts
-					this.list[9].info = this.projectTable.visualProgress
+					
+					console.log(res)
+					if(res.statusCode === 500){
+						uni.showToast({
+							title:"登录失效，重新登录！",
+							icon:'error',
+							duration:1500,
+						})
+						setTimeout(()=>{
+							uni.setStorage({
+								key:'user_key',
+								data:this.userQuit,
+								success:function(){
+									console.log("user quit!")
+								}
+							})
+							
+							try {
+								uni.clearStorageSync();
+							} catch (e) {
+								// error
+							}
+							
+							uni.redirectTo({
+								url:'/pages/login/login'
+							})
+						},1500)
+					}else{
+						this.projectTable = res.data.data
+						// console.log(this.projectTable)
+						this.list[0].info = this.projectTable.name
+						this.list[1].info = this.projectTable.district
+						this.list[2].info = this.projectTable.type
+						this.list[3].info = this.projectTable.address
+						this.list[4].info = this.projectTable.employer
+						this.list[5].info = this.projectTable.builder
+						this.list[6].info = this.projectTable.supervisor
+						this.list[7].info = this.projectTable.regulator
+						this.list[8].info = this.projectTable.director
+						this.list[9].info = this.projectTable.projectManager
+						this.list[10].info = this.projectTable.projectLeader
+						this.list[11].info = this.projectTable.visualProgress
+						// this.list[12].info = this.projectTable.visualProgress
+					}
 				})
 			},
 			// 获取巡检信息
 			getpatrolByProject(){
 				this.uploadData.data = this.projectId
 				patrolByProject_API(this.uploadData).then(res=>{
-					console.log(res.data.data)
+					//console.log(res.data.data)
 					this.projectTemp = res.data.data
 					const checksTemp = []
 					for(var i = 0 ; i< this.projectTemp.length;i++ ){
@@ -222,6 +280,7 @@ import { teamByProject_API } from '../../../api/api.js'
 					}
 					this.checks = checksTemp
 					this.getLeaderName()
+					console.log(this.checks)
 				})
 			},
 			async getLeaderName(){
@@ -236,7 +295,7 @@ import { teamByProject_API } from '../../../api/api.js'
 						this.patrolList.push(res.data.data)
 					})
 				}
-				console.log(this.patrolList)
+				//console.log(this.patrolList)
 				for(var i = 0;i<this.checks.length;i++){
 					this.checks[i].leaderName = this.patrolList[i].leader
 					this.checks[i].id = this.patrolList[i].id
@@ -249,7 +308,7 @@ import { teamByProject_API } from '../../../api/api.js'
 					}
 					this.checks[i].teamName = teamName
 				}
-				console.log(this.checks)
+				//console.log(this.checks)
 			},
 			// 展开或收起
 			showTag(){
@@ -264,7 +323,7 @@ import { teamByProject_API } from '../../../api/api.js'
 					success: function (res) {
 						that.addressMessage = res;
 						that.addressData = res.latitude + ', ' + res.longitude
-						console.log(that.addressData)
+						//console.log(that.addressData)
 						
 						uni.chooseLocation({
 							latitude:res.latitude,
@@ -306,6 +365,7 @@ import { teamByProject_API } from '../../../api/api.js'
 					var expert = uni.getStorageSync('user_key')
 					var username = expert.name
 					var session = {
+						id:id,
 						projectId:this.projectId,
 						patrolstatus:status,
 						patrolname:name,
@@ -335,17 +395,20 @@ import { teamByProject_API } from '../../../api/api.js'
 					teamid:teamid,
 					deadline:time,
 				}
-				uni.navigateTo({
-					//保留当前页面，跳转到应用内的某个页面
-					url: '/pages/project/checks/checks?id=' + JSON.stringify(temp)
-				})
+				console.log(this.jump)
+				if(this.jump === 1){
+					uni.navigateTo({
+						//保留当前页面，跳转到应用内的某个页面
+						url: '/pages/project/checks/checks?id=' + JSON.stringify(temp)
+					})
+				}
 			},
 			//存储从项目获取的basis模板
 			setBasisByProject(){
 				this.uploadData.data = this.projectId
 				basisByProject_API(this.uploadData).then(res =>{
 					this.basisData = res.data.data
-					console.log(this.basisData)
+					//console.log(this.basisData)
 					uni.setStorage({
 						key:'template_key',
 						data:this.basisData,

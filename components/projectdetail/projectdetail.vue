@@ -35,9 +35,9 @@
 				<text  class="currentWordNumber">{{fontNumTerms}}/200</text>
 			</view>
 			<view class="choose-pic">
-				<uni-file-picker v-if="picLengthTerms >= 2" v-model="realTermsurl" limit="9" title="最多选择9张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow"></uni-file-picker>
-				<uni-file-picker v-else-if="picLengthTerms === 1" v-model="realTermsurl" limit="9" title="最多选择9张图片" @select="picTerms" @delete="deleteFileTerms" :del-icon="false" :readonly="allow"></uni-file-picker>
-				<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-if="picLengthTerms >= 2" v-model="realTermsurl" limit="4" title="最多选择4张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-else-if="picLengthTerms === 1" v-model="realTermsurl" limit="4" title="最多选择4张图片" @select="picTerms" @delete="deleteFileTerms" :del-icon="false" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-else limit="4" title="最多选择4张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow"></uni-file-picker>
 			</view>
 		</view>
 		
@@ -63,9 +63,9 @@
 				</view>
 			</view>
 			<view class="choose-pic">
-				<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
-				<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :del-icon="false" :readonly="allow"></uni-file-picker>
-				<uni-file-picker v-else limit="9" title="最多选择9张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="4" title="最多选择4张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="4" title="最多选择4张图片" @select="picTest" @delete="deleteFile" :del-icon="false" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-else limit="4" title="最多选择4张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
 			</view>
 			<view class="text">
 				<view style="flex-direction: row; margin-bottom: 20rpx;">
@@ -107,6 +107,7 @@
 					
 					}
 				],
+				isShow: true,
 				testPicurl:[],
 				testPicTermsurl:[],
 				realurl:[],
@@ -142,10 +143,10 @@
 			};
 		},
 		onLoad() {
-			this.token = uni.getStorageSync('token_key')
+			
 		},
 		mounted() {
-			
+			this.token = uni.getStorageSync('token_key')
 			this.initData()
 			this.initRecord()
 		},
@@ -174,8 +175,7 @@
 				// console.log(this.fontNum)
 			},
 			picTerms(e){
-				console.log(e)
-				
+				//console.log(e)
 				uni.uploadFile({
 					url: 'https://zsjs.huaskj.com/weps-api/upload_files', //仅为示例，非真实的接口地址
 					filePath: e.tempFilePaths[0],
@@ -186,6 +186,7 @@
 					header:{
 						"Authorization":this.token,
 					},
+					
 					success: (uploadFileRes) => {
 						let json_data = JSON.parse(uploadFileRes.data)
 						//console.log(json_data.data[0]);
@@ -194,14 +195,15 @@
 						this.projectData.termsUrl.push(
 							json_data.data[0]
 						)
-						console.log(this.projectData)
+						//console.log(this.projectData)
+						this.initData()
 						//console.log(this.projectData.photoUrl)
 						this.$emit("sendData",this.projectData)
 					}
 				})
 			},
 			picTest(e){
-				console.log(e)
+				//console.log(e)
 				uni.uploadFile({
 					url: 'https://zsjs.huaskj.com/weps-api/upload_files', //仅为示例，非真实的接口地址
 					filePath: e.tempFilePaths[0],
@@ -221,104 +223,59 @@
 							json_data.data[0]
 						)
 						//console.log(this.projectData.photoUrl)
-						console.log(this.projectData)
+						//console.log(this.projectData)
+						this.initData()
 						this.$emit("sendData",this.projectData)
 					}
 				})
 			},
 			deleteFileTerms(e){
 				var sameSum = 0
+				let result = "水务/"+e.tempFilePath.slice(57)
 				for (var i = 0;i<this.testPicTermsurl.length;i++){
 					if(this.testPicTermsurl[i].url === e.tempFilePath){
 						this.deleteId = i
 						sameSum = sameSum + 1
 					}
 				}
+				var temp = this.testPicTermsurl.filter(item => item.url != e.tempFilePath)
+				this.testPicTermsurl = temp
+				var temp1 = this.projectData.termsUrl.filter(item => item != result)
+				this.projectData.termsUrl = temp1
 				if(sameSum >= 2){
-					this.projectData.termsUrl.splice(this.deleteId,1)
-					//console.log(this.projectData.photoUrl)
+					this.realTermsurl = this.testPicTermsurl
+					this.initData()
 				} else {
-					this.projectData.termsUrl.splice(this.deleteId,1)
-					//console.log(this.projectData.photoUrl)
-					let result = e.tempFilePath.slice(57)
-					console.log(result)
+					this.realTermsurl = this.testPicTermsurl
+					this.initData()
 					this.$emit("deleteId",result)
 				}
-				this.picLengthTerms = this.picLengthTerms - 1
-					if(this.picLengthTerms === 1){
-						var tran = []
-						this.realTermsurl = tran
-						this.realTermsurl = [{
-							name: this.projectData.termsUrl[0],
-							extname: this.filterImgType(this.projectData.termsUrl[0]),
-							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.termsUrl[0]
-						}]
-						//console.log(this.realurl)
-						this.picLengthTerms = this.realTermsurl.length
-					}
-					//console.log(this.picLength)
-				
-						// uni.showToast({
-						//     title: '至少保留一张图片！',
-						//     icon: 'none',
-						//     duration: 2000
-						// })
-				
-				
 			},
 			
 			deleteFile(e){
 				var sameSum = 0
+				let result1 = "水务/"+e.tempFilePath.slice(57)
+				//console.log(result1)
 				for (var i = 0;i<this.testPicurl.length;i++){
 					if(this.testPicurl[i].url === e.tempFilePath){
 						this.deleteId = i
 						sameSum = sameSum + 1
 					}
 				}
-				if(sameSum >= 2){
-					this.projectData.photoUrl.splice(this.deleteId,1)
-					//console.log(this.projectData.photoUrl)
-				} else {
-					this.projectData.photoUrl.splice(this.deleteId,1)
-					//console.log(this.projectData.photoUrl)
-					let result = e.tempFilePath.slice(57)
-					console.log(result)
-					this.$emit("deleteId",result)
-				}
-				this.picLength = this.picLength - 1
-					if(this.picLength === 1){
-						var tran = []
-						this.realurl = tran
-						this.realurl = [{
-							name: this.projectData.photoUrl[0],
-							extname: this.filterImgType(this.projectData.photoUrl[0]),
-							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[0]
-						}]
-						//console.log(this.realurl)
-						this.picLength = this.realurl.length
-					}
-					
+				
+				var temp = this.testPicurl.filter(item => item.url!== e.tempFilePath)
+				this.testPicurl = temp
+				var temp1 = this.projectData.photoUrl.filter(item => item != result1)
+				this.projectData.photoUrl = temp1
+				
+				this.$emit("deleteId",result1)
+				
+				this.initData()
 			},
 			initData(){
-				
 				try{
-					console.log("看看projectData")
-					console.log(this.projectData)
-					console.log(typeof this.projectData.rectify)
 					var temp = uni.getStorageSync('patrolStutas_key')
-					//this.modify = temp.modify
 					this.status = temp.patrolstatus
-					//console.log("专家是否为该小组成员+"+this.modify)
-					// if(this.modify === false){
-					// 	uni.showToast({
-					// 		title: '您不是该项目小组成员！',
-					// 		icon: 'none',
-					// 		duration: 2000
-					// 	})
-					// }
-					
-						
-					console.log('状态:'+this.status)
 					if (this.status === '未检查' || this.status === '进行中' || this.status === '检查中' || this.status === '待检查' || this.status === '已检查'){
 						this.allow = false
 					} else {
@@ -327,9 +284,6 @@
 				}catch(e){
 
 				}
-				
-				console.log(this.allow)
-				//console.log(this.projectData.basis)
 				if(this.projectData.basis === null){
 					
 				}else{
@@ -349,43 +303,33 @@
 				}
 				this.severityselectName = this.projectData.severity
 				this.typeName = this.projectData.type
-				//console.log(this.projectData.photoUrl.length)
-				// if(this.projectData.photoUrl.length === 0){
-				// 	this.testPicurl = null
-				// }
+				
 				if(this.projectData.photoUrl.length !== 0){
 					for (var i = 0;i<this.projectData.photoUrl.length;i++){
-						console.log(i)
+						//console.log(i)
 						this.testPicurl[i] = {
 							name: this.projectData.photoUrl[i],
 							extname: this.filterImgType(this.projectData.photoUrl[i]),
 							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
 						}
-						// this.testPicurl.push({
-						// 	fileId: this.projectData.photoUrl[i],
-						// 	url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
-						// })
 					}
 				}
 				if(this.projectData.termsUrl.length !== 0){
 					for (var i = 0;i<this.projectData.termsUrl.length;i++){
-						console.log(i)
+						//console.log(i)
 						this.testPicTermsurl[i] = {
 							name: this.projectData.termsUrl[i],
 							extname: this.filterImgType(this.projectData.termsUrl[i]),
 							url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.termsUrl[i]
 						}
-						// this.testPicurl.push({
-						// 	fileId: this.projectData.photoUrl[i],
-						// 	url: 'https://server-1315831071.cos.ap-nanjing.myqcloud.com/' + this.projectData.photoUrl[i]
-						// })
 					}
 				}
 				
-				//console.log(this.testPicurl)
+				
 				this.realurl = this.testPicurl
 				this.picLength = this.testPicurl.length
 				this.realTermsurl = this.testPicTermsurl
+				//console.log(this.realurl)
 				this.picLengthTerms = this.testPicTermsurl.length
 			},
 			severitySelect(e) {

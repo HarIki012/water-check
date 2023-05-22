@@ -37,7 +37,7 @@
 				<textarea class="detailInfo" v-model="proofValue"  placeholder="请输入反馈内容..."/>
 				<text class="Name">证明资料</text>
 				<view class="hs-choose-pic">
-					<uni-file-picker limit="2" title="上传图片" @select="pictureSelect"></uni-file-picker>
+					<uni-file-picker limit="2" title="上传图片" @select="pictureSelect" @delete="deleteFile"></uni-file-picker>
 				</view>
 				<button class="submit" @click="seedFeedBack()">发送</button>
 			</view>
@@ -76,11 +76,15 @@
 				teamId:0,
 				deadline:'',
 				token:'',
-				
+				user:'',
+				deleteId:'',
+				patrolId:0,
 			}
 		},
 		onLoad(value) {
 			this.token = uni.getStorageSync('token_key')
+			this.user = uni.getStorageSync('user_key')
+			this.patrolId = uni.getStorageSync('patrolStutas_key').id
 			this.cameFrom = value.from
 			this.getStorageBasisId()
 		},
@@ -101,7 +105,7 @@
 							this.data[0].regulations = this.basisTable.regulations
 							this.data[0].terms = this.basisTable.terms
 							this.data[0].responsibleParties = this.basisTable.responsibleParties
-							this.data[0].typeOne = this.basisTable.typeOne
+							this.data[0].typeOne = this.basisTable.description
 							this.data[0].type = this.basisTable.category
 							const reg = /\d+/g
 							const number = this.basisTable.labels.match(reg)
@@ -140,7 +144,7 @@
 							this.patrolStatus = this.patrolTemp.patrolstatus
 							this.teamId = this.patrolTemp.teamId
 							this.deadline = this.patrolTemp.deadline
-							//console.log(this.patrolStatus)
+							console.log(this.teamId)
 						})
 					}
 				} catch (e) {
@@ -173,6 +177,24 @@
 					}
 				})
 			},
+			deleteFile(e){
+				var sameSum = 0
+				for (var i = 0;i<this.proofPictureUrl.length;i++){
+					if(this.proofPictureUrl[i].url === e.tempFilePath){
+						this.deleteId = i
+						sameSum = sameSum + 1
+					}
+				}
+				if(sameSum >= 2){
+					this.proofPictureUrl.splice(this.deleteId,1)
+					//console.log(this.projectData.photoUrl)
+				} else {
+					this.proofPictureUrl.splice(this.deleteId,1)
+					//console.log(this.projectData.photoUrl)
+					let result = e.tempFilePath.slice(57)
+					console.log(result)
+				}
+			},
 			seedFeedBack(){
 				var proofpic = []
 				for(var i = 0;i<this.proofPictureUrl.length;i++){
@@ -180,21 +202,17 @@
 				}
 				var feedBackData = {
 					data:{
-						name: "专家1",
+						name: this.user.name,
 						content: this.proofValue,
 						status: "未审核",
 						proofUrl: proofpic
 					},
 					token:this.token
 				}
-				try{
-					var expert = uni.getStorageSync('user_key')
-					feedBackData.name = expert.name
-				}catch(e){
-					
-				}
 				//console.log(feedBackData)
+				
 				feedbackBasis_API(feedBackData).then(res =>{
+					console.log(res.data.data)
 					this.feedBackId = res.data.data.id
 					var bindData = {
 						data:{
@@ -245,15 +263,16 @@
 					}
 				});
 				// 判断巡检结束 是否能够新增问题。
-				if(this.patrolStatus == '未检查'|| this.patrolStatus == '检查中' || this.patrolStatus == '检查中'){
+				if(this.patrolStatus == '未检查'|| this.patrolStatus == '检查中' || this.patrolStatus == '已检查'){
 					let temp = {
+						id:this.patrolId,
 						url:Date.now(),
 						projectId:this.projectId,
 						patrolstatus:this.patrolStatus,
 						teamid:this.teamId,
 						deadline:this.deadline
 					}
-					//console.log(temp)
+					console.log(temp)
 					uni.redirectTo({
 						url:'/pages/project/checks/checks?id='+JSON.stringify(temp)
 					})
@@ -264,17 +283,7 @@
 						duration:1000
 					})
 				}
-				// let temp = {
-				// 	url:Date.now(),
-				// 	projectId:this.projectId,
-				// 	patrolstatus:this.patrolStatus,
-				// 	teamid:this.teamId,
-				// 	deadline:this.deadline
-				// }
 				
-				// uni.redirectTo({
-				// 	url:'/pages/project/checks/checks?id='+JSON.stringify(temp)
-				// })
 				
 			},
 		}

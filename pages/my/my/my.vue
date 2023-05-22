@@ -200,7 +200,7 @@
 					});
 				}
 			},
-			async redirectToLogin(){
+			redirectToLogin(){
 				
 				uni.setStorage({
 					key:'user_key',
