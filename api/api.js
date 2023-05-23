@@ -261,3 +261,14 @@ export function login_API(data){
 		},
 	})
 }
+
+// 返回根节点列表
+export function rootBases_API(data){
+	return uni.request({
+		url: `${baseUrl}/root_bases`,
+		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
+	})
+}

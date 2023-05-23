@@ -49,6 +49,7 @@
 	import { basisById_API } from '../../../api/api.js'
 	import { feedbackBasis_API } from '../../../api/api.js'
 	import { feedbackBindBasis_API } from '../../../api/api.js'
+	import { rootBases_API } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -79,6 +80,7 @@
 				user:'',
 				deleteId:'',
 				patrolId:0,
+				rootBases:[],
 			}
 		},
 		onLoad(value) {
@@ -100,51 +102,56 @@
 						}
 						basisById_API(temp).then(res => {
 							this.basisTable = res.data.data
-							this.data[0].id = this.basisTable.id
-							this.data[0].description = this.basisTable.description
-							this.data[0].regulations = this.basisTable.regulations
-							this.data[0].terms = this.basisTable.terms
-							this.data[0].responsibleParties = this.basisTable.responsibleParties
-							this.data[0].typeOne = this.basisTable.description
-							this.data[0].type = this.basisTable.category
 							const reg = /\d+/g
-							const number = this.basisTable.labels.match(reg)
-							
-							console.log(number)
-							if(number !== null){
-								for(var i = 0;i < number.length;i++){
-									if(number[i] == 3) {
-										console.log(3)
-										let detail = "专家重点" 
-										this.data[0].remarks.push(detail)
-									}else if(number[i] == 2){
-										console.log(2)
-										let detail = "政府重点"
-										this.data[0].remarks.push(detail)
-									}else if(number[i] == 1){
-										console.log(1)
-										let detail = "强条"
-										this.data[0].remarks.push(detail)
-									}else if(number[i] == 4){
-										console.log(4)
-										let detail = "过时"
-										this.data[0].remarks.push(detail)
-										console.log(5)
-									}else if(number[i] == 5){
-										let detail = "错误"
-										this.data[0].remarks.push(detail)
+							rootBases_API(temp).then(res => {
+								this.data[0].id = this.basisTable.id
+								this.data[0].description = this.basisTable.description
+								this.data[0].regulations = this.basisTable.regulations
+								this.data[0].terms = this.basisTable.terms
+								this.data[0].responsibleParties = this.basisTable.responsibleParties
+								this.rootBases = res.data.data
+								if(this.basisTable.parentCode !== null){
+									const code = this.basisTable.parentCode.match(reg)
+									const baseTemp = this.rootBases.filter(item => (item.category === this.basisTable.category && item.code === code[0]))
+									this.data[0].typeOne = baseTemp[0].description
+								}else{
+									this.data[0].typeOne = this.basisTable.description
+								}
+								this.data[0].type = this.basisTable.category
+								if(this.basisTable.labels !== null){
+									const labels= this.basisTable.labels.match(reg)
+								}
+								if(labels !== null){
+									for(var i = 0;i < labels.length;i++){
+										if(labels[i] == 3) {
+											console.log(3)
+											let detail = "专家重点" 
+											this.data[0].remarks.push(detail)
+										}else if(labels[i] == 2){
+											console.log(2)
+											let detail = "政府重点"
+											this.data[0].remarks.push(detail)
+										}else if(labels[i] == 1){
+											console.log(1)
+											let detail = "强条"
+											this.data[0].remarks.push(detail)
+										}else if(labels[i] == 4){
+											console.log(4)
+											let detail = "过时"
+											this.data[0].remarks.push(detail)
+											console.log(5)
+										}else if(labels[i] == 5){
+											let detail = "错误"
+											this.data[0].remarks.push(detail)
+										}
 									}
 								}
-							}
-							
-							console.log(this.data[0].remarks)
-							
-							this.patrolTemp = uni.getStorageSync('patrolStutas_key')
-							this.projectId = this.patrolTemp.projectId
-							this.patrolStatus = this.patrolTemp.patrolstatus
-							this.teamId = this.patrolTemp.teamId
-							this.deadline = this.patrolTemp.deadline
-							console.log(this.teamId)
+								this.patrolTemp = uni.getStorageSync('patrolStutas_key')
+								this.projectId = this.patrolTemp.projectId
+								this.patrolStatus = this.patrolTemp.patrolstatus
+								this.teamId = this.patrolTemp.teamId
+								this.deadline = this.patrolTemp.deadline
+							})
 						})
 					}
 				} catch (e) {

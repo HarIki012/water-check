@@ -26,6 +26,7 @@
 
 <script>
 	import { searchBasis_API } from '../../../api/api.js'
+	import { rootBases_API } from '../../../api/api.js'
 	export default {
 		
 		data() {
@@ -59,6 +60,7 @@
 				},
 				ismodify:false,
 				token:'',
+				rootBases:[],
 			};
 
 		},
@@ -97,19 +99,31 @@
 					token:this.token
 				}
 				searchBasis_API(temp).then(res =>{
-					this.processBasisData(res.data.data)
-					console.log("search basis success")
+					const basisdata = res.data.data
+					rootBases_API(temp).then(res => {
+						this.rootBases = res.data.data
+						this.processBasisData(basisdata)
+					})
 					uni.hideLoading()
 				})
 			},
 			processBasisData(data){
 				this.termsData = []
 				this.termsTable = data
+				const reg = /\d+/g
 				if (this.termsTable) {
 					var index = 0;
 					this.typeOneTable = []
+					//console.log(this.rootBases)
 					for(var i = 0; i < this.termsTable.length ; i++){
-						
+						if(this.termsTable[i].parentCode !== null){
+							const number = this.termsTable[i].parentCode.match(reg)
+							const baseTemp = this.rootBases.filter(item => (item.category === this.termsTable[i].category && item.code === number[0]))
+							//console.log(baseTemp)
+							this.termsTable[i].typeOne = baseTemp[0].description
+						}else{
+							this.termsTable[i].typeOne = this.termsTable[i].description
+						}
 						if(this.typeOneTable.includes(this.termsTable[i].typeOne)){
 							//得到name相同的项目
 							//获取相同typeOne的index

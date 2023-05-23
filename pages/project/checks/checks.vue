@@ -85,7 +85,7 @@ import { deleteProblem_API } from '../../../api/api.js'
 import { problemsbyId_API } from '../../../api/api.js'
 import { projectInfo_API } from '../../../api/api.js'
 import { projectUpdate_API } from '../../../api/api.js'
-
+import { rootBases_API } from '../../../api/api.js'
 export default {
 	data() {
 		return {
@@ -139,7 +139,9 @@ export default {
 				token:'',
 			},
 			intoView: '',
-			
+			rootBase:[],
+			problemTempList:[],
+			termsTempList:[],
 		}
 	},
 	components:{
@@ -259,37 +261,48 @@ export default {
 						}else{
 							this.initproblemList = res.data.data
 						}
-						this.templateDate = uni.getStorageSync('template_key')
-						console.log(this.templateDate)
-						console.log("get template success!")
-						//console.log("生成模板问题")
-						for(var i=0; i<this.templateDate.length;i++){
-							this.terms ={
-								id: '1',
-								terms: '1',
-								typeOne: '1',
-								typeTwo:'',
-								category:'',
-								length:1,
-								description:'',
-							}
-							this.terms.id = this.templateDate[i].id
-							this.terms.terms = this.templateDate[i].terms
-							this.terms.typeOne = this.templateDate[i].description
-							this.terms.description = this.templateDate[i].description
-							var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
-							//console.log(isExist.length)
-							if(isExist.length == 0){
-								for(var j = 0; j<this.typeList.length;j++){
-									if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
-										this.terms.category = this.typeList[j]
-									}
+						rootBases_API(this.uploadData).then(res => {
+							this.rootBase = res.data.data
+							this.templateDate = uni.getStorageSync('template_key')
+							console.log(this.templateDate)
+							console.log("get template success!")
+							//console.log("生成模板问题")
+							for(var i=0; i<this.templateDate.length;i++){
+								this.terms ={
+									id: '1',
+									terms: '1',
+									typeOne: '1',
+									typeTwo:'',
+									category:'',
+									length:1,
+									description:'',
 								}
-								this.addProject()
+								this.terms.id = this.templateDate[i].id
+								this.terms.terms = this.templateDate[i].terms
+								if(this.templateDate[i].parentCode !== null){
+									const reg = /\d+/g
+									const number = this.templateDate[i].parentCode.match(reg)
+									let baseTemp = this.rootBase.filter(item => (item.category === this.templateDate[i].category && item.code === number[0]))
+									this.terms.typeOne = baseTemp[0].description
+								}else{
+									this.terms.typeOne = this.templateDate[i].description
+								}
+								this.terms.description = this.templateDate[i].description
+								this.termsTempList.push(this.terms)
+								console.log(this.termsTempList)
+								var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
+								
+								if(isExist.length == 0){
+									for(var j = 0; j<this.typeList.length;j++){
+										if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
+											this.terms.category = this.typeList[j]
+										}
+									}
+									this.addProject()
+								}
+								this.terms = []
 							}
-							this.terms = []
-						}
-						
+						})
 					})
 					this.getChecks()
 				}
@@ -655,14 +668,13 @@ export default {
 				}
 				this.newProject.id = this.problemId
 				this.initproblemList.push(this.newProject)
-				//this.teamid = this.patrolTemp.teamId
 				console.log(this.teamid)
 				var bindMessage = {
 					teamId: this.teamid,
 					problemId: this.problemId,
 					token:this.token
 				}
-				console.log(this.initproblemList)
+				
 				bindTeam_API(bindMessage).then(res=>{
 					console.log(res)
 					this.changeData()
@@ -815,8 +827,9 @@ export default {
 		
 		changeData(name) {
 			this.problemList = this.initproblemList
+			//this.problemList = this.problemTempList
 			this.filterList()
-			
+			console.log(this.problemList)
 			// 添加是否为自定义问题字段
 			
 			//console.log(this.problemList)
@@ -825,6 +838,14 @@ export default {
 				this.problemList[j].index = j
 				this.problemList[j].isSelf = 'yes'
 				this.problemList[j].isOpen = false
+				console.log(this.problemList[j].basis)
+				if(this.problemList[j].basis === undefined || this.problemList[j].basis === null || this.problemList[j].basis.typeOne === '自定义' ){
+					
+				}else{
+					let temp = this.termsTempList.filter(item => item.id === this.problemList[j].basis.id)
+					this.problemList[j].basis.typeOne = temp[0].typeOne
+				}
+				//console.log(this.problemList[j])
 				for(var i=0;i<this.templateDate.length;i++){
 					// console.log("看这里")
 					// console.log(this.problemList[j].basis.id)
@@ -843,9 +864,9 @@ export default {
 							  "labels": "",
 							  "remarks": null,
 							  "feedbacks": [],
-							  "code": "2.12.2",
-							  "parentCode": "2.12",
-							  "isleaf": "Y",
+							  "code": "",
+							  "parentCode": "",
+							  "isleaf": "",
 							  "problems": [],
 						  }
 						  
