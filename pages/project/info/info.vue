@@ -141,7 +141,8 @@ import { teamByProject_API } from '../../../api/api.js'
 				},
 				update:false,
 				jump:0,
-				
+				latitude:0,
+				longitude:0,
 			}
 		},
 		onLoad(value) {
@@ -215,7 +216,7 @@ import { teamByProject_API } from '../../../api/api.js'
 						},1500)
 					}else{
 						this.projectTable = res.data.data
-						// console.log(this.projectTable)
+						console.log(this.projectTable)
 						this.list[0].info = this.projectTable.name
 						this.list[1].info = this.projectTable.district
 						this.list[2].info = this.projectTable.type
@@ -228,6 +229,8 @@ import { teamByProject_API } from '../../../api/api.js'
 						this.list[9].info = this.projectTable.projectManager
 						this.list[10].info = this.projectTable.projectLeader
 						this.list[11].info = this.projectTable.visualProgress
+						this.latitude = Number(this.projectTable.latitude)
+						this.longitude = Number(this.projectTable.longitude)
 						// this.list[12].info = this.projectTable.visualProgress
 					}
 				})
@@ -323,13 +326,13 @@ import { teamByProject_API } from '../../../api/api.js'
 					type: 'wgs84',
 					geocode:true,//设置该参数为true可直接获取经纬度及城市信息
 					success: function (res) {
-						that.addressMessage = res;
-						that.addressData = res.latitude + ', ' + res.longitude
-						//console.log(that.addressData)
-						
+						if(that.latitude === 0 && that.longitude === 0){
+							that.latitude = res.latitude
+							that.longitude = res.longitude
+						}
 						uni.chooseLocation({
-							latitude:res.latitude,
-							longitude:res.longitude,
+							latitude:that.latitude,
+							longitude:that.longitude,
 							success:function(result){
 								that.projectTable.address = result.name
 								that.projectTable.latitude = result.latitude
@@ -352,6 +355,7 @@ import { teamByProject_API } from '../../../api/api.js'
 							title: '地址更新成功',
 							duration: 1500
 						});
+						uni.removeStorageSync('project_key');
 					},
 					fail: function () {
 						uni.showToast({

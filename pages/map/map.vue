@@ -10,8 +10,6 @@
 					subkey="EIZBZ-NQRWN-N2IFP-SLVKB-NAF65-SIBM4"
 					:show-location="true"
 					@markertap="clickMarker"
-					@labeltap="clickMarkerLabel"
-					@callouttap="clickMarkerCallout"
 					>
 				</map>
 			</view>
@@ -29,6 +27,7 @@
 </template>
 
 <script>
+import { projectsAll_API } from '../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -68,19 +67,25 @@
 				markers:[],
 				title:'',
 				dataTemp:{},
-				
+				token:'',
 			}
 		},
 		onLoad: function() {
-			
+			this.initMap()
 		},
 		onReady() {
+			
+		},
+		onShow(){
+			this.markers = []
 			this.initMap()
 		},
 		methods: {
 			initMap(){
+				this.token = uni.getStorageSync('token_key')
 				this._mapContext = uni.createMapContext("map", this);
 				// 仅调用初始化才会触发on
+				
 				this._mapContext.initMarkerCluster({
 					enableDefaultStyle: false,
 					zoomOnClick: true,
@@ -126,66 +131,63 @@
 						clear: false,
 					})
 				});
-				
 				this.addMarkers();
 			},
 			// 添加标记点位
 			addMarkers() {
-				this.getProjectFromStorage()
-				let markers = [];
-				if(this.markers.length === 0){
-					for(var i = 0; i < this.projectTable.length;i++){
-						this.markerTemp.dataset = this.projectTable[i]
-						this.markerTemp.id = i
-						this.markerTemp.latitude = this.projectTable[i].latitude
-						this.markerTemp.longitude = this.projectTable[i].longitude
-						this.markerTemp.label = {
-						  content: this.projectTable[i].name.toString().substr(0, 10) + '...',
-						  anchorY: 0,
-						  display: 'ALWAYS',
-						  textAlign: 'center',
-						  bgColor: 'transparent',
-						  fontSize: 14,
-						  anchorX:-50,
-						};
-						this.markerTemp.callout = {
-						  display:'BYCLICK',
-						  content:this.projectTable[i].name.toString(),
-						  textAlign: 'center',
-						  width: 30,
-						  height: 60,
-						  color: '#000000',
-						  fontSize: 14,
-						  borderRadius: 4,
-						  bgColor: '#ffffff',
-						  padding: 8,
-						  clickable: true
-						};
-						let newMarker = Object.assign({},this.markerTemp)
-						markers.push(newMarker)
-					}
-					this.markers = markers
-				}else{
-					markers = this.markers
-				}
-				
-				this._mapContext.addMarkers({
-					markers,
-					clear: false,
-					complete(res) {
-					  console.log('addMarkers', res)
-					}
-				})
+				this.getallProjects()
 			  },
-			getProjectFromStorage(){
-				try {
-					this.projectTable = uni.getStorageSync('project_key');
-					if (this.projectTable) {
-						console.log("project get success!")
-					}
-				} catch (e) {
-					// error
+			getallProjects(){
+				var tranData = {
+					data:{
+						page:1,
+						size:10000,
+						},
+					token:this.token
 				}
+				projectsAll_API(tranData).then(result=>{
+					this.projectTable = result.data.data.data
+					uni.setStorage({
+						key:'project_key',
+						data:this.projectTable,
+						success: function() {
+							console.log('project save success!')
+						}
+					});
+					let markers = [];
+					if(this.markers.length === 0){
+						for(var i = 0; i < this.projectTable.length;i++){
+							this.markerTemp.dataset = this.projectTable[i]
+							this.markerTemp.id = i
+							this.markerTemp.latitude = this.projectTable[i].latitude
+							this.markerTemp.longitude = this.projectTable[i].longitude
+							this.markerTemp.label = {
+							  content: this.projectTable[i].name.toString().substr(0, 10) + '...',
+							  anchorY: 0,
+							  display: 'ALWAYS',
+							  textAlign: 'center',
+							  bgColor: 'transparent',
+							  fontSize: 14,
+							  anchorX:-50,
+							};
+							
+							let newMarker = Object.assign({},this.markerTemp)
+							markers.push(newMarker)
+						}
+						this.markers = markers
+					}else{
+						markers = this.markers
+					}
+					console.log(markers)
+					this._mapContext.addMarkers({
+						markers,
+						clear: false,
+						complete(res) {
+						  console.log('addMarkers', res)
+						}
+					})
+				})
+			
 			},
 			clickMarker(e){
 				this.$refs.popup.open('bottom')
@@ -193,16 +195,6 @@
 				console.log(this.markers[e.markerId].dataset)
 				this.dataTemp = this.markers[e.markerId].dataset
 				this.title = this.markers[e.markerId].dataset.name
-				//this.markers[e.markerId].callout.display = 'ALWAYS'
-				this.initMap()
-			},
-			clickMarkerLabel(){
-				console.log("我点击了一个标记点的Label！")
-			},
-			clickMarkerCallout(e){
-				console.log("我点击了一个标记点的Callout！")
-				this.markers[e.markerId].callout.display = 'BYCLICK'
-				this.initMap()
 			},
 			navigaToInfo(){
 				uni.navigateTo({
