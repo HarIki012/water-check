@@ -4,7 +4,9 @@
 			<text>···</text>
 		</view>
 		<view class="text">
-			<text style="margin-bottom: 20rpx;">问题描述</text>
+			<text style="margin-bottom: 20rpx;">问题描述
+				<text v-if="isSelf === 'yes'" style="color: red;width: 25%;">*</text>
+			</text>
 			<text v-if="isSelf !== 'yes'" style="font-size: 33rpx;">{{projectData.description}}</text>
 			<textarea v-if="isSelf === 'yes'" class="detailStyle" style="padding-left: 20rpx;" type="text" :value="projectData.description" placeholder="请输入详情描述..." @blur="projectChange" @input="sumFontNumDescription" :disabled="allow"></textarea>
 		<view class="fontInput">
@@ -70,6 +72,7 @@
 			<view class="text">
 				<view style="flex-direction: row; margin-bottom: 20rpx;">
 					<text style="margin-bottom: 20rpx;">整改要求</text>
+					<text style="color: red;width: 25%;">*</text>
 				</view>
 				<textarea class="detailStyle" :style="{'border': isFocused && !projectData.rectify ? '1px solid red' : '1px solid darkgray'}" style="padding-left: 20rpx;" type="text"  @focus="onFocus" :value="projectData.rectify" placeholder="整改要求" @blur="projectChange" @input="sumFontNumRectify" :disabled="allow"></textarea>
 				<view class="fontInput">

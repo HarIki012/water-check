@@ -138,15 +138,19 @@ import { createProject_API } from '../../../api/api.js'
 		computed: {
 			filterList() {
 				var arr = [] //定义一个空数组
-				this.projectTable.forEach((item) => arr.push(item)) //在zhiweilist查找数据放入空数组
-				if (this.projectnameSearch) { //如果有这个数据
-					arr = this.projectTable.filter(item => item.name.includes(this.projectnameSearch))
-					//则在zhiweilist里过滤掉filterText
+				if(this.projectTable.length === 0){
+					
+				}else{
+					this.projectTable.forEach((item) => arr.push(item)) //在zhiweilist查找数据放入空数组
+					if (this.projectnameSearch) { //如果有这个数据
+						arr = this.projectTable.filter(item => item.name.includes(this.projectnameSearch))
+						//则在zhiweilist里过滤掉filterText
+					}
+					if (this.projectselectName !== '区域选择') {
+						arr = this.projectTable.filter(item => item.district.includes(this.projectselectName))
+					}
+					console.log(arr)
 				}
-				if (this.projectselectName !== '区域选择') {
-					arr = this.projectTable.filter(item => item.district.includes(this.projectselectName))
-				}
-				console.log(arr)
 				return arr
 			}
 		},
@@ -157,6 +161,7 @@ import { createProject_API } from '../../../api/api.js'
 			console.log('触发了下拉刷新')	
 			this.checkLogin()
 			setTimeout(()=>{
+				uni.removeStorageSync('project_key');
 				uni.stopPullDownRefresh()
 			},500)
 		},

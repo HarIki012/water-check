@@ -156,6 +156,8 @@ import { teamByProject_API } from '../../../api/api.js'
 				this.checks[temp].status = value.status
 				uni.removeStorageSync('project_key');
 				this.update = true
+				this.getpatrolByProject()
+				this.setBasisByProject()
 			}
 			console.log(this.update + "load")
 			this.projectId = value.projectId

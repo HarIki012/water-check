@@ -46,7 +46,6 @@
 									</text>
 								</view>
 							</view>
-							
 							<view v-if="newList[index].data[id].isOpen">
 								<view style="display: flex;flex-direction: column;border-bottom: 1rpx solid darkgray;">
 									<projectdetail :projectData="it"  @sendData="getData" @deleteId="getDeleteid"></projectdetail>
@@ -64,8 +63,6 @@
 			<uni-popup-dialog :type="msgType" cancelText="取消" confirmText="确定" title="是否删除此项问题" :content=deleteName @confirm="dialogConfirm"
 								@close="dialogClose"></uni-popup-dialog>
 		</uni-popup>
-
-			
 	</view>
 	<view class="button-bottom">
 		<button class="submit-button" @tap="submitChange()" :disabled="buttonUsed">提交</button>
@@ -142,6 +139,7 @@ export default {
 			rootBase:[],
 			problemTempList:[],
 			termsTempList:[],
+			generateTypeOne:'',
 		}
 	},
 	components:{
@@ -199,9 +197,8 @@ export default {
 		this.getPatrol()
 		this.savePatrolId()
 		this.getTemplate()
-		this.getChecks()
-		this.sequ(0)
 		this.getTerms()
+		
 	},
 	onShow() {
 		
@@ -255,7 +252,7 @@ export default {
 					
 					problemsbyId_API(this.uploadData).then(res => {
 						console.log("获取原有问题！")
-						console.log(res.data.data)
+						//console.log(res.data.data)
 						if(Number(res.data.data) == 0){
 							this.initproblemList = []
 						}else{
@@ -289,7 +286,7 @@ export default {
 								}
 								this.terms.description = this.templateDate[i].description
 								this.termsTempList.push(this.terms)
-								console.log(this.termsTempList)
+								//console.log(this.termsTempList)
 								var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
 								
 								if(isExist.length == 0){
@@ -302,9 +299,11 @@ export default {
 								}
 								this.terms = []
 							}
+							this.getChecks()
+							this.sequ(0)
 						})
 					})
-					this.getChecks()
+					
 				}
 			}catch(e){
 
@@ -345,9 +344,7 @@ export default {
 			console.log(this.idbox)
 			this.uploadData.data = this.idbox
 			problemsbyId_API(this.uploadData).then(res=>{
-				//console.log(res.data.data)
 				if(Number(res.data.data) === 0){
-					
 				}else{
 					this.initproblemList = res.data.data
 					try {
@@ -360,6 +357,7 @@ export default {
 						if (this.terms.id !== undefined) {
 							console.log("terms get success!")
 							console.log("即将新增问题")
+							this.generateTypeOne = this.terms.typeOne
 							this.addProject()
 							var tempData = []
 							uni.setStorage({
@@ -798,7 +796,6 @@ export default {
 				this.initproblemList = []
 				this.problemList = []
 				const pages = getCurrentPages()
-				//console.log(pages)
 				let delta = 0
 				for(var i = 0;i<pages.length;i++){
 					if(pages[i].route === 'pages/project/info/info'){
@@ -806,7 +803,6 @@ export default {
 					}
 				}
 				let temp = pages.length - delta - 1 
-				//console.log(temp)
 				console.log("跳转堆栈！")
 				var infopage = pages[delta]
 				var id = this.projectId
@@ -814,6 +810,7 @@ export default {
 				uni.navigateBack({
 					delta:temp,
 					success() {
+						uni.removeStorageSync('project_key');
 						infopage.onLoad({
 							update:true,
 							projectId:id,
@@ -828,22 +825,24 @@ export default {
 		changeData(name) {
 			this.problemList = this.initproblemList
 			//this.problemList = this.problemTempList
+			//console.log(JSON.stringify(this.termsTempList))
 			this.filterList()
-			console.log(this.problemList)
 			// 添加是否为自定义问题字段
-			
-			//console.log(this.problemList)
-			//console.log(this.templateDate)
 			for (var j = 0; j < this.problemList.length; j++){
 				this.problemList[j].index = j
 				this.problemList[j].isSelf = 'yes'
 				this.problemList[j].isOpen = false
-				console.log(this.problemList[j].basis)
 				if(this.problemList[j].basis === undefined || this.problemList[j].basis === null || this.problemList[j].basis.typeOne === '自定义' ){
 					
 				}else{
 					let temp = this.termsTempList.filter(item => item.id === this.problemList[j].basis.id)
-					this.problemList[j].basis.typeOne = temp[0].typeOne
+					//console.log(temp)
+					if(temp.length === 0){
+						this.problemList[j].basis.typeOne = this.generateTypeOne
+					}else{
+						this.problemList[j].basis.typeOne = temp[0].typeOne
+					}
+					
 				}
 				//console.log(this.problemList[j])
 				for(var i=0;i<this.templateDate.length;i++){

@@ -34,7 +34,7 @@
 				allowLogin:false,
 				expertData:{
 					id:0,
-					name:"",
+					name:"测试账号",
 					phone:"",
 					isLogin:false,
 				},
@@ -97,7 +97,8 @@
 						}else{
 							this.userToken = res.data.data.token
 							this.userRole = res.data.data.user.role
-							
+							this.expertData.id = res.data.data.user.id
+							this.expertData.phone = res.data.data.user.phone
 							var tempData = {
 								phone:formData.tel,
 								token:this.userToken
@@ -110,13 +111,14 @@
 								}
 							});
 							expertByPhone_API(tempData).then(res =>{
-								this.expertData = {
-									id:res.data.data.id,
-									name:res.data.data.name,
-									phone:res.data.data.phone,
-									role:this.userRole,
-									isLogin:true,
+								if(res.data.data === null){
+									
+									
+								}else{
+									this.expertData.name = res.data.data.name
 								}
+								this.expertData.role = this.userRole
+								this.expertData.isLogin = true
 								uni.setStorage({
 									key:'user_key',
 									data:this.expertData,
