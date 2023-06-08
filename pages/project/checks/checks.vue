@@ -264,41 +264,44 @@ export default {
 							console.log(this.templateDate)
 							console.log("get template success!")
 							//console.log("生成模板问题")
-							for(var i=0; i<this.templateDate.length;i++){
-								this.terms ={
-									id: '1',
-									terms: '1',
-									typeOne: '1',
-									typeTwo:'',
-									category:'',
-									length:1,
-									description:'',
-								}
-								this.terms.id = this.templateDate[i].id
-								this.terms.terms = this.templateDate[i].terms
-								if(this.templateDate[i].parentCode !== null){
-									const reg = /\d+/g
-									const number = this.templateDate[i].parentCode.match(reg)
-									let baseTemp = this.rootBase.filter(item => (item.category === this.templateDate[i].category && item.code === number[0]))
-									this.terms.typeOne = baseTemp[0].description
-								}else{
-									this.terms.typeOne = this.templateDate[i].description
-								}
-								this.terms.description = this.templateDate[i].description
-								this.termsTempList.push(this.terms)
-								//console.log(this.termsTempList)
-								var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
-								
-								if(isExist.length == 0){
-									for(var j = 0; j<this.typeList.length;j++){
-										if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
-											this.terms.category = this.typeList[j]
-										}
+							if(this.templateDate !== null){
+								for(var i=0; i<this.templateDate.length;i++){
+									this.terms ={
+										id: '1',
+										terms: '1',
+										typeOne: '1',
+										typeTwo:'',
+										category:'',
+										length:1,
+										description:'',
 									}
-									this.addProject()
+									this.terms.id = this.templateDate[i].id
+									this.terms.terms = this.templateDate[i].terms
+									if(this.templateDate[i].parentCode !== null){
+										const reg = /\d+/g
+										const number = this.templateDate[i].parentCode.match(reg)
+										let baseTemp = this.rootBase.filter(item => (item.category === this.templateDate[i].category && item.code === number[0]))
+										this.terms.typeOne = baseTemp[0].description
+									}else{
+										this.terms.typeOne = this.templateDate[i].description
+									}
+									this.terms.description = this.templateDate[i].description
+									this.termsTempList.push(this.terms)
+									//console.log(this.termsTempList)
+									var isExist = this.initproblemList.filter(item => item.description === this.terms.description)
+									
+									if(isExist.length == 0){
+										for(var j = 0; j<this.typeList.length;j++){
+											if (this.templateDate[i].category.indexOf(this.typeList[j]) !== -1) {
+												this.terms.category = this.typeList[j]
+											}
+										}
+										this.addProject()
+									}
+									this.terms = []
 								}
-								this.terms = []
 							}
+							
 							this.getChecks()
 							this.sequ(0)
 						})
@@ -845,7 +848,13 @@ export default {
 					
 				}
 				//console.log(this.problemList[j])
-				for(var i=0;i<this.templateDate.length;i++){
+				var tempLength = 0
+				if(this.templateDate === null){
+					tempLength = 0
+				} else {
+					tempLength = this.templateDate.length
+				}
+				for(var i=0;i<tempLength.length;i++){
 					// console.log("看这里")
 					// console.log(this.problemList[j].basis.id)
 					if(this.problemList[j].basis !== null && this.problemList[j].basis.id !== undefined && this.problemList[j].basis.id === this.templateDate[i].id){
@@ -871,7 +880,25 @@ export default {
 						  
 					}
 				}
-				
+				if (this.problemList[j].basis === undefined || this.problemList[j].basis === null || this.problemList[j].basis.typeOne === ''){
+					this.problemList[j].basis = {
+						  "id": '',
+						  "typeOne": "自定义",
+						  "category": "",
+						  "description": "",
+						  "regulations": "",
+						  "terms": '',
+						  "responsibleParties": "",
+						  "labels": "",
+						  "remarks": null,
+						  "feedbacks": [],
+						  "code": "",
+						  "parentCode": "",
+						  "isleaf": "",
+						  "problems": [],
+					  }
+					  
+				}
 				if(this.problemList[j].id === this.newOpen && this.newOpen !== ''){
 					this.problemList[j].isOpen = true
 					this.move(j)
@@ -881,6 +908,7 @@ export default {
 			
 			var map = {}
 			var nList = []
+			console.log(this.problemList)
 			for (var i = 0; i < this.problemList.length; i++) {
 				var item = this.problemList[i]
 				if (!map[item.basis.typeOne]) {
