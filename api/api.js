@@ -13,6 +13,17 @@ export function projectsAll_API(data) {
 	})
 }
 
+// 获取所有的项目详情(new)
+export function projectsAllnew_API(data) {
+	return uni.request({
+		url: `${baseUrl}/projects?page=${data.data.page}&size=${data.data.size}`,
+		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
+	})
+}
+
 // 按ID获取项目详情
 export function projectInfo_API(data){
 	return uni.request({
@@ -267,6 +278,52 @@ export function rootBases_API(data){
 	return uni.request({
 		url: `${baseUrl}/root_bases`,
 		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
+	})
+}
+
+// 返回根节点列表
+export function getpatrolsAll_API(data){
+	return uni.request({
+		url: `${baseUrl}/patrols`,
+		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
+	})
+}
+
+// 获取所有的巡检组
+export function teamsAll_API(data) {
+	return uni.request({
+		url: `${baseUrl}/teams`,
+		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
+	})
+}
+
+// 修改巡检活动
+export function updataPatrol_API(data) {
+	return uni.request({
+		url: `${baseUrl}/patrol_update`,
+		data: data.data,
+		method:'PUT',
+		header:{
+			"Authorization":data.token,
+		}
+	})
+}
+
+//巡查组添加巡查项目
+export function teamBindProject_API(data){
+	return uni.request({
+		url: `${baseUrl}//team_project_bind?team_id=${data.teamid}`,
+		method:'PUT',
+		data: data.data,
 		header:{
 			"Authorization":data.token,
 		}

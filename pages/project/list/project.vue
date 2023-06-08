@@ -39,15 +39,17 @@
 						<view v-if="item.patrolStatus !== null && item.patrolStatus.length !== 0">
 							<text v-if="item.patrolStatus[0].status === '未检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '待检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">待检查</text>
+							<text v-if="item.patrolStatus[0].status === '未开始'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '进行中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '已提交'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
 							<text v-if="item.patrolStatus[0].status === '已审核'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
+							<!-- <text v-else style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">未开始</text> -->
 						</view>
-						<!-- <view v-else>
-							<text style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">未检查</text>
-						</view> -->
+						<view v-else>
+							<text style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">未开始</text>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -75,10 +77,26 @@
 				</view>
 				<view class="popup-use1">
 					<view class="project-time">
-						<picker style="width: 90%;" @change="dateSelect" :range="dateChoose">
+						<picker style="width: 90%;" @change="dateSelect" :range="patrolList">
 							<label class="label-style">{{ dateName }}</label>
 						</picker>
-						<picker @change="dateSelect" :range="dateChoose">
+						<picker @change="dateSelect" :range="patrolList">
+							<text class="iconfont icon icon-xiangxia"></text>
+						</picker>
+					</view>
+				</view>
+				
+				<view class="popup-use">
+					<text style="color: #5547ae;">所属巡检小组</text>
+					<text style="color: red;">*</text>
+				</view>
+				<view class="popup-use1">
+					<view class="project-time">
+						<picker style="width: 90%;" @change="teamSelect" :range="teamsList">
+							<label v-if="teamName !== ''" class="label-style">第{{ teamName }}组</label>
+							<label v-else class="label-style">请选择巡检小组</label>
+						</picker>
+						<picker @change="teamSelect" :range="teamsList">
 							<text class="iconfont icon icon-xiangxia"></text>
 						</picker>
 					</view>
@@ -97,7 +115,7 @@
 					<input class="input-style" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done">
 				</view>
 				
-				<button v-if="this.newProjectname && this.dateName !== this.firstName" class="buttonStyle" type="primary" @tap="closePop('top')">确定</button>	
+				<button v-if="this.newProjectname && this.dateName !== this.firstName && this.teamName" class="buttonStyle" type="primary" @tap="closePop('top')">确定</button>	
 				<button v-else class="buttonStyle" type="primary" disabled="true" @tap="closePop('top')">确定</button>
 				
 			</view>
@@ -108,7 +126,13 @@
 <script>
 import { warn } from "vue"
 import { projectsAll_API } from '../../../api/api.js'
+import { projectsAllnew_API } from '../../../api/api.js'
 import { createProject_API } from '../../../api/api.js'
+import { getpatrolsAll_API } from '../../../api/api.js'
+import { teamsAll_API } from '../../../api/api.js'
+import { updataPatrol_API } from '../../../api/api.js'
+import { teamBindProject_API } from '../../../api/api.js'
+
 	export default {
 		data() {
 			return {
@@ -116,7 +140,10 @@ import { createProject_API } from '../../../api/api.js'
 				newProjectname: '',
 				isNew: '',
 				blankSpace: '',
-				dateChoose: ['2023年第一次检查','2023年第二次检查','2023年第三次检查','2023年第四次检查','2023年第五次检查','2023年第六次检查'],
+				dateChooseOld: ['2023年第一次检查','2023年第二次检查','2023年第三次检查','2023年第四次检查','2023年第五次检查','2023年第六次检查'],
+				dateChoose: ['水务局试用巡检活动','自定义测试巡检'],
+				patrolList:[],
+				patrolidList:[],
 				projectChoose: ['区域选择',"洪山区","东湖风景区","汉阳区","江汉区","武昌区","江夏区","东西湖区","青山区","硚口区","东湖高新区","新洲区","蔡甸区","江岸区","经开区","黄陂区"],
 				projectselectIndex: 0,
 				dateIndex: 0,
@@ -133,6 +160,16 @@ import { createProject_API } from '../../../api/api.js'
 				loginData:{},
 				role:'',
 				token:'',
+				patrolChange:'',
+				teamsList:[],
+				teamName:'',
+				teamlistIndex:'',
+				latitude:null,
+				longitude:null,
+				newproId:'',
+				allpatrolList:'',
+				modifyPatrol:'',
+				testT:'1'
 			}
 		},
 		computed: {
@@ -152,7 +189,8 @@ import { createProject_API } from '../../../api/api.js'
 					console.log(arr)
 				}
 				return arr
-			}
+			},
+			
 		},
 		onLoad() {
 			this.checkLogin()
@@ -181,10 +219,47 @@ import { createProject_API } from '../../../api/api.js'
 					}else{
 						this.role = this.loginData.role
 						this.getProjects()
+						this.getPatrols()
+						this.getTeams()
 					}
 				}catch(e){
 
 				}
+			},
+			getTeams(){
+				var tempData = {
+					token:this.token
+				}
+				teamsAll_API(tempData).then(res=>{
+					// console.log(res)
+					var tempTeams = res.data.data
+					console.log(tempTeams)
+					for(var i=0;i<tempTeams.length;i++){
+						this.teamsList.push(tempTeams[i].id)
+					}
+					console.log(this.teamsList)
+				})
+			},
+			getPatrols(){
+				var tempData = {
+					token:this.token
+				}
+				getpatrolsAll_API(tempData).then(res=>{
+					// console.log(res)
+					var tempPatrol = res.data.data
+					this.allpatrolList = tempPatrol
+					console.log(tempPatrol)
+					for(var i=0;i<tempPatrol.length;i++){
+						this.patrolidList.push({
+							id: tempPatrol[i].id,
+							name: tempPatrol[i].name
+						})
+						this.patrolList.push(tempPatrol[i].name)
+					}
+					console.log(this.patrolList)
+					console.log(this.patrolidList)
+				})
+				
 			},
 			// 获取巡检活动
 			getProjects(){
@@ -199,23 +274,30 @@ import { createProject_API } from '../../../api/api.js'
 					token:this.token
 				}
 				try{
-					this.projectTable = uni.getStorageSync('project_key')
-					if(this.projectTable.length === 0 ){
-						projectsAll_API(tranData).then(res=>{
-							// console.log(res)
-							this.sumData = res.data.data.count
-							//console.log(res.data.data.data)
-							this.getallProjects()
-						})
-					}
-					else{
-						uni.hideLoading();
-					}
+					// this.projectTable = uni.getStorageSync('project_key')
+					// if(this.projectTable.length === 0 ){
+					// 	projectsAllnew_API(tranData).then(res=>{
+					// 		console.log(res)
+					// 		this.sumData = res.data.data.count
+					// 		//console.log(res.data.data.data)
+					// 		this.getallProjects()
+					// 	})
+					// }
+					// else{
+					// 	uni.hideLoading();
+					// }
+					projectsAllnew_API(tranData).then(res=>{
+						console.log(res)
+						this.sumData = res.data.data.count
+						//console.log(res.data.data.data)
+						this.getallProjects()
+					})
 				}catch(e){
 
 				}
 			},
 			getallProjects(){
+				console.log(this.sumData)
 				var tranData = {
 					data:{
 						page:1,
@@ -223,8 +305,9 @@ import { createProject_API } from '../../../api/api.js'
 						},
 					token:this.token
 				}
-				projectsAll_API(tranData).then(result=>{
+				projectsAllnew_API(tranData).then(result=>{
 					this.projectTable = result.data.data.data
+					console.log(this.projectTable)
 					console.log("数据获取成功！")
 					uni.hideLoading();
 					uni.setStorage({
@@ -258,30 +341,60 @@ import { createProject_API } from '../../../api/api.js'
 				})
 				var newProject = {
 				  "name": this.newProjectname,
-				  "type": "水务工程",
-				  "district": "青山区",
-				  "address": "青山区友谊大道XXXX",
-				  "employer": "XXX有限公司",
-				  "builder": "XXX建设有限公司",
-				  "supervisor": "XXX工程管理有限公司",
-				  "patrolStatus": [{"patrol_name":this.dateName,"status":"待检查"}],
-				  "regulator": "监管部门1",
-				  "contracts": "监理-XXX-18888888888",
-				  "visualProgress": "0%",
+				  "type": "市政",
+				  "district": "青山区、洪山区",
+				  "address": "青山区、洪山区",
+				  "longitude": this.longitude,
+				  "latitude": this.latitude,
+				  "employer": "武汉德鑫建设投资有限公司",
+				  "builder": "中铁一局集团有限公司",
+				  "supervisor": "湖北南方建设管理咨询有限公司",
+				  "projectLeader": "王雷18675517001",
+				  "projectManager": "吴迪18675173456",
+				  "director": "周喆15071088180",
+				  "patrolStatus": [
+					{
+					  "patrol_name": this.dateName,
+					  "status": this.modifyPatrol.status
+					}
+				  ],
+				  "regulator": null,
+				  "visualProgress": null,
+				  "template": null
 				}
 				var data = {
 					newProject:newProject,
 					token:this.token
 				}
-				//console.log(newProject)
-				createProject_API(newProject).then(res=>{
+				console.log(newProject)
+				
+				createProject_API(data).then(res=>{
 					//console.log(res.data.data)
 					if (res.data.message === 'success') {
+						this.newproId = res.data.data.id
 						uni.hideLoading();
 						uni.showToast({
 							title: '添加成功!',
 							duration: 1000
 						});
+						this.modifyPatrol.projectIds.push(this.newproId)
+						console.log(this.modifyPatrol)
+						var patrolData = {
+							data:this.modifyPatrol,
+							token:this.token
+						}
+						updataPatrol_API(patrolData).then(res1=>{
+							console.log(res1)
+						})
+						var teamData = {
+							teamid:this.teamName,
+							data:[this.newproId],
+							token:this.token
+						}
+						console.log(teamData)
+						teamBindProject_API(teamData).then(res2=>{
+							console.log(res2)
+						})
 					} else {
 						uni.hideLoading();
 						uni.showToast({
@@ -291,6 +404,7 @@ import { createProject_API } from '../../../api/api.js'
 						});
 					}
 				})
+				
 				this.$refs['popup'].close()
 				this.getProjects()
 			},
@@ -306,7 +420,21 @@ import { createProject_API } from '../../../api/api.js'
 			},
 			dateSelect(e) {
 			    this.dateIndex = e.detail.value;
-			    this.dateName=this.dateChoose[this.dateIndex]
+			    this.dateName=this.patrolList[this.dateIndex]
+				var patrolTemp = this.patrolidList.filter(item=>{
+					return item.name === this.dateName
+				})[0]
+				this.modifyPatrol = this.allpatrolList.filter(item=>{
+					return item.name === this.dateName
+				})[0]
+				console.log(this.modifyPatrol)
+				console.log(patrolTemp)
+				this.patrolChange = patrolTemp
+			},
+			teamSelect(e){
+				this.teamlistIndex = e.detail.value;
+				this.teamName=this.teamsList[this.teamlistIndex]
+				console.log(this.teamName)
 			},
 			projectSelect(e) {
 			    this.projectselectIndex = e.detail.value;
@@ -325,6 +453,8 @@ import { createProject_API } from '../../../api/api.js'
 						//console.log(res)
 						that.addressMessage = res;
 						that.addressData = res.latitude + ', ' + res.longitude
+						that.latitude = res.latitude
+						that.longitude = res.longitude
 						//console.log(that.addressData)
 						uni.showToast({
 							title: '地址获取成功',
