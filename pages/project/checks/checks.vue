@@ -140,6 +140,7 @@ export default {
 			problemTempList:[],
 			termsTempList:[],
 			generateTypeOne:'',
+			typePro:'质量'
 		}
 	},
 	components:{
@@ -537,6 +538,8 @@ export default {
 			} else {
 				this.selectPoint = this.typeList[id]
 			}
+			console.log(this.typeList[id])
+			this.typePro = this.typeList[id] 
 			this.getChecks()
 		},
 		
@@ -601,7 +604,7 @@ export default {
 					  "termsUrl": [],
 					  "terms":"",
 					  "projectName": this.tranprojectName,
-					  "type": "质量",
+					  "type": this.typePro,
 					  "severity": "一般",
 					  "description": "请填写问题描述",
 					  "detail": "",
