@@ -857,7 +857,8 @@ export default {
 				} else {
 					tempLength = this.templateDate.length
 				}
-				for(var i=0;i<tempLength.length;i++){
+				console.log(tempLength)
+				for(var i=0;i<tempLength;i++){
 					// console.log("看这里")
 					// console.log(this.problemList[j].basis.id)
 					if(this.problemList[j].basis !== null && this.problemList[j].basis.id !== undefined && this.problemList[j].basis.id === this.templateDate[i].id){
@@ -943,7 +944,7 @@ export default {
 				nList[nList.length-1] = tran
 			}
 			this.newList = nList
-			// sconsole.log(this.newList)
+			console.log(this.newList)
 			
 		}
 	}

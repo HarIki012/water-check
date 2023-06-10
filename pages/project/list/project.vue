@@ -92,14 +92,23 @@
 				</view>
 				<view class="popup-use1">
 					<view class="project-time">
-						<picker style="width: 90%;" @change="teamSelect" :range="teamsList">
-							<label v-if="teamName !== ''" class="label-style">第{{ teamName }}组</label>
+						<picker style="width: 90%;" @change="teamSelect" :range="teamsList" :disabled="chooseTeam">
+							<label v-if="teamName !== ''" class="label-style">{{ teamName }}组</label>
+							<label v-else class="label-style">请选择巡检小组</label>
+						</picker>
+						<picker @change="teamSelect" :range="teamsList" :disabled="chooseTeam">
+							<text class="iconfont icon icon-xiangxia"></text>
+						</picker>
+					</view>
+					<!-- <view v-else class="project-time">
+						<picker style="width: 90%;" @change="teamSelect" :range="teamsList" disabled=true>
+							<label v-if="teamName !== ''" class="label-style">{{ teamName }}组</label>
 							<label v-else class="label-style">请选择巡检小组</label>
 						</picker>
 						<picker @change="teamSelect" :range="teamsList">
 							<text class="iconfont icon icon-xiangxia"></text>
 						</picker>
-					</view>
+					</view> -->
 				</view>
 				
 				<view class="popup-use">
@@ -163,13 +172,16 @@ import { teamBindProject_API } from '../../../api/api.js'
 				patrolChange:'',
 				teamsList:[],
 				teamName:'',
+				teamId:'',
 				teamlistIndex:'',
 				latitude:null,
 				longitude:null,
 				newproId:'',
 				allpatrolList:'',
 				modifyPatrol:'',
-				testT:'1'
+				testT:'1',
+				teamidList:[],
+				chooseTeam:true,
 			}
 		},
 		computed: {
@@ -220,7 +232,7 @@ import { teamBindProject_API } from '../../../api/api.js'
 						this.role = this.loginData.role
 						this.getProjects()
 						this.getPatrols()
-						this.getTeams()
+						// this.getTeams()
 					}
 				}catch(e){
 
@@ -257,6 +269,7 @@ import { teamBindProject_API } from '../../../api/api.js'
 						this.patrolList.push(tempPatrol[i].name)
 					}
 					console.log(this.patrolList)
+					
 					console.log(this.patrolidList)
 				})
 				
@@ -332,6 +345,8 @@ import { teamBindProject_API } from '../../../api/api.js'
 					this.errorTips2 = this.blankSpace
 					this.dateName = this.firstName
 					this.addressData = this.blankSpace
+					this.teamName = this.blankSpace
+					this.chooseTeam = true
 					this.$refs['popup'].open();
 				}
 			},
@@ -355,7 +370,7 @@ import { teamBindProject_API } from '../../../api/api.js'
 				  "patrolStatus": [
 					{
 					  "patrol_name": this.dateName,
-					  "status": this.modifyPatrol.status
+					  "status": "待检查"
 					}
 				  ],
 				  "regulator": null,
@@ -387,7 +402,7 @@ import { teamBindProject_API } from '../../../api/api.js'
 							console.log(res1)
 						})
 						var teamData = {
-							teamid:this.teamName,
+							teamid:this.teamId,
 							data:[this.newproId],
 							token:this.token
 						}
@@ -404,7 +419,7 @@ import { teamBindProject_API } from '../../../api/api.js'
 						});
 					}
 				})
-				
+				this.teamsList=[]
 				this.$refs['popup'].close()
 				this.getProjects()
 			},
@@ -428,13 +443,30 @@ import { teamBindProject_API } from '../../../api/api.js'
 					return item.name === this.dateName
 				})[0]
 				console.log(this.modifyPatrol)
+				var tempTeams = this.modifyPatrol.inspectionTeams
+				console.log(tempTeams)
+				for(var i=0;i<tempTeams.length;i++){
+					this.teamsList.push(tempTeams[i].leader)
+					this.teamidList.push({
+						id:tempTeams[i].id,
+						leader:tempTeams[i].leader
+					})
+				}
+				console.log(this.teamsList)
 				console.log(patrolTemp)
+				console.log(this.teamidList)
 				this.patrolChange = patrolTemp
+				this.chooseTeam = false
 			},
 			teamSelect(e){
 				this.teamlistIndex = e.detail.value;
 				this.teamName=this.teamsList[this.teamlistIndex]
 				console.log(this.teamName)
+				var teamidTemp = this.teamidList.filter(item=>{
+					return item.leader === this.teamName
+				})[0]
+				this.teamId = teamidTemp.id
+				console.log(this.teamId)
 			},
 			projectSelect(e) {
 			    this.projectselectIndex = e.detail.value;
