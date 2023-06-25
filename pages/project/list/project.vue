@@ -3,54 +3,60 @@
 		<view class="stick-bar">
 			<view class="wx-top">
 				<!-- 搜索图标 -->
-				<view class="create-button iconfont icon icon-new_document" @click="openPop"></view>
-				<view class="create-word" @click="openPop">新建</view>
+				<image src="/static/img/fanhui1.png" @click="openPop" class="create-button"></image>
+				<!-- <view class="create-button iconfont icon icon-new_document" @click="openPop"></view> -->
+				<view class="create-word" @click="openPop">新建项目</view>
 				<view class="title-word">项目列表</view>
 			</view>
 			<view class="projectSearch">
-				<view class="projectStyle">
-					<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
-						<label style="color: #929293;margin-right: 10rpx;">{{ projectselectName }}</label>
+				<view class="projectStyle" @click="openPopArea">
+					<!-- <picker class="centerStyle" @change="projectSelect" :range="projectChoose">
+						<label style="color: #0D72BE;margin-right: 10rpx;">{{ projectselectName }}</label>
 						<text class="iconfont icon icon-xiangxia"></text>
-					</picker>
+					</picker> -->
+					<label style="color: #0D72BE;margin-right: 10rpx;">{{ projectselectName }}</label>
+					<text class="iconfont icon icon-xiangxia"></text>
 				</view>
 				<view class="selectStyle">
-					<image class="logo iconfont icon icon-chazhao" ></image>
+					<image src="../../../static/img/sousuo.png" class="search-icon"></image>
 					<input type="text" v-model="projectnameSearch" placeholder="项目名称" confirm-type="search">
 				</view>
 				<text class="searchButton">搜索</text>
 			</view>
 		</view>
 		
-		
-		
 		<view >
 			<view class="tableStyle" v-for="(item,index) in filterList" :key="item.id" @click="navigatortoinfo(item.id)">
 				<view class="tableContent" style="display: flex;align-items: center;">
-					<view class="logoItem iconfont icon icon-chazhao" style="display: flex;align-items: center;"></view>
+					<image class="gongdan-icon" src="../../../static/img/gongdan1.png"></image>
+					<!-- <view class="logoItem iconfont icon icon-chazhao" style="display: flex;align-items: center;"></view> -->
 					<view style="width: 80%;display: flex;align-items: center;">
 						{{item.name}}
 					</view>
 				</view>
 				
-				<view class="statusStyle">
+				<view class="statusStyle"> 
 					<view style="display: flex;width: 100%;justify-content: flex-end;">
 						<text style="color: darkgray;">状态：</text>
 						<view v-if="item.patrolStatus !== null && item.patrolStatus.length !== 0">
-							<text v-if="item.patrolStatus[0].status === '未检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
-							<text v-if="item.patrolStatus[0].status === '待检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">待检查</text>
-							<text v-if="item.patrolStatus[0].status === '未开始'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
-							<text v-if="item.patrolStatus[0].status === '进行中'" style="color: #02baf7;background-color: #dbfdff;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
-							<text v-if="item.patrolStatus[0].status === '已检查'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
-							<text v-if="item.patrolStatus[0].status === '已中止'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
-							<text v-if="item.patrolStatus[0].status === '已提交'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
-							<text v-if="item.patrolStatus[0].status === '已审核'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.patrolStatus[0].status}}</text>
+							<text v-if="item.status === '未检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '待检查'" style="color: #FF9830;background-color: #FFF4EA;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '未开始'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '检查中'" style="color: #399CFF;background-color: #EBF5FF;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '已检查'" style="color: #00D64F;background-color: #E6FBEE;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '已中止'" style="color: #FF4538;background-color: #FFEDEC;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '已提交'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '已审核'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 							<!-- <text v-else style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">未开始</text> -->
 						</view>
 						<view v-else>
 							<text style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">未开始</text>
 						</view>
 					</view>
+				</view>
+				
+				<view class="patrol-container">
+					<text class="patrol-name">{{ item.patrolName }}</text>
 				</view>
 			</view>
 		</view>
@@ -112,12 +118,12 @@
 				</view>
 				
 				<view class="popup-use">
-					<view style="width: 70%;text-align: left;color: #5547ae;">
-						经纬度
+					<view style="width: 65%;text-align: left;color: #5547ae;">
+						项目地址
 					</view>
-					<view style="width: 30%;text-align: right;color: #83ABC7;" @tap="addressGet">
-						<text class="iconfont icon icon-xiangxia"></text>
-						获取
+					<view style="width: 35%;text-align: right;color: #83ABC7;" @tap="addressGet">
+						<image style="height: 30rpx;width: 30rpx;" src="../../../static/img/huoqu1.png" ></image>
+						点击定位
 					</view>
 				</view>
 				<view class="popup-use1">
@@ -127,6 +133,12 @@
 				<button v-if="this.newProjectname && this.dateName !== this.firstName && this.teamName" class="buttonStyle" type="primary" @tap="closePop('top')">确定</button>	
 				<button v-else class="buttonStyle" type="primary" disabled="true" @tap="closePop('top')">确定</button>
 				
+			</view>
+		</uni-popup>
+		
+		<uni-popup ref="area" type="top">
+			<view class="area-container">
+				测试
 			</view>
 		</uni-popup>
 	</view>
@@ -141,7 +153,7 @@ import { getpatrolsAll_API } from '../../../api/api.js'
 import { teamsAll_API } from '../../../api/api.js'
 import { updataPatrol_API } from '../../../api/api.js'
 import { teamBindProject_API } from '../../../api/api.js'
-
+import { projectByExpert_API } from '../../../api/api.js'
 	export default {
 		data() {
 			return {
@@ -216,6 +228,9 @@ import { teamBindProject_API } from '../../../api/api.js'
 			},500)
 		},
 		methods: {
+			openPopArea(){
+				this.$refs.area.open()
+			},
 			//检测登录状态
 			checkLogin(){
 				try{
@@ -230,7 +245,7 @@ import { teamBindProject_API } from '../../../api/api.js'
 						//console.log(this.loginData.isLogin)
 					}else{
 						this.role = this.loginData.role
-						this.getProjects()
+						this.getallProjects()
 						this.getPatrols()
 						// this.getTeams()
 					}
@@ -245,11 +260,11 @@ import { teamBindProject_API } from '../../../api/api.js'
 				teamsAll_API(tempData).then(res=>{
 					// console.log(res)
 					var tempTeams = res.data.data
-					console.log(tempTeams)
+					//console.log(tempTeams)
 					for(var i=0;i<tempTeams.length;i++){
 						this.teamsList.push(tempTeams[i].id)
 					}
-					console.log(this.teamsList)
+					//console.log(this.teamsList)
 				})
 			},
 			getPatrols(){
@@ -260,7 +275,7 @@ import { teamBindProject_API } from '../../../api/api.js'
 					// console.log(res)
 					var tempPatrol = res.data.data
 					this.allpatrolList = tempPatrol
-					console.log(tempPatrol)
+					//console.log(tempPatrol)
 					for(var i=0;i<tempPatrol.length;i++){
 						this.patrolidList.push({
 							id: tempPatrol[i].id,
@@ -268,17 +283,15 @@ import { teamBindProject_API } from '../../../api/api.js'
 						})
 						this.patrolList.push(tempPatrol[i].name)
 					}
-					console.log(this.patrolList)
+					//console.log(this.patrolList)
 					
-					console.log(this.patrolidList)
+					//console.log(this.patrolidList)
 				})
 				
 			},
-			// 获取巡检活动
+			// 获取巡检活动(该方法废弃)
 			getProjects(){
-				uni.showLoading({
-				    title: '加载中',
-				})
+				
 				var tranData = {
 					data:{
 						page:1,
@@ -287,18 +300,6 @@ import { teamBindProject_API } from '../../../api/api.js'
 					token:this.token
 				}
 				try{
-					// this.projectTable = uni.getStorageSync('project_key')
-					// if(this.projectTable.length === 0 ){
-					// 	projectsAllnew_API(tranData).then(res=>{
-					// 		console.log(res)
-					// 		this.sumData = res.data.data.count
-					// 		//console.log(res.data.data.data)
-					// 		this.getallProjects()
-					// 	})
-					// }
-					// else{
-					// 	uni.hideLoading();
-					// }
 					projectsAllnew_API(tranData).then(res=>{
 						console.log(res)
 						this.sumData = res.data.data.count
@@ -310,26 +311,43 @@ import { teamBindProject_API } from '../../../api/api.js'
 				}
 			},
 			getallProjects(){
-				console.log(this.sumData)
+				uni.showLoading({
+				    title: '加载中',
+				})
 				var tranData = {
-					data:{
-						page:1,
-						size:this.sumData,
-						},
+					id:this.loginData.id,
 					token:this.token
 				}
-				projectsAllnew_API(tranData).then(result=>{
-					this.projectTable = result.data.data.data
-					console.log(this.projectTable)
-					console.log("数据获取成功！")
-					uni.hideLoading();
-					uni.setStorage({
-						key:'project_key',
-						data:this.projectTable,
-						success: function() {
-							console.log('project save success!')
+				// projectsAllnew_API(tranData).then(result=>{
+				// 	this.projectTable = result.data.data.data
+				// 	console.log(this.projectTable)
+				// 	console.log("数据获取成功！")
+				// 	uni.hideLoading();
+				// 	uni.setStorage({
+				// 		key:'project_key',
+				// 		data:this.projectTable,
+				// 		success: function() {
+				// 			console.log('project save success!')
+				// 		}
+				// 	});
+				// })
+				// console.log(tranData)
+				
+				// 获取每个专家有关的项目
+				projectByExpert_API(tranData).then(res=>{
+					let projectShow = []
+					
+					this.projectTable = res.data.data
+					this.projectTable.forEach(item => {
+						for(var title in item){
+							var status = title.slice(-3)
+							item[title].patrolName = title
+							item[title].status = status
+							projectShow.push(item[title])
 						}
-					});
+					})
+					this.projectTable = projectShow
+					uni.hideLoading();
 				})
 			
 			},
@@ -357,16 +375,16 @@ import { teamBindProject_API } from '../../../api/api.js'
 				var newProject = {
 				  "name": this.newProjectname,
 				  "type": "市政",
-				  "district": "青山区、洪山区",
-				  "address": "青山区、洪山区",
+				  "district": "",
+				  "address": this.addressData,
 				  "longitude": this.longitude,
 				  "latitude": this.latitude,
-				  "employer": "武汉德鑫建设投资有限公司",
-				  "builder": "中铁一局集团有限公司",
-				  "supervisor": "湖北南方建设管理咨询有限公司",
-				  "projectLeader": "王雷18675517001",
-				  "projectManager": "吴迪18675173456",
-				  "director": "周喆15071088180",
+				  "employer": "",
+				  "builder": "",
+				  "supervisor": "",
+				  "projectLeader": "",
+				  "projectManager": "",
+				  "director": "",
 				  "patrolStatus": [
 					{
 					  "patrol_name": this.dateName,
@@ -381,7 +399,7 @@ import { teamBindProject_API } from '../../../api/api.js'
 					newProject:newProject,
 					token:this.token
 				}
-				console.log(newProject)
+				//console.log(newProject)
 				
 				createProject_API(data).then(res=>{
 					//console.log(res.data.data)
@@ -392,8 +410,8 @@ import { teamBindProject_API } from '../../../api/api.js'
 							title: '添加成功!',
 							duration: 1000
 						});
-						this.modifyPatrol.projectIds.push(this.newproId)
-						console.log(this.modifyPatrol)
+						this.modifyPatrol.projectIds.push(this.newproId + "")
+						//console.log(this.modifyPatrol)
 						var patrolData = {
 							data:this.modifyPatrol,
 							token:this.token
@@ -406,7 +424,7 @@ import { teamBindProject_API } from '../../../api/api.js'
 							data:[this.newproId],
 							token:this.token
 						}
-						console.log(teamData)
+						//console.log(teamData)
 						teamBindProject_API(teamData).then(res2=>{
 							console.log(res2)
 						})
@@ -483,11 +501,27 @@ import { teamBindProject_API } from '../../../api/api.js'
 					geocode:true,//设置该参数为true可直接获取经纬度及城市信息
 					success: function (res) {
 						//console.log(res)
-						that.addressMessage = res;
-						that.addressData = res.latitude + ', ' + res.longitude
-						that.latitude = res.latitude
-						that.longitude = res.longitude
-						//console.log(that.addressData)
+						
+						uni.chooseLocation({
+							latitude:res.latitude,
+							longitude:res.longitude,
+							success:function(result){
+								that.addressData = result.name
+								that.latitude = result.latitude
+								that.longitude = result.longitude
+								
+								console.log('位置名称：' + result.name);
+								console.log('详细地址：' + result.address);
+								console.log('纬度：' + result.latitude);
+								console.log('经度：' + result.longitude);
+								console.log(that.projectTable)
+							}
+						})
+						// that.addressData = res.latitude + ', ' + res.longitude
+						// that.latitude = res.latitude
+						// that.longitude = res.longitude
+						
+						
 						uni.showToast({
 							title: '地址获取成功',
 							duration: 1500

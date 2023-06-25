@@ -4,27 +4,57 @@
 	.stick-bar{
 		position: sticky;
 		top: 0;
+		background-color: #0D72BE;
+		z-index: 1;
 	}
 	.wx-top{
 		display: flex;
-		padding: 0 40rpx;
+		padding: 0 35rpx;
 		text-align: center;
 		height: 150rpx;
 		line-height: 200rpx;
 		align-items:center;
-		background-color: white;
+		background-color: #0D72BE;
+		color: #fff;
 		}
 	.create-button{
-		font-size: 50rpx;
-		width: 10%;
-		padding-top: 20rpx;
+		/* icon/返回 1 */
+		
+		/* 自动布局子元素 */
+		position: static;
+		left: 0px;
+		top: 0px;
+		width: 24px;
+		height: 24px;
+		opacity: 1;
+			
+		z-index: 1;
 	}
 	.title-style,.create-word,.title-word{
 		text-align: center;
 		padding-top: 20rpx;
 	}
 	.create-word{
-		width: 10%;
+		/* 新建项目 */
+		
+		/* 自动布局子元素 */
+		position: static;
+		width: 68px;
+		height: 29px;
+		opacity: 1;
+		
+			
+		/* 正文/大正文/加粗 */
+		font-family: 思源黑体;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 22px;
+		letter-spacing: 0em;
+			
+		/* 一般辅助/1 */
+		color: #A6C8E0;
+			
+		z-index: 2;
 	}
 	.title-word{
 		width: 60%;
@@ -98,7 +128,21 @@
 		align-items: center;
 		flex-direction: row;
 		margin-right: 1%;
-		width: 30%;
+		width: 25%;
+	}
+	.search-icon{
+		/* icon/搜索 */
+		
+		/* 自动布局子元素 */
+		position: static;
+		left: 12px;
+		top: 13px;
+		width: 20px;
+		height: 20px;
+		opacity: 1;
+		margin-right: 10rpx;
+			
+		z-index: 1;
 	}
 	.centerStyle{
 		display: flex;
@@ -108,8 +152,8 @@
 		position: sticky;
 	}
 	.selectStyle{
-		border-radius: 15px;
-		width: 50%;
+		border-radius: 100px;
+		width: 55%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -138,7 +182,8 @@
 		margin-left: 5%;
 		display: flex;
 		flex-direction: column;
-		background-color: white;
+		background-color: #FFFFFF;
+		
 	}
 	.logoItem{
 		width: 100rpx;
@@ -180,6 +225,38 @@
 		display: flex;
 		text-align: right;
 		font-family: '阿里巴巴普惠体 2.0 65 Medium';
+	}
+	.patrol-container{
+		width: 92%;
+		height: 42rpx;
+		background-color: #F0F3F5;
+		padding: 10rpx 10rpx;
+		text-align: center;
+		color: #0D72BE;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		margin: 10rpx 10rpx 10rpx 17rpx ;
+	}
+	.gongdan-icon{
+		/* icon/工单 1 */
+		
+		/* 自动布局子元素 */
+		position: sticky;
+		left: 0px;
+		top: 0px;
+		width: 52px;
+		height: 52px;
+		border-radius: 108.33px;
+		opacity: 1;
+		margin-right: 15rpx;	
+		/* 一般辅助/3 */
+		background: #EDF6FC;
+			
+		z-index: 0;
+	}
+	.area-container{
+		background-color: #FFFFFF;
 	}
 	/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 	@font-face {

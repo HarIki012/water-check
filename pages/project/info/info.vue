@@ -239,7 +239,7 @@ import { teamByProject_API } from '../../../api/api.js'
 			getpatrolByProject(){
 				this.uploadData.data = this.projectId
 				patrolByProject_API(this.uploadData).then(res=>{
-					//console.log(res.data.data)
+					console.log(res.data)
 					this.projectTemp = res.data.data
 					const checksTemp = []
 					for(var i = 0 ; i< this.projectTemp.length;i++ ){

@@ -1,18 +1,22 @@
 <template>
 	<view class="hs-content">
 		<view class="head-container">
+			<view class="background-container"></view>
 			<image class="hs-logo" src="../../static/hs-logo.png"></image>
 			<text  class="hs-title" >青山区水务工程巡查系统</text>
 		</view>
 		<form class="hs-form" @submit="formSubmit">
 			<view class="hs-tel-wrap">
-				<text class="iconfont icon icon-yonghu"></text>
-				<input name="tel" class="tel" type="tel"  maxlength=11 placeholder="请输入您的账号" placeholder-class="hs-plh-tel" v-model="userName"/>
+				<image src="../../static/img/zhanghu.png" class="user-icon" />
+				<!-- <text class="iconfont icon icon-yonghu"></text> -->
+				<input name="tel" class="tel" type="tel" ref="input1"  :focus="focustel" :auto-blur="focustel"  maxlength=11 placeholder="请输入您的账号" placeholder-style="color:#A6C8E0" v-model="userName" @confirm="confirm"/>
 			</view>
 			<view class="hs-psd-wrap">
-				<text class="iconfont icon icon-mima"></text>
-				<input name="psd" class="psd" type="text" placeholder="请输入密码" placeholder-class="hs-plh-psw" :password="showPassword" v-model="userPwd"/>
+				<image src="../../static/img/mima.png" class="psw-icon" />
+				<!-- <text class="iconfont icon icon-mima"></text> -->
+				<input name="psd" class="psd" type="number" ref="input2"  :focus="focuspsw"  placeholder="请输入密码" placeholder-style="color:#A6C8E0" :password="showPassword" v-model="userPwd"/>
 				<text class="hs-show iconfont icon icon-chakan" :class="[!this.showPassword ? 'hs-eye-active' : 'hs-show']" @click="changePassword">&#xe568;</text>
+				
 			</view>
 			<button formType="submit" :disabled="!loginButtonState" :class="[loginButtonState ? 'hs-login-btn' : 'hs-login-btn-disable']" class="hs-login-btn" type="default" >登 录</button>
 		</form>
@@ -20,7 +24,7 @@
 	</view>
 </template>
 
-<script>
+<script> 
 	import { expertByPhone_API } from '../../api/api.js'
 	import { login_API } from '../../api/api.js'
 	export default {
@@ -41,6 +45,8 @@
 				allUserData:[],
 				userToken:'',
 				userRole:'',
+				focustel:false,
+				focuspsw:false,
 			};
 		},
 		computed:{
@@ -52,7 +58,14 @@
 		onLoad() {
 		},
 		methods:{
-			
+
+			confirm(){
+				uni.hideKeyboard()
+				this.focuspsw = false;
+				this.$nextTick( function() {
+					this.focuspsw = true;
+				});
+			},
 			// 验证账号密码
 			async formSubmit(e) {
 				var rule = [

@@ -37,9 +37,9 @@
 				<text  class="currentWordNumber">{{fontNumTerms}}/200</text>
 			</view>
 			<view class="choose-pic">
-				<uni-file-picker v-if="picLengthTerms >= 2" v-model="realTermsurl" limit="4" title="最多选择4张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow"></uni-file-picker>
-				<uni-file-picker v-else-if="picLengthTerms === 1" v-model="realTermsurl" limit="4" title="最多选择4张图片" @select="picTerms" @delete="deleteFileTerms" :del-icon="false" :readonly="allow"></uni-file-picker>
-				<uni-file-picker v-else limit="4" title="最多选择4张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-if="picLengthTerms >= 2" v-model="realTermsurl" limit="4" title="最多选择4张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow" :sizeType="sizeType"></uni-file-picker>
+				<uni-file-picker v-else-if="picLengthTerms === 1" v-model="realTermsurl" limit="4" title="最多选择4张图片" @select="picTerms" @delete="deleteFileTerms" :del-icon="false" :readonly="allow" :sizeType="sizeType"></uni-file-picker>
+				<uni-file-picker v-else limit="4" title="最多选择4张图片" @select="picTerms" @delete="deleteFileTerms" :readonly="allow" :sizeType="sizeType"></uni-file-picker>
 			</view>
 		</view>
 		
@@ -65,9 +65,9 @@
 				</view>
 			</view>
 			<view class="choose-pic">
-				<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="4" title="最多选择4张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
-				<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="4" title="最多选择4张图片" @select="picTest" @delete="deleteFile" :del-icon="false" :readonly="allow"></uni-file-picker>
-				<uni-file-picker v-else limit="4" title="最多选择4张图片" @select="picTest" @delete="deleteFile" :readonly="allow"></uni-file-picker>
+				<uni-file-picker v-if="picLength >= 2" v-model="realurl" limit="4" title="最多选择4张图片" @select="picTest" @delete="deleteFile" :readonly="allow" :sizeType="sizeType"></uni-file-picker>
+				<uni-file-picker v-else-if="picLength === 1" v-model="realurl" limit="4" title="最多选择4张图片" @select="picTest" @delete="deleteFile" :del-icon="false" :readonly="allow" :sizeType="sizeType"></uni-file-picker>
+				<uni-file-picker v-else limit="4" title="最多选择4张图片" @select="picTest" @delete="deleteFile" :readonly="allow" :sizeType="sizeType"></uni-file-picker>
 			</view>
 			<view class="text">
 				<view style="flex-direction: row; margin-bottom: 20rpx;">
@@ -143,6 +143,7 @@
 				status:'',
 				isFocused: false,
 				token:'',
+				sizeType:'compressed',
 			};
 		},
 		onLoad() {

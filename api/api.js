@@ -329,3 +329,14 @@ export function teamBindProject_API(data){
 		}
 	})
 }
+
+// 获取该专家需要巡检的项目列表
+export function projectByExpert_API(data) {
+	return uni.request({
+		url: `${baseUrl}/project_by_expert?id=${data.id}`,
+		method:'GET',
+		header:{
+			"Authorization":data.token,
+		}
+	})
+}

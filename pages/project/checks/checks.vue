@@ -828,7 +828,7 @@ export default {
 			}
 		},
 		
-		changeData(name) {
+		changeData() {
 			this.problemList = this.initproblemList
 			//this.problemList = this.problemTempList
 			//console.log(JSON.stringify(this.termsTempList))
@@ -929,7 +929,7 @@ export default {
 							nItem.data.push(item)
 							break
 						}
-					}
+					} 
 				}
 			}
 			var selfId = nList.length-1
@@ -945,7 +945,6 @@ export default {
 			}
 			this.newList = nList
 			console.log(this.newList)
-			
 		}
 	}
 }

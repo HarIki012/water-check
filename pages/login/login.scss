@@ -1,6 +1,7 @@
 .hs-content{
 	width: 100%;
-	height: 100%;
+	height: 1500rpx;
+	background-color: #F0F3F5;
 }
 .hs-content {
 	background-size: cover;
@@ -10,11 +11,12 @@
 		padding-top: 40upx;
 	}
 	.hs-tel-wrap, .hs-psd-wrap {
-		width: 80%;
+		background-color: #FFFFFF;
+		width: 70%;
 		margin: 0 auto;
 		position: relative;
 		height: 100upx;
-		border: 1upx solid #eee;
+		border: 1upx solid #D7E9F5;
 		border-radius: 52rpx;
 		.iconfont {
 			position: absolute;
@@ -26,7 +28,7 @@
 		.hs-show{
 			z-index: 2;
 			position: absolute;
-			left: 500upx;
+			left: 450upx;
 			top: 24upx;
 			font-size: 51upx;
 			color: #83ABC7;
@@ -36,41 +38,58 @@
 		    color: #007AFF;
 		}
 		input{
-			padding-left: 100upx;
+			padding-left: 15upx;
 			padding-top: 28upx;
 			font-size: 36upx;
 		}
 	}
+	.user-icon, .psw-icon{
+		/* icon/账户 */
+		
+		/* 自动布局子元素 */
+		position: sticky;
+		width: 24px;
+		height: 24px;
+		opacity: 1;
+		padding-left: 13px;
+		padding-top: 15px;
+		z-index: 2;
+	}
 	.hs-tel-wrap{
+		display: flex;
 		margin-bottom: 20upx;
 	}
 	.hs-psd-wrap{
+		display: flex;
 		margin-bottom: 80upx;
 	}
 	.hs-login-btn{
-		width: 80%;
+		width: 70%;
 		margin: 0 auto 40upx;
 		background: #0D72BE;
-		border-radius: 80upx;
+		border-radius: 50px;
 		color: #fff;
-		font-size: 32upx;
+		font-size: 20px;
 	}
 	.hs-login-btn-disable{
 		background:#83ABC7;
 	}
-	.hs-plh-psw,.hs-plh-tel{
-		color: #83ABC7;
-	}
 	.tel,.psd{
-		color: #007AFF;
+		color: #0D72BE;
 	}
 	.head-container{
-		background-color: #0D72BE;
 		padding-top: 120rpx;
 		padding-bottom: 170rpx;
-		border-radius: 400px/71px;
-		border-top-right-radius: 0;
-		border-top-left-radius: 0;
+	}
+	.background-container{
+		background-color: #0D72BE;
+		position: absolute;
+		left: -276px;
+		top: -394px;
+		width: 964px;
+		height: 718px;
+		border-radius: 0 0 50% 50%;
+		opacity: 1;
 	}
 	.hs-logo{
 		background-color: #fff;
@@ -78,7 +97,7 @@
 		left: 250rpx;
 		margin: 15rpx;
 		width: 200rpx;
-		height: 160rpx;
+		height: 170rpx;
 		padding-left: 15rpx;
 		padding-right: 15rpx;
 		padding-top: 25rpx;
