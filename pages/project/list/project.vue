@@ -1,21 +1,30 @@
 <template>
 	<view class="backgroundStyle">
 		<view class="stick-bar">
-			<view class="wx-top">
+			<view v-if="this.osName === 'android'" class="wx-top">
 				<!-- 搜索图标 -->
 				<image src="/static/img/fanhui1.png" @click="openPop" class="create-button"></image>
 				<!-- <view class="create-button iconfont icon icon-new_document" @click="openPop"></view> -->
 				<view class="create-word" @click="openPop">新建项目</view>
 				<view class="title-word">项目列表</view>
 			</view>
+			<view v-else class="ios-top">
+				<!-- 搜索图标 -->
+				<image src="/static/img/fanhui1.png" @click="openPop" class="create-button-ios"></image>
+				<!-- <view class="create-button iconfont icon icon-new_document" @click="openPop"></view> -->
+				<view class="create-word-ios" @click="openPop">新建项目</view>
+				<view class="title-word-ios">项目列表</view>
+			</view>
+			
+			
 			<view class="projectSearch">
-				<view class="projectStyle" @click="openPopArea">
-					<!-- <picker class="centerStyle" @change="projectSelect" :range="projectChoose">
+				<view class="projectStyle" >
+					<picker class="centerStyle" @change="projectSelect" :range="projectChoose">
 						<label style="color: #0D72BE;margin-right: 10rpx;">{{ projectselectName }}</label>
 						<text class="iconfont icon icon-xiangxia"></text>
-					</picker> -->
-					<label style="color: #0D72BE;margin-right: 10rpx;">{{ projectselectName }}</label>
-					<text class="iconfont icon icon-xiangxia"></text>
+					</picker>
+					<!-- <label style="color: #0D72BE;margin-right: 10rpx;">{{ projectselectName }}</label>
+					<text class="iconfont icon icon-xiangxia"></text> -->
 				</view>
 				<view class="selectStyle">
 					<image src="../../../static/img/sousuo.png" class="search-icon"></image>
@@ -37,16 +46,16 @@
 				
 				<view class="statusStyle"> 
 					<view style="display: flex;width: 100%;justify-content: flex-end;">
-						<text style="color: darkgray;">状态：</text>
+						<text style="color: #BFBFBF;">状态：</text>
 						<view v-if="item.patrolStatus !== null && item.patrolStatus.length !== 0">
-							<text v-if="item.status === '未检查'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
-							<text v-if="item.status === '待检查'" style="color: #FF9830;background-color: #FFF4EA;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
-							<text v-if="item.status === '未开始'" style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '未检查'" style="color: #FF881A;background-color: #FFF4EA;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '待检查'" style="color: #FF881A;background-color: #FFF4EA;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '未开始'" style="color: #FF881A;background-color: #FFF4EA;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 							<text v-if="item.status === '检查中'" style="color: #399CFF;background-color: #EBF5FF;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 							<text v-if="item.status === '已检查'" style="color: #00D64F;background-color: #E6FBEE;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 							<text v-if="item.status === '已中止'" style="color: #FF4538;background-color: #FFEDEC;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
-							<text v-if="item.status === '已提交'" style="color: #00CD00;background-color: #e1ffe1;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
-							<text v-if="item.status === '已审核'" style="color: #EE2C2C;background-color: #ffe6e6;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '已提交'" style="color: #00D64F;background-color: #E6FBEE;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
+							<text v-if="item.status === '已审核'" style="color: #FF4538;background-color: #FFEDEC;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">{{item.status}}</text>
 							<!-- <text v-else style="color: #f1a532;background-color: #fef7eb;border-radius: 20rpx;padding: 5rpx 15rpx 5rpx 15rpx;">未开始</text> -->
 						</view>
 						<view v-else>
@@ -66,20 +75,20 @@
 		<uni-popup ref="popup">
 			<view class="pop">
 				<view class="newStyle">
-					<text style="width: 100%;text-align: center;padding-left: 50rpx;">新建项目</text>
+					<text style="width: 100%;text-align: center;padding-left: 50rpx;">新建项目 </text>
 					<view class="iconfont icon icon-shanchu2" style="margin-right: 30rpx;" @click="closeButton"></view>
 				</view>
 				<view class="popup-use">
-					<text style="color: #5547ae;">项目名称</text>
-					<text style="color: red;">*</text>
+					<text style="color: #0D72BE;">项目名称</text>
+					<text style="color: red;"> *</text>
 				</view>
 				<view class="popup-use1">
 					<input class="input-style" style="padding-left: 20rpx;" placeholder="请输入项目名称" type="text" v-model="newProjectname" confirm-type="done" @confirm="oldInput">
 				</view>
 				
 				<view class="popup-use">
-					<text style="color: #5547ae;">所属巡检活动</text>
-					<text style="color: red;">*</text>
+					<text style="color: #0D72BE;">所属巡检活动 </text>
+					<text style="color: red;"> *</text>
 				</view>
 				<view class="popup-use1">
 					<view class="project-time">
@@ -93,8 +102,8 @@
 				</view>
 				
 				<view class="popup-use">
-					<text style="color: #5547ae;">所属巡检小组</text>
-					<text style="color: red;">*</text>
+					<text style="color: #0D72BE;">所属巡检小组 </text>
+					<text style="color: red;"> *</text>
 				</view>
 				<view class="popup-use1">
 					<view class="project-time">
@@ -118,10 +127,10 @@
 				</view>
 				
 				<view class="popup-use">
-					<view style="width: 65%;text-align: left;color: #5547ae;">
+					<view style="width: 65%;text-align: left;color: #0D72BE;">
 						项目地址
 					</view>
-					<view style="width: 35%;text-align: right;color: #83ABC7;" @tap="addressGet">
+					<view style="width: 35%;text-align: right;color: #0CBCC2;" @tap="addressGet">
 						<image style="height: 30rpx;width: 30rpx;" src="../../../static/img/huoqu1.png" ></image>
 						点击定位
 					</view>
@@ -130,17 +139,19 @@
 					<input class="input-style" style="padding-left: 20rpx;" v-if="upData" type="text" v-model="addressData" confirm-type="done">
 				</view>
 				
-				<button v-if="this.newProjectname && this.dateName !== this.firstName && this.teamName" class="buttonStyle" type="primary" @tap="closePop('top')">确定</button>	
-				<button v-else class="buttonStyle" type="primary" disabled="true" @tap="closePop('top')">确定</button>
+				<button v-if="this.newProjectname && this.dateName !== this.firstName && this.teamName" class="buttonStyle"  @tap="closePop('top')">确 定</button>	
+				<button v-else class="buttonStyle-disabled" >确 定</button>
 				
 			</view>
 		</uni-popup>
 		
-		<uni-popup ref="area" type="top">
+		<uni-popup ref="area" type="top" class="area-popup">
 			<view class="area-container">
-				测试
+				<button>江岸区</button>
 			</view>
 		</uni-popup>
+		
+		<tabbar-shadow></tabbar-shadow>
 	</view>
 </template>
 
@@ -194,6 +205,7 @@ import { projectByExpert_API } from '../../../api/api.js'
 				testT:'1',
 				teamidList:[],
 				chooseTeam:true,
+				osName:'',
 			}
 		},
 		computed: {
@@ -217,6 +229,7 @@ import { projectByExpert_API } from '../../../api/api.js'
 			
 		},
 		onLoad() {
+			this.getOSName()
 			this.checkLogin()
 		},
 		onPullDownRefresh () {
@@ -228,6 +241,18 @@ import { projectByExpert_API } from '../../../api/api.js'
 			},500)
 		},
 		methods: {
+			// 获取平台名称进行不同编译
+			getOSName(){
+				const that = this
+				uni.getSystemInfo({
+					success: function(res) {
+						that.osName = res.osName
+						console.log("使用机型为：",that.osName)
+					}
+				})
+				// var test =  uni.getWindowInfo()
+				// console.log(test)
+			},
 			openPopArea(){
 				this.$refs.area.open()
 			},
@@ -517,15 +542,6 @@ import { projectByExpert_API } from '../../../api/api.js'
 								console.log(that.projectTable)
 							}
 						})
-						// that.addressData = res.latitude + ', ' + res.longitude
-						// that.latitude = res.latitude
-						// that.longitude = res.longitude
-						
-						
-						uni.showToast({
-							title: '地址获取成功',
-							duration: 1500
-						});
 					},
 					fail: function () {
 						uni.showToast({

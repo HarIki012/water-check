@@ -24,6 +24,7 @@
 			</view>
 		</uni-popup>
 	</view>
+	<tabbar-shadow></tabbar-shadow>
 </template>
 
 <script>

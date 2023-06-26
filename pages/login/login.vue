@@ -15,7 +15,9 @@
 				<image src="../../static/img/mima.png" class="psw-icon" />
 				<!-- <text class="iconfont icon icon-mima"></text> -->
 				<input name="psd" class="psd" type="number" ref="input2"  :focus="focuspsw"  placeholder="请输入密码" placeholder-style="color:#A6C8E0" :password="showPassword" v-model="userPwd"/>
-				<text class="hs-show iconfont icon icon-chakan" :class="[!this.showPassword ? 'hs-eye-active' : 'hs-show']" @click="changePassword">&#xe568;</text>
+				<image v-if="showPassword" src="../../static/img/xianshi.png" class="hs-show" @click="changePassword"/>
+				<image v-else src="../../static/img/yincang.png" class="hs-eye-active" @click="changePassword"/>
+				<!-- <text class="hs-show iconfont icon icon-chakan" :class="[!this.showPassword ? 'hs-eye-active' : 'hs-show']" @click="changePassword">&#xe568;</text> -->
 				
 			</view>
 			<button formType="submit" :disabled="!loginButtonState" :class="[loginButtonState ? 'hs-login-btn' : 'hs-login-btn-disable']" class="hs-login-btn" type="default" >登 录</button>

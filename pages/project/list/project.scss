@@ -7,6 +7,16 @@
 		background-color: #0D72BE;
 		z-index: 1;
 	}
+	.ios-top{
+		display: flex;
+		padding: var(--status-bar-height) 35rpx;
+		text-align: center;
+		height: 100rpx;
+		line-height: 150rpx;
+		align-items:center;
+		background-color: #0D72BE;
+		color: #fff;
+	}
 	.wx-top{
 		display: flex;
 		padding: 0 35rpx;
@@ -17,7 +27,8 @@
 		background-color: #0D72BE;
 		color: #fff;
 		}
-	.create-button{
+	
+	.create-button,.create-button-ios{
 		/* icon/返回 1 */
 		
 		/* 自动布局子元素 */
@@ -27,14 +38,21 @@
 		width: 24px;
 		height: 24px;
 		opacity: 1;
-			
+		padding-top: 5rpx;	
 		z-index: 1;
 	}
 	.title-style,.create-word,.title-word{
 		text-align: center;
 		padding-top: 20rpx;
 	}
-	.create-word{
+	.create-word-ios,.title-word-ios{
+		text-align: center;
+		padding-top: 70rpx;
+	}
+	.create-button-ios{
+		padding-top: 55rpx;
+	}
+	.create-word,.create-word-ios{
 		/* 新建项目 */
 		
 		/* 自动布局子元素 */
@@ -56,10 +74,10 @@
 			
 		z-index: 2;
 	}
-	.title-word{
-		width: 60%;
+	.title-word,.title-word-ios{
+		width: 55%;
 		padding-right: 100rpx;
-		font-size: 40rpx;
+		font-size: 24px;
 	}
 	.backgroundStyle{
 		width: 100%;
@@ -167,14 +185,21 @@
 		align-items: center;
 		color: #0E73BF;
 	}
-	.buttonStyle{
+	.buttonStyle,.buttonStyle-disabled{
 		width: 530rpx;
 		height: 88rpx;
 		padding-top: 0rpx;
-		font-size: 35rpx;
+		font-size: 18px;
 		text-align: center;
 		margin-top: 30rpx;
 		margin-bottom: 40rpx;
+		border-radius: 4px;
+		background: #0D72BE;
+		color: #FFFFFF;
+	}
+	.buttonStyle-disabled{
+		background: #83ABC7;
+		color: #F5F8FA;
 	}
 	.tableStyle{
 		width: 90%;
@@ -200,11 +225,11 @@
 		padding-left: 20rpx;
 		padding-top: 20rpx;
 		padding-right: 20rpx;
-		padding-bottom: 20rpx;
 		display: flex;
 		flex-direction: row;
 		height: 80%;
-		font-size: 35rpx;
+		font-size: 18px;
+		color: #333333;
 	}
 	.newStyle{
 		width: 100%;
@@ -217,7 +242,7 @@
 	}
 	.statusStyle{
 		padding-left: 20rpx;
-		padding-top: 20rpx;
+		padding-top: 11px;
 		padding-right: 20rpx;
 		padding-bottom: 20rpx;
 		height: 20%;
@@ -255,8 +280,10 @@
 			
 		z-index: 0;
 	}
+	
 	.area-container{
 		background-color: #FFFFFF;
+		padding-top: 20%;
 	}
 	/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
 	@font-face {

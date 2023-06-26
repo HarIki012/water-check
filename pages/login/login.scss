@@ -25,17 +25,13 @@
 			font-size: 48upx;
 			color: #83ABC7;
 		}
-		.hs-show{
+		.hs-show,.hs-eye-active{
 			z-index: 2;
 			position: absolute;
+			width: 26px;
+			height: 26px;
 			left: 450upx;
 			top: 24upx;
-			font-size: 51upx;
-			color: #83ABC7;
-		}
-		.hs-eye-active {
-			z-index: 2;
-		    color: #007AFF;
 		}
 		input{
 			padding-left: 15upx;
